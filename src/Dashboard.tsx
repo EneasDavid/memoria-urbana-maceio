@@ -274,6 +274,7 @@ export function Dashboard({ events, reports, setReports, bump, onPublic }: { eve
     const m: Monument = {
       id: 'novo-' + n, plate: String(n).padStart(2, '0'), name: '', role: '', years: '', area: 'Centro', address: '', kind: 'Busto', group: 'centro', visit: 'Aberto', rarity: 'Comum', xp: 80,
       lat: -9.6658, lng: -35.7352, x: 70 + n * 3, y: 540, hue: '#2c8585', views: 0, change: 0, flow: 0, summary: '', facts: [['Escultor', '']], sources: [],
+      museum: { name: '', address: '', why: '' },
       tag: { type: 'NTAG216', status: 'Ativa', lastRead: '—', pendingOffline: 0 },
     }
     monuments.push(m)
