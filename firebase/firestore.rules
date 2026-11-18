@@ -1,0 +1,10 @@
+rules_version = '2';
+// Nenhum cliente lê ou escreve direto no Firestore: todo acesso passa pela API (Admin SDK),
+// que aplica os níveis de acesso (docs/arquitetura.md §4).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
