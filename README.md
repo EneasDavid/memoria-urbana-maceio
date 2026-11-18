@@ -8,11 +8,12 @@
 
 | Artefato | Link |
 |---|---|
-| Sistema online (Vercel) | _URL da Vercel, adicionada após o primeiro deploy_ |
+| Sistema online (Vercel) | https://memoria-urbana-maceio.vercel.app |
 | Protótipo publicado (Figma Make) | https://rotacultural.figma.site |
 | Arquivo do Figma Make | https://www.figma.com/make/1aEK440GM9tIze8UfG7usz/Sem-t%C3%ADtulo |
 | Apresentação (Canva) | https://www.canva.com/design/DAHaJGuZ0zs/eP23D5eJfYwAb0mdKRQgLQ/edit |
 | Backlog e sprints (Jira, projeto KAN) | https://ic-team-yrsngn10.atlassian.net/jira/software/projects/KAN/boards/1 |
+| Issues e sprints no GitHub (espelho do Jira) | https://github.com/EneasDavid/memoria-urbana-maceio/milestones |
 
 ## Problema
 
@@ -28,17 +29,38 @@ As estátuas da orla e das praças do Centro viraram paisagem. Elas são vistas 
 
 ## Metodologia
 
-- Scrum com sprints de 5 dias. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
+- Scrum com sprints de **4 dias úteis: 3 de desenvolvimento + 1 de review, retro e planning** da próxima sprint. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
 - Estimativa em story points (planning poker), burndown por sprint, dailies e retrospectiva.
 - Programação em par, baixo acoplamento e alta coesão: telas, dados (`src/data.ts`) e fluxo do celular ficam separados.
 - Testes servem para **achar falhas** (falta → erro → falha) antes que elas cheguem à placa.
+
+### Sprints
+
+| Sprint | Período | Foco | Estado |
+|---|---|---|---|
+| 1 · Acesso na placa | 26/10 – 29/10 | NFC/QR, página sem login, protótipo no Figma Make | concluída |
+| 2 · Conteúdo e convite ao museu | 30/10 – 04/11 | Abas Bio/Audiodescrição, card Como chegar | concluída |
+| 3 · Trilha e engajamento | 05/11 – 10/11 | Mapa, rota, carimbos, login Google opcional | concluída |
+| 4 · Preservação, correções e teste com usuários | 11/11 – 16/11 | Relato de dano, painel, bugs da Trilha, teste com usuários | concluída |
+| 5 · Qualidade, conteúdo e CI/CD | 17/11 – 20/11 | Áudio real, cache, GitHub + CI + Vercel, sync Jira ↔ GitHub | em andamento |
+| 6 · Segurança e validação | 23/11 – 26/11 | OWASP, proteção da main, CMS, conversão rua → museu | planejada |
+| 7 · Piloto e entrega | 27/11 – 02/12 | Placas físicas e apresentação | planejada |
+
+O último dia de cada sprint é de review (demo do incremento), retrospectiva e planning (planning poker em story points).
+
+### Jira ↔ GitHub
+
+- O backlog do Jira é exportado para `.github/jira-backlog.json` a cada planning. O workflow `jira-sync.yml` cria ou atualiza uma issue por task, com a chave no título (`[KAN-23] …`), milestone da sprint e labels de épico, tipo e status. Task concluída no Jira vira issue fechada.
+- Cada task no Jira tem um link para a issue correspondente no GitHub.
+- Convenção: branch, commit e título de PR começam com a chave (`KAN-23 cache dos lugares visitados`). Use `Closes #30` no PR para fechar a issue ao fazer merge.
 
 ## CI/CD
 
 | Etapa | Onde | O que faz |
 |---|---|---|
 | CI | GitHub Actions (`.github/workflows/ci.yml`) | Em todo push ou PR na `main`: instala, checa tipos (`tsc`), gera o build, roda os testes de dados e de integração e audita dependências |
-| CD | Vercel (integração Git) | Todo push na `main` publica em produção. PRs ganham uma URL de preview |
+| CD | Vercel (integração Git) | Todo push na `main` publica em https://memoria-urbana-maceio.vercel.app. PRs ganham uma URL de preview |
+| Backlog | GitHub Actions (`.github/workflows/jira-sync.yml`) | Espelha o backlog do Jira em Issues e milestones |
 
 ### Testes
 
