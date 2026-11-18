@@ -490,12 +490,12 @@
    "key": "KAN-43",
    "type": "Tarefa",
    "summary": "Deploy contínuo na Vercel",
-   "status": "Em andamento",
+   "status": "Concluído",
    "epic": "KAN-38",
    "points": 2,
    "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
    "labels": [],
-   "description": "Importar o repositório na Vercel com vercel.json (Vite, rewrites SPA, headers de segurança) e publicar a cada push na main, com preview por PR. Aceite: URL de produção no README."
+   "description": "Importar o repositório na Vercel com vercel.json (Vite, rewrites SPA, headers de segurança) e publicar a cada push na main, com preview por PR. Aceite: URL de produção no README. Entregue: https://memoria-urbana-maceio.vercel.app"
   },
   {
    "key": "KAN-44",
