@@ -1,0 +1,591 @@
+{
+ "jiraBaseUrl": "https://ic-team-yrsngn10.atlassian.net",
+ "board": "https://ic-team-yrsngn10.atlassian.net/jira/software/projects/KAN/boards/1",
+ "cadence": "Sprints de 4 dias úteis: 3 de desenvolvimento + 1 de review, retro e planning",
+ "sprints": [
+  {
+   "name": "Sprint 1 · Acesso na placa",
+   "state": "closed",
+   "start": "2026-10-26",
+   "end": "2026-10-29",
+   "goal": "Ler a placa (NFC/QR) e abrir a página do monumento sem login; protótipo navegável no Figma Make. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 2 · Conteúdo e convite ao museu",
+   "state": "closed",
+   "start": "2026-10-30",
+   "end": "2026-11-04",
+   "goal": "Bio em abas (Bio/Audiodescrição) e card Como chegar ao museu em todas as páginas. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 3 · Trilha e engajamento",
+   "state": "closed",
+   "start": "2026-11-05",
+   "end": "2026-11-10",
+   "goal": "Mapa da Trilha, rota até o museu, carimbos/passaporte e login Google opcional. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 4 · Preservação, correções e teste com usuários",
+   "state": "closed",
+   "start": "2026-11-11",
+   "end": "2026-11-16",
+   "goal": "Relato de dano, painel da prefeitura, correção dos bugs da Trilha/Passaporte e teste com usuários do protótipo. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "state": "active",
+   "start": "2026-11-17",
+   "end": "2026-11-20",
+   "goal": "Narração e audiodescrição reais, cache de visitados, repositório + CI/CD (GitHub Actions, testes de integração, Vercel) e sincronização Jira ↔ GitHub. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 6 · Segurança e validação",
+   "state": "future",
+   "start": "2026-11-23",
+   "end": "2026-11-26",
+   "goal": "Testes OWASP, proteção da main, CMS conectado e medição da conversão rua → museu. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 7 · Piloto e entrega",
+   "state": "future",
+   "start": "2026-11-27",
+   "end": "2026-12-02",
+   "goal": "Piloto com placas físicas e apresentação final. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  }
+ ],
+ "epics": [
+  {
+   "key": "KAN-4",
+   "summary": "E1 · Acesso na placa",
+   "color": "1d76db"
+  },
+  {
+   "key": "KAN-5",
+   "summary": "E2 · Conteúdo acessível",
+   "color": "0e8a16"
+  },
+  {
+   "key": "KAN-6",
+   "summary": "E3 · Convite ao museu (ponto base)",
+   "color": "fbca04"
+  },
+  {
+   "key": "KAN-7",
+   "summary": "E4 · Trilha e gamificação",
+   "color": "c5def5"
+  },
+  {
+   "key": "KAN-8",
+   "summary": "E5 · Preservação",
+   "color": "b60205"
+  },
+  {
+   "key": "KAN-9",
+   "summary": "E6 · Qualidade e segurança",
+   "color": "5319e7"
+  },
+  {
+   "key": "KAN-38",
+   "summary": "E7 · Entrega contínua (CI/CD)",
+   "color": "0052cc"
+  }
+ ],
+ "issues": [
+  {
+   "key": "KAN-4",
+   "type": "Epic",
+   "summary": "E1 · Acesso na placa",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Quem passa pela estátua abre a história sem app e sem cadastro. Resolve a barreira 1: na estátua, nada conta quem foi o homenageado."
+  },
+  {
+   "key": "KAN-5",
+   "type": "Epic",
+   "summary": "E2 · Conteúdo acessível",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "A história chega a quem não lê bem ou não enxerga. Resolve a barreira 2."
+  },
+  {
+   "key": "KAN-6",
+   "type": "Epic",
+   "summary": "E3 · Convite ao museu (ponto base)",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Toda página leva a um museu ou centro histórico ligado ao homenageado, com rota de ônibus ou a pé."
+  },
+  {
+   "key": "KAN-7",
+   "type": "Epic",
+   "summary": "E4 · Trilha e gamificação",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Mapa, carimbos e passaporte para ampliar e popularizar o uso e estimular a volta."
+  },
+  {
+   "key": "KAN-8",
+   "type": "Epic",
+   "summary": "E5 · Preservação",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Dano e perda passam a ter registro: relato, painel da prefeitura e memória em 3D. Resolve a barreira 3."
+  },
+  {
+   "key": "KAN-9",
+   "type": "Epic",
+   "summary": "E6 · Qualidade e segurança",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Testes para achar falhas e aumentar a confiança: plano por etapa, OWASP, usuários e cache."
+  },
+  {
+   "key": "KAN-38",
+   "type": "Epic",
+   "summary": "E7 · Entrega contínua (CI/CD)",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [],
+   "description": "Todo push na main passa por checagem de tipos, build e testes de integração e é publicado na Vercel."
+  },
+  {
+   "key": "KAN-10",
+   "type": "História",
+   "summary": "Ler a placa por NFC",
+   "status": "Concluído",
+   "epic": "KAN-4",
+   "points": 5,
+   "sprint": "Sprint 1 · Acesso na placa",
+   "labels": [],
+   "description": "Como morador, quero encostar o celular na placa e abrir a página do monumento, para saber quem foi o homenageado. Web NFC real no Android; simulado nos demais."
+  },
+  {
+   "key": "KAN-11",
+   "type": "História",
+   "summary": "Ler a placa por QR Code",
+   "status": "Concluído",
+   "epic": "KAN-4",
+   "points": 5,
+   "sprint": "Sprint 1 · Acesso na placa",
+   "labels": [],
+   "description": "Como morador sem NFC, quero ler o QR da placa com a câmera, para abrir a mesma página. Leitura real via BarcodeDetector no Chrome/Android."
+  },
+  {
+   "key": "KAN-12",
+   "type": "História",
+   "summary": "Página aberta do monumento",
+   "status": "Concluído",
+   "epic": "KAN-4",
+   "points": 3,
+   "sprint": "Sprint 1 · Acesso na placa",
+   "labels": [],
+   "description": "Como visitante, quero ver a página sem login, para não desistir antes de ler."
+  },
+  {
+   "key": "KAN-13",
+   "type": "História",
+   "summary": "Bio do homenageado em linguagem simples",
+   "status": "Concluído",
+   "epic": "KAN-5",
+   "points": 3,
+   "sprint": "Sprint 1 · Acesso na placa",
+   "labels": [],
+   "description": "Como visitante, quero uma bio curta e direta, com fontes, para entender quem foi o homenageado."
+  },
+  {
+   "key": "KAN-39",
+   "type": "Tarefa",
+   "summary": "Protótipo navegável no Figma Make",
+   "status": "Concluído",
+   "epic": "KAN-4",
+   "points": 5,
+   "sprint": "Sprint 1 · Acesso na placa",
+   "labels": [],
+   "description": "Protótipo navegável do fluxo placa → página → convite ao museu, publicado em https://rotacultural.figma.site. Aceite: fluxo completo até o card Como chegar, sem login."
+  },
+  {
+   "key": "KAN-14",
+   "type": "História",
+   "summary": "Card \"Como chegar\" ao museu",
+   "status": "Concluído",
+   "epic": "KAN-6",
+   "points": 3,
+   "sprint": "Sprint 2 · Conteúdo e convite ao museu",
+   "labels": [],
+   "description": "Como visitante, quero ver em toda página o museu ligado ao homenageado, com endereço, horário e por que visitar."
+  },
+  {
+   "key": "KAN-15",
+   "type": "História",
+   "summary": "Abas Bio e Audiodescrição",
+   "status": "Concluído",
+   "epic": "KAN-5",
+   "points": 2,
+   "sprint": "Sprint 2 · Conteúdo e convite ao museu",
+   "labels": [],
+   "description": "Como visitante com baixa visão, quero alternar entre a bio e a audiodescrição da peça."
+  },
+  {
+   "key": "KAN-19",
+   "type": "História",
+   "summary": "Rota de ônibus ou a pé a partir da localização",
+   "status": "Concluído",
+   "epic": "KAN-6",
+   "points": 5,
+   "sprint": "Sprint 3 · Trilha e engajamento",
+   "labels": [],
+   "description": "Como visitante, quero a rota até o museu a partir de onde estou, a pé ou de ônibus."
+  },
+  {
+   "key": "KAN-20",
+   "type": "História",
+   "summary": "Mapa da Trilha Cultural",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 8,
+   "sprint": "Sprint 3 · Trilha e engajamento",
+   "labels": [],
+   "description": "Como visitante, quero ver no mapa as placas próximas para seguir uma trilha."
+  },
+  {
+   "key": "KAN-21",
+   "type": "História",
+   "summary": "Carimbos e passaporte",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 5,
+   "sprint": "Sprint 3 · Trilha e engajamento",
+   "labels": [],
+   "description": "Como visitante logado, quero ganhar carimbos ao visitar placas e museus."
+  },
+  {
+   "key": "KAN-22",
+   "type": "História",
+   "summary": "Login com Google opcional",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 3 · Trilha e engajamento",
+   "labels": [],
+   "description": "Como visitante, quero entrar só se quiser pontuar ou ver em 3D; história e museu ficam livres."
+  },
+  {
+   "key": "KAN-24",
+   "type": "História",
+   "summary": "Relato de dano em 2 toques",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 5,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [],
+   "description": "Como morador, quero relatar uma peça danificada, para avisar a prefeitura."
+  },
+  {
+   "key": "KAN-25",
+   "type": "História",
+   "summary": "Painel da prefeitura",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 8,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [],
+   "description": "Como gestor, quero ver leituras por placa e danos relatados, para priorizar manutenção. Dados ainda simulados."
+  },
+  {
+   "key": "KAN-27",
+   "type": "Tarefa",
+   "summary": "Corrigir: QR escondido na Trilha",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 1,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: o botão Ler QR só aparecia a menos de 60 m. Erro: condição de distância no card. Corrigido."
+  },
+  {
+   "key": "KAN-28",
+   "type": "Tarefa",
+   "summary": "Corrigir: câmera travava sem leitor de QR",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 1,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: no iPhone e no computador a leitura nunca terminava. Erro: simulação desligada com a câmera aberta. Corrigido."
+  },
+  {
+   "key": "KAN-29",
+   "type": "Tarefa",
+   "summary": "Corrigir: ficha da Trilha sobre a história",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 1,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: a ficha de rota ficava por cima da página da estátua. Erro: estado não limpo ao abrir a história. Corrigido."
+  },
+  {
+   "key": "KAN-30",
+   "type": "Tarefa",
+   "summary": "Corrigir: ficha do Passaporte sem fechar",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 1,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: não havia X nem arraste para fechar. Corrigido."
+  },
+  {
+   "key": "KAN-31",
+   "type": "Tarefa",
+   "summary": "Corrigir: ficha do Passaporte presa na lista",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 2,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: com a lista rolada, a ficha abria sob a barra de abas. Erro: renderizada dentro do contêiner rolável. Corrigido com portal."
+  },
+  {
+   "key": "KAN-34",
+   "type": "Tarefa",
+   "summary": "Teste de usabilidade com moradores",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 3,
+   "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+   "labels": [],
+   "description": "Teste com usuários do protótipo navegável: leitura da placa, bio, áudio e convite ao museu. Achados viraram as correções KAN-27 a KAN-31."
+  },
+  {
+   "key": "KAN-16",
+   "type": "História",
+   "summary": "Narração em áudio real (voz sintetizada)",
+   "status": "Em andamento",
+   "epic": "KAN-5",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Como visitante, quero ouvir a bio narrada, para acompanhar sem ler."
+  },
+  {
+   "key": "KAN-17",
+   "type": "História",
+   "summary": "Audiodescrição das 15 peças",
+   "status": "Em andamento",
+   "epic": "KAN-5",
+   "points": 5,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Como visitante cego ou com baixa visão, quero a audiodescrição de cada peça."
+  },
+  {
+   "key": "KAN-18",
+   "type": "História",
+   "summary": "Curadoria com fontes no CMS",
+   "status": "Em andamento",
+   "epic": "KAN-5",
+   "points": 8,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Como curador, quero cadastrar bios e fontes no CMS, para manter o conteúdo verificável."
+  },
+  {
+   "key": "KAN-23",
+   "type": "História",
+   "summary": "Cache dos lugares visitados",
+   "status": "A fazer",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Como visitante, quero que o app lembre por onde passei ao reabrir e sem internet."
+  },
+  {
+   "key": "KAN-26",
+   "type": "História",
+   "summary": "Visualização 3D e AR da peça",
+   "status": "Em andamento",
+   "epic": "KAN-8",
+   "points": 8,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Como visitante logado, quero ver a peça em 3D, para preservar a memória. Hoje é uma prévia; falta modelo real."
+  },
+  {
+   "key": "KAN-32",
+   "type": "Tarefa",
+   "summary": "Plano de testes por etapa do fluxo",
+   "status": "Em andamento",
+   "epic": "KAN-9",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Um caso de teste por tela do fluxo (placa, página, áudio, museu, trilha, painel). Base para os testes automatizados do CI."
+  },
+  {
+   "key": "KAN-40",
+   "type": "Tarefa",
+   "summary": "Repositório GitHub público com o código do Make",
+   "status": "Concluído",
+   "epic": "KAN-38",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Código versionado em EneasDavid/memoria-urbana-maceio, enviado pelo Figma Make. Repositório público."
+  },
+  {
+   "key": "KAN-41",
+   "type": "Tarefa",
+   "summary": "Pipeline de CI no GitHub Actions",
+   "status": "Concluído",
+   "epic": "KAN-38",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Todo push e PR na main roda tsc, build, testes e pnpm audit (.github/workflows/ci.yml). Aceite: badge do CI verde no README."
+  },
+  {
+   "key": "KAN-42",
+   "type": "Tarefa",
+   "summary": "Testes de dados e de integração (smoke)",
+   "status": "Concluído",
+   "epic": "KAN-38",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "tests/data.test.mjs (ids únicos, coordenadas em Maceió, museu em todo monumento, fontes HTTPS) e tests/smoke.test.mjs (sobe o build e confere página, assets e logo). Relaciona-se com KAN-32."
+  },
+  {
+   "key": "KAN-43",
+   "type": "Tarefa",
+   "summary": "Deploy contínuo na Vercel",
+   "status": "Em andamento",
+   "epic": "KAN-38",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Importar o repositório na Vercel com vercel.json (Vite, rewrites SPA, headers de segurança) e publicar a cada push na main, com preview por PR. Aceite: URL de produção no README."
+  },
+  {
+   "key": "KAN-44",
+   "type": "Tarefa",
+   "summary": "Sincronizar backlog do Jira com Issues do GitHub",
+   "status": "Concluído",
+   "epic": "KAN-38",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Workflow jira-sync.yml + .github/jira-backlog.json: uma issue por task com a chave KAN-xx no título, milestone por sprint e issue fechada quando a task está concluída."
+  },
+  {
+   "key": "KAN-45",
+   "type": "Tarefa",
+   "summary": "Corrigir: novo monumento no painel sem campo museum",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [
+    "bug"
+   ],
+   "description": "Falha: o CI falhava no tsc. Erro: o botão Novo monumento criava o objeto sem museum. Corrigido: nasce com museum vazio."
+  },
+  {
+   "key": "KAN-47",
+   "type": "Tarefa",
+   "summary": "Vincular commits e PRs ao Jira (GitHub for Jira)",
+   "status": "A fazer",
+   "epic": "KAN-38",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Instalar o app GitHub for Atlassian e autorizar o repositório, para ver commits, branches e PRs com KAN-xx na aba Desenvolvimento do Jira."
+  },
+  {
+   "key": "KAN-33",
+   "type": "Tarefa",
+   "summary": "Camada de testes de segurança OWASP",
+   "status": "A fazer",
+   "epic": "KAN-9",
+   "points": 5,
+   "sprint": "Sprint 6 · Segurança e validação",
+   "labels": [],
+   "description": "Testes guiados pelo OWASP Top 10: cabeçalhos, dependências vulneráveis, entrada do relato de dano e dados do login."
+  },
+  {
+   "key": "KAN-35",
+   "type": "História",
+   "summary": "Medir conversão rua → museu",
+   "status": "A fazer",
+   "epic": "KAN-6",
+   "points": 5,
+   "sprint": "Sprint 6 · Segurança e validação",
+   "labels": [],
+   "description": "Como gestor, quero saber quantas leituras de placa viram visita ao museu."
+  },
+  {
+   "key": "KAN-36",
+   "type": "Tarefa",
+   "summary": "Publicar e conectar o CMS ao app",
+   "status": "A fazer",
+   "epic": "KAN-5",
+   "points": 5,
+   "sprint": "Sprint 6 · Segurança e validação",
+   "labels": [],
+   "description": "Publicar o CMS e trocar os dados fixos do app pelos do CMS."
+  },
+  {
+   "key": "KAN-46",
+   "type": "Tarefa",
+   "summary": "Proteger a main: PR com CI verde obrigatório",
+   "status": "A fazer",
+   "epic": "KAN-38",
+   "points": 2,
+   "sprint": "Sprint 6 · Segurança e validação",
+   "labels": [],
+   "description": "Regra de proteção de branch: PR revisado em par e status check do CI obrigatório."
+  },
+  {
+   "key": "KAN-37",
+   "type": "Tarefa",
+   "summary": "Piloto com placas físicas NFC/QR",
+   "status": "A fazer",
+   "epic": "KAN-4",
+   "points": 8,
+   "sprint": "Sprint 7 · Piloto e entrega",
+   "labels": [],
+   "description": "Instalar placas NFC/QR em monumentos piloto e medir leituras reais."
+  }
+ ]
+}
