@@ -1,0 +1,110 @@
+name: Jira → GitHub Issues
+
+# Espelha o backlog do Jira (projeto KAN) em Issues do GitHub.
+# Fonte: .github/jira-backlog.json (exportado do Jira a cada planning).
+# - Uma issue por task, com a chave no título: "[KAN-23] Cache dos lugares visitados"
+# - Milestone = sprint (com data de fim), labels = épico, tipo e status
+# - Task "Concluído" no Jira → issue fechada; reaberta se voltar para "A fazer"/"Em andamento"
+# É idempotente: rodar de novo só atualiza o que mudou.
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/jira-backlog.json']
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: jira-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sincronizar issues, labels e milestones
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs')
+            const data = JSON.parse(fs.readFileSync('.github/jira-backlog.json', 'utf8'))
+            const { owner, repo } = context.repo
+            const jiraBase = data.jiraBaseUrl
+
+            // ---------- labels ----------
+            const wantedLabels = new Map()
+            const add = (name, color, description = '') => wantedLabels.set(name, { color, description })
+            const epicName = Object.fromEntries(data.epics.map((e) => [e.key, e.summary.slice(0, 50)]))
+            for (const e of data.epics) add(epicName[e.key], e.color || '5319e7', `Épico ${e.key} no Jira`)
+            add('tipo:história', '1d76db'); add('tipo:task', '0e8a16'); add('tipo:bug', 'd73a4a'); add('tipo:épico', '5319e7')
+            add('status:a-fazer', 'ededed'); add('status:em-andamento', 'fbca04'); add('status:concluído', '0e8a16')
+            add('jira', '0052cc', 'Espelhada do Jira KAN')
+            const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, { owner, repo, per_page: 100 })
+            for (const [name, { color, description }] of wantedLabels) {
+              const cur = existingLabels.find((l) => l.name === name)
+              if (!cur) await github.rest.issues.createLabel({ owner, repo, name, color, description })
+              else if (cur.color !== color || (cur.description || '') !== description)
+                await github.rest.issues.updateLabel({ owner, repo, name, color, description })
+            }
+
+            // ---------- milestones (sprints) ----------
+            const milestones = await github.paginate(github.rest.issues.listMilestones, { owner, repo, state: 'all', per_page: 100 })
+            const msByTitle = {}
+            for (const s of data.sprints) {
+              const body = `${s.goal}\n\nPeríodo: ${s.start} a ${s.end} · estado no Jira: ${s.state}`
+              const due_on = `${s.end}T23:59:59Z`
+              const state = s.state === 'closed' ? 'closed' : 'open'
+              let ms = milestones.find((m) => m.title === s.name)
+              if (!ms) ms = (await github.rest.issues.createMilestone({ owner, repo, title: s.name, description: body, due_on, state })).data
+              else ms = (await github.rest.issues.updateMilestone({ owner, repo, milestone_number: ms.number, description: body, due_on, state })).data
+              msByTitle[s.name] = ms.number
+            }
+
+            // ---------- issues ----------
+            const all = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'all', per_page: 100 })
+            const byKey = {}
+            for (const i of all) {
+              if (i.pull_request) continue
+              const m = i.title.match(/^\[(KAN-\d+)\]/)
+              if (m) byKey[m[1]] = i
+            }
+            const statusLabel = { 'A fazer': 'status:a-fazer', 'Em andamento': 'status:em-andamento', 'Concluído': 'status:concluído' }
+            const typeLabel = { 'História': 'tipo:história', 'Tarefa': 'tipo:task', 'Bug': 'tipo:bug', 'Epic': 'tipo:épico' }
+            let created = 0, updated = 0, closed = 0
+            for (const t of data.issues) {
+              const title = `[${t.key}] ${t.summary}`
+              const labels = ['jira', statusLabel[t.status] || 'status:a-fazer', typeLabel[t.type] || 'tipo:task']
+              if (t.epic && epicName[t.epic]) labels.push(epicName[t.epic])
+              if (t.type === 'Epic' && epicName[t.key]) labels.push(epicName[t.key])
+              if (t.labels?.includes('bug')) labels.push('tipo:bug')
+              const body = [
+                `**Jira:** [${t.key}](${jiraBase}/browse/${t.key}) · **Story points:** ${t.points ?? '—'} · **Sprint:** ${t.sprint || 'Backlog'}`,
+                '',
+                t.description || '',
+                '',
+                '---',
+                `_Sincronizada automaticamente do Jira. Cite \`${t.key}\` no commit ou no PR para ligar o trabalho a esta task._`,
+              ].join('\n')
+              const milestone = t.sprint ? msByTitle[t.sprint] ?? null : null
+              const done = t.status === 'Concluído'
+              let issue = byKey[t.key]
+              if (!issue) {
+                issue = (await github.rest.issues.create({ owner, repo, title, body, labels, milestone })).data
+                created++
+              } else {
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, title, body, labels, milestone })
+                updated++
+              }
+              if (done && issue.state !== 'closed') {
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'completed' })
+                closed++
+              } else if (!done && issue.state === 'closed') {
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'open' })
+              }
+            }
+            core.summary.addHeading('Jira → GitHub').addRaw(`Criadas: ${created} · Atualizadas: ${updated} · Fechadas: ${closed}`).write()
