@@ -1,0 +1,1 @@
+"""Fixtures dos testes."""
