@@ -51,6 +51,9 @@ jobs:
       - name: Testes do login (sessão, PKCE, claims, open redirect)
         run: node --experimental-strip-types --no-warnings --test tests/auth.test.mjs
 
+      - name: Testes da narração (trechos, palavra falada, voz pt-BR)
+        run: node --experimental-strip-types --no-warnings --test tests/speech.test.mjs
+
       - name: Testes de integração (smoke no build servido)
         run: node --experimental-strip-types --no-warnings --test tests/smoke.test.mjs
 
