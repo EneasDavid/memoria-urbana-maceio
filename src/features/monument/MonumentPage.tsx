@@ -159,7 +159,7 @@ export function MonumentPage({ id }: { id: string }) {
             <ReportSheet
               m={m}
               onClose={() => setReport(false)}
-              onSend={(r: Omit<Report, 'id' | 'at' | 'status'>) => queueReport(r)}
+              onSend={(r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => queueReport(r, media)}
               sentText={<>Seu relato sobre <b className="text-black">{m.name}</b> ficou salvo neste aparelho e será enviado assim que o serviço de relatos entrar no ar.</>}
             />
           </div>
