@@ -15,6 +15,21 @@
 | Backlog e sprints (Jira, projeto KAN) | https://ic-team-yrsngn10.atlassian.net/jira/software/projects/KAN/boards/1 |
 | Issues e sprints no GitHub (espelho do Jira) | https://github.com/EneasDavid/memoria-urbana-maceio/milestones |
 
+## Rotas
+
+| URL | Quem acessa | O que é |
+|---|---|---|
+| `/` | todos, sem login | Lista de monumentos (cada card abre em nova aba) |
+| `/monumento/:id` | todos, sem login | Página do monumento, aberta pelo QR/NFC da placa: bio, narração, audiodescrição, convite ao museu e relato de dano. Sem menus nem botão voltar |
+| `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) |
+| `/app` | conta (participante) | Trilha Cultural (em construção) |
+| `/painel` | papel gestor | Painel da prefeitura |
+| `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
+
+## Arquitetura
+
+A arquitetura completa (FastAPI, Celery + Redis, Firebase, OAuth, níveis de acesso, APIs e fases por sprint) está em [`docs/arquitetura.md`](docs/arquitetura.md). O esqueleto do backend está em [`backend/`](backend/).
+
 ## Problema
 
 As estátuas da orla e das praças do Centro viraram paisagem. Elas são vistas todos os dias, mas pouca gente sabe quem foram os homenageados ou por que estão ali. Algumas já foram alvo de deboche e de vandalismo. Os museus que guardam essa memória ficam a poucos quarteirões e recebem pouca visita. O caso Braskem tornou o tema mais urgente: ruas, praças e igrejas de bairros inteiros (Pinheiro, Bebedouro, Mutange) foram esvaziadas e hoje só existem na memória.
@@ -68,7 +83,9 @@ O último dia de cada sprint é de review (demo do incremento), retrospectiva e 
 pnpm install
 pnpm build
 node --experimental-strip-types --test tests/data.test.mjs   # integridade do conteúdo
-node --experimental-strip-types --test tests/smoke.test.mjs  # integração: sobe o build e verifica página, assets e logo
+node --experimental-strip-types --test tests/smoke.test.mjs  # integração: sobe o build e verifica rotas, assets e logo
+node --experimental-strip-types --test tests/auth.test.mjs   # login: sessão assinada, PKCE, claims, open redirect
+cd backend && pytest                                          # RBAC, cache, relatos com rate limit
 ```
 
 - `tests/data.test.mjs` cobre o conteúdo: ids e placas únicos, coordenadas dentro de Maceió, bio preenchida, **convite ao museu presente em todos os monumentos** e fontes em HTTPS.
