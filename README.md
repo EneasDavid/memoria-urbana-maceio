@@ -25,6 +25,7 @@
 | `/app` | conta (participante) | Trilha Cultural (em construção) |
 | `/painel` | papel gestor | Painel da prefeitura |
 | `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
+| `/privacidade` `/termos` `/cookies` `/acessibilidade` `/creditos` `/sobre` | todos | Páginas legais, linkadas no rodapé de toda página pública |
 
 ## Arquitetura
 
@@ -85,12 +86,40 @@ pnpm build
 node --experimental-strip-types --test tests/data.test.mjs   # integridade do conteúdo
 node --experimental-strip-types --test tests/smoke.test.mjs  # integração: sobe o build e verifica rotas, assets e logo
 node --experimental-strip-types --test tests/auth.test.mjs   # login: sessão assinada, PKCE, claims, open redirect
+node --experimental-strip-types --test tests/compliance.test.mjs  # 17 regras legais e LGPD
+node --experimental-strip-types --test tests/a11y.test.mjs        # axe-core WCAG 2.1 AA + teclado (precisa do Chromium do Playwright)
 cd backend && pytest                                          # RBAC, cache, relatos com rate limit
 ```
 
 - `tests/data.test.mjs` cobre o conteúdo: ids e placas únicos, coordenadas dentro de Maceió, bio preenchida, **convite ao museu presente em todos os monumentos** e fontes em HTTPS.
 - `tests/smoke.test.mjs` sobe o build com `vite preview` e confere a página inicial, todos os JS/CSS, a logo e o favicon. Também garante que não há sourcemap inline nem segredos no bundle.
 - Camada OWASP: `pnpm audit` (A06, componentes vulneráveis) e cabeçalhos de segurança em `vercel.json` (nosniff, frame-options, referrer, permissions e HSTS).
+
+## Conformidade legal, LGPD e acessibilidade
+
+O job **Conformidade** do CI barra o merge quando algum destes 17 itens quebra:
+
+| # | Item | Onde está | Verificação |
+|---|---|---|---|
+| 1 | Política de privacidade | `/privacidade` | seções obrigatórias (controlador, dados, base legal, direitos, encarregado) |
+| 2 | Termos de serviço | `/termos` | seções obrigatórias e foro |
+| 3 | Aviso de cookies | `CookieNotice` + `/cookies` | aviso montado; todo cookie usado está na tabela |
+| 4 | Política de reembolso | Termos, "Uso gratuito" | nenhum código de pagamento em `src/` e `api/` |
+| 5 | Formulários na LGPD | formulário de relato | link para a política em todo formulário |
+| 6 | Só dados necessários | relato e login | nenhum campo de nome, e-mail, telefone ou CPF; escopo `openid email profile` |
+| 7 | Scripts de tracking | `vercel.json` (CSP) | nenhum rastreador no bundle; CSP só com origens declaradas |
+| 8 | Acessibilidade | `/acessibilidade` | `lang="pt-BR"`, axe-core sem violações graves em 12 rotas, claro e escuro |
+| 9 | Alt nas imagens | todo `<img>` | `alt` obrigatório (texto ou vazio decorativo) |
+| 10 | Contraste corrigido | cores das páginas públicas | regra `color-contrast` do axe (AA 4,5:1) |
+| 11 | Navegação por teclado | link "Pular para o conteúdo", foco visível, diálogo com Esc | testes de teclado no Playwright |
+| 12 | Sem avaliações falsas | todo o site | nenhuma nota ou depoimento; dados de demonstração marcados |
+| 13 | Sem promessas falsas | textos públicos | nada de "100% seguro" ou "oficial"; relato diz que fica salvo no aparelho |
+| 14 | Copyright das imagens | `/creditos` | toda foto com crédito, fonte e licença |
+| 15 | Dados da empresa | `/sobre` + `src/legal/org.ts` | responsável, natureza, contato e aviso de que não há CNPJ |
+| 16 | Conformidade LGPD | `docs/lgpd.md` | registro das operações, base legal, retenção, direitos, incidente |
+| 17 | Riscos jurídicos | `docs/riscos-juridicos.md` | matriz com probabilidade, impacto, mitigação e dono |
+
+O que falta, e está no Jira: autorização das fotos de terceiros, e-mail do encarregado, revisão jurídica pelo orientador e acessibilidade do `/prototipo`.
 
 ## Rodar localmente
 
