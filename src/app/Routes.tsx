@@ -5,6 +5,7 @@ import { MonumentPage } from '../features/monument/MonumentPage'
 import { NotFound } from '../features/monument/NotFound'
 import { LoginPage } from '../features/auth/LoginPage'
 import { AuthGate } from '../features/auth/AuthGate'
+import { useSystemTheme } from './theme'
 
 // Área logada e protótipo ficam em chunks separados: quem lê a placa baixa só a página pública.
 const AppHome = lazy(() => import('../features/trail/AppHome').then((m) => ({ default: m.AppHome })))
@@ -15,6 +16,8 @@ const Loading = () => <div className="fixed inset-0 grid place-items-center bg-[
 
 export function Routes() {
   const route = matchRoute(window.location.pathname, window.location.search)
+  // O protótipo tem o próprio botão de modo noturno; o resto segue o tema do aparelho.
+  useSystemTheme(route.name !== 'prototype')
 
   useEffect(() => {
     document.documentElement.lang = 'pt-BR'
