@@ -2,6 +2,9 @@
 // Cada página é uma URL de verdade (abre em nova aba, funciona com QR/NFC e com o botão
 // voltar do próprio navegador), então o app não precisa desenhar menus de "voltar".
 
+export const LEGAL_PAGES = ['privacidade', 'termos', 'cookies', 'acessibilidade', 'creditos', 'sobre'] as const
+export type LegalPage = (typeof LEGAL_PAGES)[number]
+
 export type Route =
   | { name: 'index' }
   | { name: 'monument'; id: string }
@@ -9,6 +12,7 @@ export type Route =
   | { name: 'app' }
   | { name: 'panel' }
   | { name: 'prototype' }
+  | { name: 'legal'; page: LegalPage }
   | { name: 'notFound' }
 
 /** Só aceita caminhos internos: bloqueia open redirect ("//site", "https://site", "/\\site"). */
@@ -26,6 +30,8 @@ export function matchRoute(pathname: string, search = ''): Route {
   if (path === '/app') return { name: 'app' }
   if (path === '/painel') return { name: 'panel' }
   if (path === '/prototipo') return { name: 'prototype' }
+  const legal = path.slice(1) as LegalPage
+  if ((LEGAL_PAGES as readonly string[]).includes(legal)) return { name: 'legal', page: legal }
   return { name: 'notFound' }
 }
 
