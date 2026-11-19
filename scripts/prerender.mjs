@@ -48,7 +48,9 @@ function page({ route, title, description, body = '', jsonld = [], index = true 
     `<meta property="og:url" content="${esc(url)}">`,
     `<meta property="og:image" content="${SITE}/memoria-urbana-logo.png">`,
     `<meta name="twitter:card" content="summary">`,
-    `<meta name="theme-color" content="#0b2f49">`,
+    `<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">`,
+    `<meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">`,
+    `<meta name="color-scheme" content="light dark">`,
     VERIFY ? `<meta name="google-site-verification" content="${esc(VERIFY)}">` : '',
     ...jsonld.map(ld),
   ].filter(Boolean).join('\n    ')
