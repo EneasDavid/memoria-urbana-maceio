@@ -225,7 +225,7 @@ export function Website({ id, setId, user, setUser, dark, setDark, onTrack, onRe
           {[
             ['qr', 'Aponte a câmera', 'O QR da placa abre esta página no navegador. Sem app, sem cadastro.'],
             ['nfc', 'Ou encoste o celular', 'A notificação da tag NFC aparece na tela inicial e abre a mesma página.'],
-            ['star', 'Quer pontuar? Entre e baixe o app', 'Login Google + app leve: trilha, carimbos, foto do monumento e RA.'],
+            ['placa', 'Quer pontuar? Entre e baixe o app', 'Login Google + app leve: trilha, carimbos, foto do monumento e RA.'],
           ].map(([ic, t, d]) => (
             <div key={t} className="flex gap-3"><span className="w-11 h-11 rounded-[12px] bg-white grid place-items-center text-[#2c8585] shrink-0"><Icon name={ic as 'qr'} size={22} /></span><div><div className="text-[16px] font-semibold">{t}</div><div className="text-[14px] text-black/55 leading-snug mt-0.5">{d}</div></div></div>
           ))}

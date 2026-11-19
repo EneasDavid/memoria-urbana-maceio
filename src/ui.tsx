@@ -3,6 +3,10 @@ import { splitSpeech, estimateMs, wordAt, pickVoice } from './shared/speech'
 
 // Ícones em linha fina, no espírito dos SF Symbols
 const paths: Record<string, ReactNode> = {
+  // Placa da logo: a placa de rua no poste, com o parafuso no topo e a onda da orla dentro
+  placa: <><rect x="5" y="2.5" width="14" height="13.5" rx="2.6" /><circle cx="12" cy="5.4" r="0.7" fill="currentColor" stroke="none" /><path d="M7.8 12.2c1.4-1 2.8 1 4.2 0s2.8 1 4.2 0" /><path d="M12 16v5.5" /></>,
+  // Estátua no pedestal (no lugar da estrela, que parecia nota de avaliação)
+  estatua: <><circle cx="12" cy="4.6" r="1.9" /><path d="M12 6.8v5.4M9.4 9h5.2M10.4 12.2 9.6 16M13.6 12.2l.8 3.8" /><path d="M7.5 16h9v5h-9zM6 21h12" /></>,
   image: <><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="9" cy="10" r="1.8" /><path d="M21 16l-5-5-9 9" /></>,
   home: <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />,
   map: <><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z" /><path d="M9 4v13M15 6.5v13" /></>,
@@ -138,7 +142,7 @@ export function RarityPill({ rarity }: { rarity: 'Comum' | 'Raro' | 'Lendário' 
     Raro: 'bg-[#2c8585]/12 text-[#1f6b6b]',
     Lendário: 'bg-gradient-to-r from-[#f3d27a] to-[#dda93f] text-[#5a3d00]',
   }
-  return <span className={`inline-flex items-center gap-1 h-[22px] px-2 rounded-full text-[11px] font-bold uppercase tracking-[0.04em] ${styles[rarity]}`}>{rarity === 'Lendário' && <Icon name="star" size={11} stroke={2.4} />}{rarity}</span>
+  return <span className={`inline-flex items-center gap-1 h-[22px] px-2 rounded-full text-[11px] font-bold uppercase tracking-[0.04em] ${styles[rarity]}`}>{rarity === 'Lendário' && <Icon name="placa" size={11} stroke={2.4} />}{rarity}</span>
 }
 
 // Carimbo circular (passaporte)
@@ -207,6 +211,49 @@ export function GoogleG({ size = 18 }: { size?: number }) {
 }
 
 // Ondas da logo (traço da marca)
+// ===== Identidade (detalhes tirados da logo) =====
+// Emblema: a logo dentro dos dois arcos da marca, verde-água à esquerda e dourado à direita.
+export function LogoMark({ size = 56, className = '' }: { size?: number; className?: string }) {
+  const r = 46
+  return (
+    <span className={`relative inline-grid place-items-center shrink-0 ${className}`} style={{ width: size, height: size }}>
+      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" aria-hidden="true">
+        <path d={`M ${50 - r * Math.cos(0.35)} ${50 + r * Math.sin(0.35)} A ${r} ${r} 0 0 1 ${50 + r * Math.cos(1.2)} ${50 - r * Math.sin(1.2)}`} fill="none" stroke="#2c8585" strokeWidth="4" strokeLinecap="round" />
+        <path d={`M ${50 + r * Math.cos(0.9)} ${50 - r * Math.sin(0.9)} A ${r} ${r} 0 0 1 ${50 + r * Math.cos(-0.5)} ${50 - r * Math.sin(-0.5)}`} fill="none" stroke="#dda93f" strokeWidth="4" strokeLinecap="round" />
+      </svg>
+      <img src="/memoria-urbana-logo.png" alt="" width={size} height={size} className="rounded-full object-cover mu-multiply" style={{ width: size * 0.8, height: size * 0.8 }} />
+    </span>
+  )
+}
+
+// "— em Maceió —": a assinatura da logo, com os dois traços
+export function EmMaceio({ className = '' }: { className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 text-[#1f6b6b] font-semibold ${className}`} aria-hidden="true">
+      <span className="h-px w-6 bg-current opacity-70" />em Maceió<span className="h-px w-6 bg-current opacity-70" />
+    </span>
+  )
+}
+
+// Silhueta da cidade da base da placa: farol, igreja, coqueiro e prédios da orla, sobre a onda
+export function Skyline({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 320 44" preserveAspectRatio="xMidYMax meet" className={className} aria-hidden="true">
+      <g fill="#0b2f49" className="mu-skyline">
+        <path d="M30 40V14l2-4h4l2 4v26zM32 10l2-5 2 5z" />
+        <path d="M70 40V22l14-10 14 10v18zM80 40v-8h8v8zM84 12V5M81.5 7.5h5" stroke="#0b2f49" strokeWidth="1.6" />
+        <path d="M58 40V27h8v13z" />
+        <path d="M124 40c1-10 2-17 2-24h2c0 7 1 14 2 24z" />
+        <path d="M127 16c-6-5-13-4-17 0 6-2 11-1 15 2-5 0-10 3-12 8 5-4 10-6 14-6 1 4 1 8-1 12 4-3 5-8 4-12 4 1 9 4 12 8-2-6-8-9-13-9 3-3 8-4 14-2-5-4-12-4-16 1z" />
+        <path d="M166 40V18h14v22zM184 40V8h12v32zM200 40V24h10v16z" />
+        <path d="M232 40V20l12-7 12 7v20zM240 40v-9h8v9z" />
+        <path d="M262 40V16h4v-4h4v4h4v24z" />
+      </g>
+      <path d="M0 42c20 0 20-4 40-4s20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4" fill="none" stroke="#2c8585" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export function Waves({ className = '', color = '#2c8585' }: { className?: string; color?: string }) {
   return (
     <svg viewBox="0 0 120 16" preserveAspectRatio="none" className={className} aria-hidden="true">

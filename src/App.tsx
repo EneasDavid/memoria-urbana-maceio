@@ -72,7 +72,7 @@ export default function App() {
   const tips: [IconName, string, string][] = [
     ['nfc', '1 · Encoste ou aponte', 'Notificação de NFC na tela inicial, ou câmera no QR'],
     ['globe', '2 · Página do monumento', 'Abre no navegador: livre, sem app e sem cadastro'],
-    ['star', '3 · Quer pontuar?', 'Login com Google (OAuth) e app leve de 6 MB'],
+    ['placa', '3 · Quer pontuar?', 'Login com Google (OAuth) e app leve de 6 MB'],
     ['scan', '4 · No app', 'Trilha, carimbos, foto do monumento (+XP) e RA'],
     ['flag', 'Relatos', 'Obra danificada? Avise em 2 toques, sem conta'],
   ]

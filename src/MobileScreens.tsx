@@ -127,7 +127,7 @@ export function Photo({ m, className = '', credit = false }: { m: Monument; clas
 }
 
 export function KindPill({ kind }: { kind: Monument['kind'] }) {
-  const ic: IconName = kind === 'Praça' ? 'building' : kind === 'Busto' ? 'person' : 'star'
+  const ic: IconName = kind === 'Praça' ? 'building' : kind === 'Busto' ? 'person' : 'estatua'
   return <span className="inline-flex items-center gap-1 h-[22px] px-2 rounded-full bg-white/85 backdrop-blur text-black/70 text-[11px] font-bold uppercase tracking-[0.04em]"><Icon name={ic} size={11} stroke={2.4} />{kind}</span>
 }
 
@@ -219,7 +219,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
         ) : (
           <>
             <ul className="mt-3 space-y-1.5 text-[13.5px] text-white/85">
-              <li className="flex items-center gap-2"><Icon name="star" size={15} className="text-[#dda93f]" />Pontos e carimbos em cada placa</li>
+              <li className="flex items-center gap-2"><Icon name="placa" size={15} className="text-[#dda93f]" />Pontos e carimbos em cada placa</li>
               <li className="flex items-center gap-2"><Icon name="cube" size={15} className="text-[#dda93f]" />Monumentos em 3D e realidade aumentada</li>
               <li className="flex items-center gap-2"><Icon name="book" size={15} className="text-[#dda93f]" />Passaporte cultural de Maceió</li>
             </ul>

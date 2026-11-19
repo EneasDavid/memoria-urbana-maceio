@@ -129,7 +129,7 @@ export function VisitorsView({ events }: { events: TrackEvent[] }) {
   }, [])
   const feed = [...events.slice(0, 5).map((e) => ({ ...e, mine: true })), ...sim.map((e) => ({ ...e, mine: false }))].slice(0, 12)
   const max = funnel[0].value
-  const iconFor: Record<string, IconName> = { nfc_read: 'nfc', qr_scan: 'qr', audio_play: 'speaker', checkin: 'pin', gps_checkin: 'pin', stamp: 'star', sync: 'sync', audiodesc: 'eye', open_story: 'book', login: 'person', logout: 'person', pe_link: 'book' }
+  const iconFor: Record<string, IconName> = { nfc_read: 'nfc', qr_scan: 'qr', audio_play: 'speaker', checkin: 'pin', gps_checkin: 'pin', stamp: 'placa', sync: 'sync', audiodesc: 'eye', open_story: 'book', login: 'person', logout: 'person', pe_link: 'book' }
 
   return (
     <div className="space-y-4">
@@ -221,7 +221,7 @@ export function TrailView() {
     <div className="space-y-4">
       <div className="grid grid-cols-4 gap-4">
         <Kpi icon="users" color="#0b2f49" label="Jogadores ativos (30 dias)" value="846" delta="21%" />
-        <Kpi icon="star" color="#dda93f" label="Carimbos emitidos" value="2.904" delta="17%" />
+        <Kpi icon="placa" color="#dda93f" label="Carimbos emitidos" value="2.904" delta="17%" />
         <Kpi icon="trophy" color="#2c8585" label="Trilhas completas" value="73" note="8 de 8 pontos" />
         <Kpi icon="book" color="#a8322a" label="Passaportes PE vinculados" value="129" note="proposta de parceria" />
       </div>

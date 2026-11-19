@@ -127,7 +127,7 @@ function MobileWeb({ id, user, onLogin, onTrack, onReport }: { id: string; user:
           <Photo m={m} className="absolute inset-0" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 30%, transparent 45%, rgba(5,20,32,0.9) 100%)' }} />
           <div className="absolute left-5 top-[58px] flex items-center gap-2 text-white"><img src="/memoria-urbana-logo.png" alt="" className="w-8 h-8 rounded-full bg-white object-cover" /><span className="text-[13px] font-semibold">Memória Urbana Maceió</span></div>
-          {!cta && <button onClick={onLogin} className="absolute right-4 top-[56px] h-8 px-3 rounded-full bg-black/35 backdrop-blur-xl text-white text-[12.5px] font-semibold flex items-center gap-1.5 active:scale-95 transition"><Icon name="star" size={13} />{user ? 'Pontuar' : 'Entrar'}</button>}
+          {!cta && <button onClick={onLogin} className="absolute right-4 top-[56px] h-8 px-3 rounded-full bg-black/35 backdrop-blur-xl text-white text-[12.5px] font-semibold flex items-center gap-1.5 active:scale-95 transition"><Icon name="placa" size={13} />{user ? 'Pontuar' : 'Entrar'}</button>}
           <div className="absolute left-5 right-5 bottom-5 text-white">
             <div className="flex items-center gap-2 mb-2"><KindPill kind={m.kind} /><span className="text-[12px] font-semibold tracking-[0.1em] text-white/75">PLACA {m.plate}</span></div>
             <h1 className="text-[30px] font-bold tracking-[-0.025em] leading-[1.05]">{m.name}</h1>
@@ -168,7 +168,7 @@ function MobileWeb({ id, user, onLogin, onTrack, onReport }: { id: string; user:
         <div className="absolute left-3 right-3 bottom-[86px] z-20 rounded-[24px] bg-[#0b2f49] text-white p-4 shadow-[0_14px_40px_rgba(0,0,0,0.35)] sheet-up">
           <button onClick={() => setCta(false)} aria-label="Fechar" className="absolute right-3 top-3 w-7 h-7 rounded-full bg-white/10 grid place-items-center"><Icon name="x" size={13} stroke={2.6} /></button>
           <div className="flex items-center gap-3 pr-8">
-            <span className="w-11 h-11 rounded-full bg-[#dda93f] text-[#0b2f49] grid place-items-center shrink-0"><Icon name="star" size={22} stroke={2.2} /></span>
+            <span className="w-11 h-11 rounded-full bg-[#dda93f] text-[#0b2f49] grid place-items-center shrink-0"><Icon name="placa" size={22} stroke={2.2} /></span>
             <div><div className="text-[15px] font-semibold leading-tight">Você está em {m.name}: vale +{m.xp} pontos</div><div className="text-[12.5px] text-white/65 leading-snug mt-0.5">Entre com Google e baixe o app para pontuar, fotografar e ver em realidade aumentada.</div></div>
           </div>
           <button onClick={onLogin} className="mt-3 w-full h-[46px] rounded-[13px] bg-white text-black text-[15px] font-semibold flex items-center justify-center gap-2.5"><GoogleG size={18} />{user ? 'Continuar e baixar o app' : 'Pontuar com Google'}</button>
@@ -201,7 +201,7 @@ function Install({ onDone }: { onDone: () => void }) {
           <div className="flex-1"><div className="text-[19px] font-bold leading-tight">Memória Urbana Maceió</div><div className="text-[13.5px] text-black/55">Trilha cultural · Prefeitura de Maceió</div><div className="text-[12.5px] text-black/45 mt-0.5">Grátis · 6 MB · funciona em celulares simples</div></div>
         </div>
         <ul className="mt-5 space-y-2 text-[14px] text-black/70">
-          <li className="flex gap-2"><Icon name="star" size={17} className="text-[#dda93f]" />Pontos e carimbos em cada placa</li>
+          <li className="flex gap-2"><Icon name="placa" size={17} className="text-[#dda93f]" />Pontos e carimbos em cada placa</li>
           <li className="flex gap-2"><Icon name="scan" size={17} className="text-[#2c8585]" />Foto do monumento vale pontos extras</li>
           <li className="flex gap-2"><Icon name="cube" size={17} className="text-[#0b2f49]" />Realidade aumentada e 3D</li>
         </ul>

@@ -476,7 +476,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
               setXp((v) => v + gain)
               pending.forEach((id) => onTrack({ type: 'stamp', label: 'Carimbo reservado confirmado', monument: id, offline: false, identified: true, synced: true }))
               setPending([])
-              window.setTimeout(() => showToast('star', `+${gain} XP · ${pending.length} carimbo(s) guardado(s)`), 2800)
+              window.setTimeout(() => showToast('placa', `+${gain} XP · ${pending.length} carimbo(s) guardado(s)`), 2800)
             }
             setShareRoute(prefs.history)
             setLogin(false)
@@ -499,7 +499,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
         if (photos.includes(id)) return
         setPhotos((p) => [...p, id]); setPhotoLog((l) => ({ ...l, [id]: { at: Date.now(), ...shot } })); addXp(50)
         onTrack({ type: 'stamp', label: 'Foto do monumento enviada (+50 XP)', monument: id, offline: !online, identified: true, synced: online })
-        showToast('star', 'Foto enviada · +50 XP')
+        showToast('placa', 'Foto enviada · +50 XP')
       }} />}
 
       {report && <ReportSheet m={byId(report)} onClose={() => setReport(null)} onSend={async (r, media) => { await onReport(r, media); setMyReports((all) => ({ ...all, [r.monument]: [...(all[r.monument] || []), { kind: r.kind, note: r.note, photo: r.photo, at: Date.now() }] })) }} />}
@@ -518,7 +518,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
             <div className="mx-auto mt-3 w-fit stamp-in"><Stamp label={stampClass(reward.m)} sub={reward.m.area} hue={reward.m.hue} got method={stampLog[reward.m.id]?.method} count={stampLog[reward.m.id]?.count || 1} rotate={-10} size={150} /></div>
             <div className="mt-3 text-[22px] font-bold tracking-[-0.01em] text-black leading-tight">{reward.m.name}</div>
             <div className="mt-2 flex items-center justify-center gap-2"><RarityPill rarity={reward.m.rarity} /><span className="text-[15px] font-bold text-[#1f6b6b]">{reward.pending ? `+${reward.xp} XP ao entrar` : `+${reward.xp} XP`}</span></div>
-            {reward.levelUp && <div className="mt-3 h-8 px-3 mx-auto w-fit rounded-full bg-[#0b2f49] text-white text-[13px] font-semibold flex items-center gap-1.5"><Icon name="star" size={14} />Subiu para o nível {levelFor(xp).level}!</div>}
+            {reward.levelUp && <div className="mt-3 h-8 px-3 mx-auto w-fit rounded-full bg-[#0b2f49] text-white text-[13px] font-semibold flex items-center gap-1.5"><Icon name="placa" size={14} />Subiu para o nível {levelFor(xp).level}!</div>}
             {simulate && user && !reward.pending && <GroupPicker options={nearbyFriends(user, reward.m)} value={stampLog[reward.m.id]?.group || []} onChange={(g) => setGroup(reward.m, g)} />}
             {!user && <p className="mt-3 text-[12.5px] text-black/50 leading-snug">A página continua aberta para você. Entrando com Google, o carimbo é guardado e libera 3D e realidade aumentada.</p>}
             {!user ? (

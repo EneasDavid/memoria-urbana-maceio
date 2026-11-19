@@ -249,3 +249,7 @@ p { text-wrap: pretty; }
 [id] { scroll-margin-top: 24px; }
 input, textarea, select { font-size: max(16px, 1em); } /* iOS não dá zoom ao focar */
 ::selection { background: oklch(76% 0.13 80 / 0.45); }
+
+/* Identidade: silhueta da cidade da logo legível no modo escuro */
+.mu-dark .mu-skyline { fill: #6f97a6; }
+.mu-dark .mu-ink { color: #eef3f4; }
