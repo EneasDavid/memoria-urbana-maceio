@@ -2047,6 +2047,66 @@
    "points": 1,
    "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
    "description": "Pedir links da Ufal, dos museus parceiros e da imprensa local."
+  },
+  {
+   "key": "KAN-184",
+   "type": "Tarefa",
+   "summary": "Área logada igual ao protótipo do Figma (Explorar, Trilha, Passaporte e leitura)",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "/app usa as telas do protótipo do Figma em tela cheia: abas Explorar, Trilha e Passaporte, leitura da placa, carimbo animado e perfil, sem moldura de celular nem relógio 9:41."
+  },
+  {
+   "key": "KAN-185",
+   "type": "Tarefa",
+   "summary": "Área logada sem simulações na conta real",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Conta Google: data e rede reais, só QR/NFC verdadeiros, GPS só com localização real, sem amigos fictícios. Na demonstração as simulações continuam."
+  },
+  {
+   "key": "KAN-186",
+   "type": "Tarefa",
+   "summary": "Aviso antes de abrir a câmera do leitor de placa",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Cartão antes do pedido do navegador: a imagem fica no aparelho e só o código da placa é lido; Permitir câmera ou Agora não."
+  },
+  {
+   "key": "KAN-187",
+   "type": "Tarefa",
+   "summary": "Acessibilidade e testes da área logada no CI",
+   "status": "Concluído",
+   "epic": "KAN-113",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "tests/access.test.mjs: abas, conta real sem simulação, demonstração com simulação e axe-core nas 3 abas no claro e no escuro."
+  },
+  {
+   "key": "KAN-188",
+   "type": "Tarefa",
+   "summary": "Salvar carimbos e pontos da conta no servidor",
+   "status": "A fazer",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "description": "Criar /api/v1/progress (FastAPI + Firestore) para gravar carimbo, XP, fotos e relatos por usuário e carregar ao entrar."
+  },
+  {
+   "key": "KAN-189",
+   "type": "Tarefa",
+   "summary": "Ler QR dentro do site no iPhone (decodificador em JavaScript)",
+   "status": "A fazer",
+   "epic": "KAN-7",
+   "points": 2,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "description": "Safari não tem BarcodeDetector; adicionar decodificador JS leve, carregado só no leitor."
   }
  ]
 }
