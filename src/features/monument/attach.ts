@@ -5,14 +5,20 @@ import { LIMITS, checkBytes, fmtBytes, type MediaKind } from '../../shared/media
 export type Attachment = { blob: Blob; kind: MediaKind; mime: string; bytes: number; preview: string; seconds?: number; label: string }
 export type Prepared = { ok: true; att: Attachment } | { ok: false; reason: string }
 
-export async function prepareAttachment(file: File): Promise<Prepared> {
+export type Stage = 'lendo' | 'verificando' | 'preparando-foto' | 'lendo-video'
+
+export async function prepareAttachment(file: File, onStage: (s: Stage) => void = () => {}): Promise<Prepared> {
   // 1. barra pelo tamanho antes de ler o arquivo para a memória
   if (file.size > LIMITS.videoBytes) return { ok: false, reason: `Arquivo grande demais (${fmtBytes(file.size)}). O máximo é ${LIMITS.videoBytes / 1024 / 1024} MB para vídeo e ${LIMITS.imageInBytes / 1024 / 1024} MB para foto.` }
+  onStage('lendo')
   const bytes = new Uint8Array(await file.arrayBuffer())
+  onStage('verificando')
+  await new Promise((r) => setTimeout(r, 0)) // deixa a animação aparecer antes da checagem
   // 2. tipo real, poliglotas, scripts e dimensões
   const check = checkBytes(bytes, file.type)
   if (!check.ok) return check
-  if (check.kind === 'image') return reencodeImage(new Blob([bytes], { type: check.mime }))
+  if (check.kind === 'image') { onStage('preparando-foto'); return reencodeImage(new Blob([bytes], { type: check.mime })) }
+  onStage('lendo-video')
   return checkVideo(new Blob([bytes], { type: check.mime }), check.mime)
 }
 
@@ -33,23 +39,27 @@ async function reencodeImage(src: Blob): Promise<Prepared> {
   return { ok: true, att: { blob, kind: 'image', mime: 'image/jpeg', bytes: blob.size, preview: URL.createObjectURL(blob), label: `Foto ${w}×${h} · ${fmtBytes(blob.size)} · sem localização` } }
 }
 
-// 4. vídeo: o navegador lê só os metadados para conferir a duração
+// 4. vídeo: o navegador lê só os metadados para conferir a duração.
+//    Se este navegador não decodifica o formato (ex.: HEVC/MOV do iPhone no Chrome do computador), o vídeo
+//    NÃO é recusado: já passou nas checagens de conteúdo, e o servidor confere a duração com ffprobe.
 function checkVideo(blob: Blob, mime: string): Promise<Prepared> {
   const url = URL.createObjectURL(blob)
+  const accept = (seconds?: number): Prepared => ({ ok: true, att: { blob, kind: 'video', mime, bytes: blob.size, preview: url, seconds, label: seconds ? `Vídeo ${seconds} s · ${fmtBytes(blob.size)}` : `Vídeo · ${fmtBytes(blob.size)} · duração conferida no envio` } })
   return new Promise((resolve) => {
     const v = document.createElement('video')
     v.preload = 'metadata'
     v.muted = true
-    const done = (r: Prepared) => { v.removeAttribute('src'); v.load(); if (!r.ok) URL.revokeObjectURL(url); resolve(r) }
-    const timer = window.setTimeout(() => done({ ok: false, reason: 'Não foi possível ler este vídeo.' }), 8000)
+    v.playsInline = true
+    let settled = false
+    const done = (r: Prepared) => { if (settled) return; settled = true; window.clearTimeout(timer); v.removeAttribute('src'); v.load(); if (!r.ok) URL.revokeObjectURL(url); resolve(r) }
+    const timer = window.setTimeout(() => done(accept()), 6000)
     v.onloadedmetadata = () => {
-      window.clearTimeout(timer)
       const s = v.duration
-      if (!Number.isFinite(s) || s <= 0) return done({ ok: false, reason: 'Não foi possível ler a duração do vídeo.' })
-      if (s > LIMITS.videoSeconds + 0.5) return done({ ok: false, reason: `Vídeo longo demais (${Math.round(s)} s). O máximo é ${LIMITS.videoSeconds} s.` })
-      done({ ok: true, att: { blob, kind: 'video', mime, bytes: blob.size, preview: url, seconds: Math.round(s), label: `Vídeo ${Math.round(s)} s · ${fmtBytes(blob.size)}` } })
+      if (!Number.isFinite(s) || s <= 0) return done(accept()) // alguns MP4 só informam a duração ao tocar
+      if (s > LIMITS.videoSeconds + 0.5) return done({ ok: false, reason: `Vídeo longo demais (${Math.round(s)} s). O máximo é ${LIMITS.videoSeconds} s: corte o vídeo e tente de novo.` })
+      done(accept(Math.round(s)))
     }
-    v.onerror = () => { window.clearTimeout(timer); done({ ok: false, reason: 'Formato de vídeo não suportado neste aparelho.' }) }
+    v.onerror = () => done(accept())
     v.src = url
   })
 }

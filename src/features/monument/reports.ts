@@ -23,7 +23,7 @@ function saveMedia(id: number, blob: Blob): Promise<void> {
   })
 }
 
-export function queueReport(r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob): void {
+export async function queueReport(r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob): Promise<void> {
   const at = Date.now()
   try {
     const list = JSON.parse(localStorage.getItem(KEY) || '[]') as unknown[]
@@ -32,5 +32,5 @@ export function queueReport(r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blo
   } catch {
     /* armazenamento indisponível (aba anônima/Safari): o relato se perde, a página segue funcionando */
   }
-  if (media) void saveMedia(at, media)
+  if (media) await saveMedia(at, media)
 }
