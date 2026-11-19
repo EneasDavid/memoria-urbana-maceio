@@ -55,3 +55,34 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-98](https://ic-team-yrsngn10.atlassian.net/browse/KAN-98) | Conformidade 16/17: Conformidade LGPD | ![Conformidade LGPD](conf-privacidade.jpg) |
 | [KAN-99](https://ic-team-yrsngn10.atlassian.net/browse/KAN-99) | Conformidade 17/17: Riscos jurídicos | ![Riscos jurídicos](conf-ci-verde.jpg) |
 | [KAN-100](https://ic-team-yrsngn10.atlassian.net/browse/KAN-100) | CI: job Conformidade (LGPD, acessibilidade, legal) | ![CI: job Conformidade (LGPD, acessibilidade, legal)](conf-ci-verde.jpg) |
+| [KAN-114](https://ic-team-yrsngn10.atlassian.net/browse/KAN-114) | UX 1/20: Squash & stretch | ![UX 1/20: Squash & stretch](ux-acoes-rapidas.jpg) |
+| [KAN-115](https://ic-team-yrsngn10.atlassian.net/browse/KAN-115) | UX 2/20: Antecipação (wind-up) | ![UX 2/20: Antecipação (wind-up)](ux-museu-fitts.jpg) |
+| [KAN-116](https://ic-team-yrsngn10.atlassian.net/browse/KAN-116) | UX 3/20: Encenar o foco (staging) | ![UX 3/20: Encenar o foco (staging)](ux-narracao-foco.jpg) |
+| [KAN-117](https://ic-team-yrsngn10.atlassian.net/browse/KAN-117) | UX 4/20: Pose a pose | ![UX 4/20: Pose a pose](ux-relato-folha.jpg) |
+| [KAN-118](https://ic-team-yrsngn10.atlassian.net/browse/KAN-118) | UX 5/20: Follow through | ![UX 5/20: Follow through](ux-relato-folha.jpg) |
+| [KAN-120](https://ic-team-yrsngn10.atlassian.net/browse/KAN-120) | UX 7/20: Movimento em arcos | ![UX 7/20: Movimento em arcos](conf-aviso-cookies.jpg) |
+| [KAN-121](https://ic-team-yrsngn10.atlassian.net/browse/KAN-121) | UX 8/20: Ação secundária | ![UX 8/20: Ação secundária](ux-narracao-foco.jpg) |
+| [KAN-123](https://ic-team-yrsngn10.atlassian.net/browse/KAN-123) | UX 10/20: Feedback exagerado | ![UX 10/20: Feedback exagerado](ux-relato-enviado.jpg) |
+| [KAN-124](https://ic-team-yrsngn10.atlassian.net/browse/KAN-124) | UX 11/20: Desenho sólido em 3D | ![UX 11/20: Desenho sólido em 3D](ux-lista-grupos.jpg) |
+| [KAN-125](https://ic-team-yrsngn10.atlassian.net/browse/KAN-125) | UX 12/20: Apelo geral | ![UX 12/20: Apelo geral](ux-acoes-rapidas.jpg) |
+| [KAN-126](https://ic-team-yrsngn10.atlassian.net/browse/KAN-126) | UX 13/20: Lei de Fitts | ![UX 13/20: Lei de Fitts](ux-museu-fitts.jpg) |
+| [KAN-127](https://ic-team-yrsngn10.atlassian.net/browse/KAN-127) | UX 14/20: Áreas de toque maiores | ![UX 14/20: Áreas de toque maiores](ux-relato-folha.jpg) |
+| [KAN-128](https://ic-team-yrsngn10.atlassian.net/browse/KAN-128) | UX 15/20: Lei de Hick | ![UX 15/20: Lei de Hick](ux-lista-grupos.jpg) |
+| [KAN-129](https://ic-team-yrsngn10.atlassian.net/browse/KAN-129) | UX 16/20: Lei de Miller | ![UX 16/20: Lei de Miller](ux-lista-grupos.jpg) |
+| [KAN-131](https://ic-team-yrsngn10.atlassian.net/browse/KAN-131) | UX 18/20: Lei de Postel | ![UX 18/20: Lei de Postel](ux-postel-placa.jpg) |
+| [KAN-132](https://ic-team-yrsngn10.atlassian.net/browse/KAN-132) | UX 19/20: Lei de Jakob | ![UX 19/20: Lei de Jakob](ux-relato-folha.jpg) |
+| [KAN-133](https://ic-team-yrsngn10.atlassian.net/browse/KAN-133) | UX 20/20: Frequência de uso | ![UX 20/20: Frequência de uso](ux-acoes-rapidas.jpg) |
+| [KAN-134](https://ic-team-yrsngn10.atlassian.net/browse/KAN-134) | Design 1/10: Raio concêntrico | ![Design 1/10: Raio concêntrico](ux-acoes-rapidas.jpg) |
+| [KAN-135](https://ic-team-yrsngn10.atlassian.net/browse/KAN-135) | Design 2/10: Borda com transparência | ![Design 2/10: Borda com transparência](ux-museu-fitts.jpg) |
+| [KAN-136](https://ic-team-yrsngn10.atlassian.net/browse/KAN-136) | Design 3/10: Paletas em OKLCH | ![Design 3/10: Paletas em OKLCH](ux-acoes-rapidas.jpg) |
+| [KAN-137](https://ic-team-yrsngn10.atlassian.net/browse/KAN-137) | Design 4/10: Degradês em OKLCH | ![Design 4/10: Degradês em OKLCH](ux-museu-fitts.jpg) |
+| [KAN-138](https://ic-team-yrsngn10.atlassian.net/browse/KAN-138) | Design 5/10: Ícone no peso do texto | ![Design 5/10: Ícone no peso do texto](ux-acoes-rapidas.jpg) |
+| [KAN-141](https://ic-team-yrsngn10.atlassian.net/browse/KAN-141) | Design 8/10: Profundidade no escuro | ![Design 8/10: Profundidade no escuro](ux-escuro-profundidade.jpg) |
+| [KAN-142](https://ic-team-yrsngn10.atlassian.net/browse/KAN-142) | Design 9/10: Altura dinâmica | ![Design 9/10: Altura dinâmica](ux-relato-enviado.jpg) |
+| [KAN-143](https://ic-team-yrsngn10.atlassian.net/browse/KAN-143) | Design 10/10: Mistura multiply | ![Design 10/10: Mistura multiply](ux-lista-grupos.jpg) |
+| [KAN-145](https://ic-team-yrsngn10.atlassian.net/browse/KAN-145) | Relato com foto ou vídeo real | ![Relato com foto ou vídeo real](anexo-foto-ok.jpg) |
+| [KAN-146](https://ic-team-yrsngn10.atlassian.net/browse/KAN-146) | Segurança de anexos | ![Segurança de anexos](anexo-recusado.jpg) |
+| [KAN-151](https://ic-team-yrsngn10.atlassian.net/browse/KAN-151) | Ferramenta 1/5 · Bom gosto | ![Ferramenta 1/5 · Bom gosto](ux-home-cabecalho.jpg) |
+| [KAN-154](https://ic-team-yrsngn10.atlassian.net/browse/KAN-154) | Ferramenta 4/5 · Imagem → código | ![Ferramenta 4/5 · Imagem → código](ux-um-play.jpg) |
+| [KAN-156](https://ic-team-yrsngn10.atlassian.net/browse/KAN-156) | Corrigir: dois plays | ![Corrigir: dois plays](ux-um-play.jpg) |
+| [KAN-157](https://ic-team-yrsngn10.atlassian.net/browse/KAN-157) | Corrigir: home | ![Corrigir: home](ux-home-cabecalho.jpg) |
