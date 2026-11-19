@@ -225,3 +225,15 @@
 .mu-dark .mu-raise-1 { background-color: oklch(24% 0.015 230) !important; box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.06), inset 0 0 0 1px var(--edge); }
 .mu-dark .mu-raise-2 { background-color: oklch(28% 0.018 230) !important; box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.08), inset 0 0 0 1px var(--edge), 0 -12px 40px oklch(0% 0 0 / 0.45); }
 .mu-dark .mu-tilt { box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.06); }
+
+/* =====================================================================================
+   Web Interface Guidelines (Vercel) · regras checadas por tests/guidelines.test.mjs
+   ===================================================================================== */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+button, a, label, [role="tab"], summary { touch-action: manipulation; } /* sem atraso de duplo toque */
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.tabular, time { font-variant-numeric: tabular-nums; }
+[id] { scroll-margin-top: 24px; }
+input, textarea, select { font-size: max(16px, 1em); } /* iOS não dá zoom ao focar */
+::selection { background: oklch(76% 0.13 80 / 0.45); }

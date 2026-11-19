@@ -82,7 +82,7 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
                 </button>
               ))}
             </div>
-            <textarea aria-label="Detalhe do problema (opcional)" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Detalhe (opcional). Não escreva nomes ou contatos." rows={2} className="mt-3 w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-black placeholder:text-black/35 outline-none resize-none" />
+            <textarea aria-label="Detalhe do problema (opcional)" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Detalhe (opcional). Não escreva nomes ou contatos." rows={2} className="mt-3 w-full rounded-[14px] bg-white px-4 py-3 text-[16px] text-black placeholder:text-black/45 mu-edge resize-none focus-visible:outline-[3px]" />
             {/* anexo real: foto ou vídeo, validado e (foto) recodificado no aparelho — src/shared/media.ts */}
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm" className="sr-only" id="relato-anexo" aria-describedby="relato-anexo-regras" onChange={(e) => pick(e.target.files?.[0])} />
             {att ? (
