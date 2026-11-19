@@ -2173,6 +2173,26 @@
    "points": 3,
    "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
    "description": "Mapa segue a pessoa com watchPosition, distâncias reais, check-in por GPS só perto da obra e selo mais perto; aviso antes do pedido, não grava nem envia."
+  },
+  {
+   "key": "KAN-195",
+   "type": "Tarefa",
+   "summary": "Identidade da logo na área do visitante (igual ao painel)",
+   "status": "Concluído",
+   "epic": "KAN-113",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Assinatura no topo do Explorar, arcos da logo sob os títulos e silhueta da cidade no Perfil."
+  },
+  {
+   "key": "KAN-196",
+   "type": "Tarefa",
+   "summary": "Lista de monumentos na área logada (por área, filtro e distância real)",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Seção Monumentos no Explorar: progresso, filtro por área e Perto de você, foto, situação, distância e placa."
   }
  ]
 }
