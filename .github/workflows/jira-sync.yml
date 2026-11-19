@@ -59,9 +59,9 @@ jobs:
               const body = `${s.goal}\n\nPeríodo: ${s.start} a ${s.end} · estado no Jira: ${s.state}`
               const due_on = `${s.end}T23:59:59Z`
               const state = s.state === 'closed' ? 'closed' : 'open'
-              let ms = milestones.find((m) => m.title === s.name)
+              let ms = milestones.find((m) => m.title === s.name) || milestones.find((m) => m.title.split(' · ')[0] === s.name.split(' · ')[0])
               if (!ms) ms = (await github.rest.issues.createMilestone({ owner, repo, title: s.name, description: body, due_on, state })).data
-              else ms = (await github.rest.issues.updateMilestone({ owner, repo, milestone_number: ms.number, description: body, due_on, state })).data
+              else ms = (await github.rest.issues.updateMilestone({ owner, repo, milestone_number: ms.number, title: s.name, description: body, due_on, state })).data
               msByTitle[s.name] = ms.number
             }
 
