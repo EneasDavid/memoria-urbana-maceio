@@ -40,7 +40,7 @@ test('página inicial responde 200 com o ponto de montagem do React', async () =
   const r = await fetch(BASE + '/')
   assert.equal(r.status, 200)
   const html = await r.text()
-  assert.match(html, /<div id="root"><\/div>/)
+  assert.match(html, /<div id="root">/)
   assert.match(html, /<title>[^<]+<\/title>/)
 })
 
@@ -55,10 +55,10 @@ test('todos os scripts e estilos do build carregam', async () => {
 })
 
 test('rotas públicas respondem (uma URL por monumento)', async () => {
-  for (const p of ['/', '/monumento/graciliano', '/monumento/nise', '/entrar', '/prototipo']) {
+  for (const p of ['/', '/monumento/graciliano', '/monumento/nise', '/entrar', '/prototipo', '/privacidade', '/robots.txt', '/sitemap.xml']) {
     const r = await fetch(BASE + p)
     assert.equal(r.status, 200, `rota ${p}`)
-    assert.match(await r.text(), /<div id="root"><\/div>/)
+    if (!/\.(txt|xml)$/.test(p)) assert.match(await r.text(), /<div id="root">/)
   }
 })
 

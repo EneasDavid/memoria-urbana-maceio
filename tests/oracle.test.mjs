@@ -1,0 +1,65 @@
+// Hospedagem na Oracle Cloud: a configuração do servidor não pode divergir da Vercel,
+// e a API de login precisa responder fora da Vercel com os mesmos handlers.
+// Pré-requisito: `pnpm build:server` (compila api/ para server/build/api).
+import { test, before, after } from 'node:test'
+import assert from 'node:assert/strict'
+import { readFileSync, existsSync } from 'node:fs'
+
+const read = (p) => readFileSync(p, 'utf8')
+const caddy = read('infra/oracle/Caddyfile')
+const vercel = JSON.parse(read('vercel.json'))
+const vercelHeaders = Object.fromEntries(vercel.headers.flatMap((b) => b.headers).map((h) => [h.key, h.value]))
+
+test('Caddyfile tem os mesmos cabeçalhos de segurança da Vercel (CSP, HSTS, COOP…)', () => {
+  for (const [k, v] of Object.entries(vercelHeaders)) assert.ok(caddy.includes(`${k} "${v}"`), `cabeçalho ${k} diferente da Vercel`)
+})
+
+test('Caddyfile serve o HTML pré-renderizado, cai no spa.html e repassa só /api/* ao Node local', () => {
+  assert.match(caddy, /try_files \{path\} \{path\}\/index\.html \/spa\.html/)
+  assert.match(caddy, /handle \/api\/\* \{\s*reverse_proxy 127\.0\.0\.1:3001/)
+  assert.match(caddy, /\{\$SITE_DOMAIN\}/)
+})
+
+test('setup.sh abre 80/443 no iptables da imagem Oracle e não guarda segredos no repositório', () => {
+  const s = read('infra/oracle/setup.sh')
+  assert.match(s, /iptables -I INPUT .*--dport \$port/)
+  assert.match(s, /GOOGLE_CLIENT_SECRET=\n/)
+  assert.match(s, /NoNewPrivileges=true/)
+})
+
+test('workflow de deploy só roda com variáveis da Oracle e fixa a chave do host', () => {
+  const w = read('.github/workflows/deploy-oracle.yml')
+  assert.match(w, /vars\.ORACLE_HOST != ''/)
+  assert.match(w, /StrictHostKeyChecking=yes/)
+  assert.doesNotMatch(w, /StrictHostKeyChecking=no/)
+})
+
+let server, base
+before(async () => {
+  assert.ok(existsSync('server/build/api/auth/me.js'), 'rode `pnpm build:server` antes')
+  for (const k of ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'SESSION_SECRET']) delete process.env[k]
+  const { createServer } = await import('../server/api-server.mjs')
+  server = createServer()
+  await new Promise((r) => server.listen(0, '127.0.0.1', r))
+  base = `http://127.0.0.1:${server.address().port}`
+})
+after(() => server?.close())
+
+test('API Node responde /api/auth/me como na Vercel (sem OAuth configurado)', async () => {
+  const r = await fetch(base + '/api/auth/me')
+  assert.equal(r.status, 200)
+  assert.deepEqual(await r.json(), { configured: false, user: null })
+})
+
+test('API Node: login sem configuração responde 503, rota desconhecida 404, método errado 404', async () => {
+  assert.equal((await fetch(base + '/api/auth/login')).status, 503)
+  assert.equal((await fetch(base + '/api/nada')).status, 404)
+  assert.equal((await fetch(base + '/api/auth/me', { method: 'DELETE' })).status, 404)
+})
+
+test('API Node: logout limpa o cookie de sessão respeitando o protocolo do proxy', async () => {
+  const r = await fetch(base + '/api/auth/logout', { method: 'POST', headers: { 'x-forwarded-proto': 'https' } })
+  const c = r.headers.get('set-cookie') || ''
+  assert.match(c, /mu_session=;/)
+  assert.match(c, /Secure/)
+})
