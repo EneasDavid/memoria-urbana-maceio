@@ -61,10 +61,11 @@ export function PrivacyPage() {
           ['Abrir qualquer página', 'Endereço IP, data/hora, navegador (registros técnicos da hospedagem)', 'Funcionamento e segurança do site', 'Legítimo interesse (art. 7º, IX)', 'Prazo dos registros da hospedagem (curto, definido pela Vercel)'],
           ['Ver fotos dos monumentos', 'Seu navegador busca a foto no site de origem, que recebe o seu IP', 'Exibir a foto creditada ao autor', 'Legítimo interesse (art. 7º, IX)', 'Conforme o site de origem (lista em Créditos)'],
           ['Relatar um problema na obra', 'Tipo do problema, detalhe opcional, foto ou vídeo opcional (a foto é recodificada sem localização; vídeo até 30 s) e um código derivado do IP (hash) só para limitar abusos', 'Avisar sobre danos ao patrimônio', 'Legítimo interesse (art. 7º, IX)', 'Hoje fica só no seu aparelho; quando houver servidor, até 12 meses e depois anonimizado'],
+          ['Mapa da Trilha com conta (opcional)', 'Localização do aparelho, só enquanto o mapa está aberto e depois que você permite', 'Mostrar onde você está, a distância até cada obra e o check-in por GPS', 'Consentimento (art. 7º, I): permissão do navegador, que você pode retirar a qualquer momento', 'Não é gravada nem enviada: fica na memória do aparelho e para de ser lida quando você sai do mapa'],
           ['Entrar com Google (opcional)', 'Identificador da conta Google, nome, e-mail e foto; carimbos da Trilha', 'Pontuar na Trilha Cultural e guardar o passaporte', 'Consentimento (art. 7º, I), que você pode revogar', 'Até você sair ou pedir a exclusão da conta; sessão expira em 7 dias'],
         ]}
       />
-      <p>Não pedimos nome, telefone, CPF, endereço nem localização para ler ou relatar. Não tratamos dados sensíveis.</p>
+      <p>Não pedimos nome, telefone, CPF, endereço nem localização para ler ou relatar. A localização só é usada no mapa da Trilha, se você permitir, e não sai do seu aparelho. Não tratamos dados sensíveis.</p>
 
       <H2 id="cookies">Cookies e armazenamento no aparelho</H2>
       <p>Usamos só itens essenciais. Detalhes na página <a className="underline" href="/cookies">Cookies</a>.</p>
