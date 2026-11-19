@@ -176,3 +176,32 @@ test('painel do gestor com a identidade da logo e sem estrela', async () => {
   assert.equal(await page.locator('path[d^="m12 3 2.7 5.6"]').count(), 0, 'estrela no painel')
   await ctx.close()
 })
+
+// Lista de monumentos da área logada
+test('lista de monumentos: por área, filtro e abre a história', async () => {
+  const { ctx, page } = await withFakeApi(REAL)
+  await page.goto(BASE + '/app')
+  const lista = page.getByTestId('lista-monumentos')
+  await lista.waitFor()
+  for (const area of ['Orla', 'Centro histórico', 'Bebedouro', 'Parte alta']) await lista.getByRole('heading', { name: area, level: 3 }).waitFor()
+  assert.match(await lista.textContent(), /0 de \d+ com selo/)
+  await lista.getByRole('button', { name: 'Centro histórico' }).click()
+  assert.equal(await lista.getByRole('heading', { level: 3 }).count(), 1, 'filtro mostra só uma área')
+  await lista.getByRole('button', { name: /Praça dos Martírios/ }).click()
+  await page.getByRole('button', { name: 'Voltar' }).waitFor()
+  await ctx.close()
+})
+
+test('lista de monumentos: com localização, ordena por perto e mostra a distância', async () => {
+  const { ctx, page } = await withFakeApi(REAL, 'light', { permissions: ['geolocation'], geolocation: { latitude: -9.66705, longitude: -35.71245 } })
+  await page.goto(BASE + '/app')
+  const abas = page.getByRole('navigation', { name: 'Abas' })
+  await abas.getByRole('button', { name: 'Trilha', exact: true }).click()
+  await page.getByText('Você está aqui').waitFor()
+  await abas.getByRole('button', { name: 'Explorar', exact: true }).click()
+  const lista = page.getByTestId('lista-monumentos')
+  assert.equal(await lista.getByRole('button', { name: 'Perto de você' }).getAttribute('aria-pressed'), 'true')
+  await lista.getByRole('heading', { name: 'Mais perto de você' }).waitFor()
+  assert.match(await lista.locator('li').first().textContent(), /Graciliano Ramos.*\d+ m/)
+  await ctx.close()
+})
