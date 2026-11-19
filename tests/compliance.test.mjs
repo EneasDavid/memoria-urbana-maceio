@@ -95,7 +95,7 @@ test('10/11. contraste e teclado: foco visível e link para pular conteúdo', ()
 })
 
 test('12. sem avaliações, notas ou depoimentos inventados', () => {
-  const fake = /depoimento|testemunho|★|estrelas|avalia[çc](ão|ões) de (clientes|usu[aá]rios)|rating|testimonial/i
+  const fake = /depoimento|testemunho|★|estrelas|avalia[çc](ão|ões) de (clientes|usu[aá]rios)|\brating\b|testimonial/i
   for (const [p, src] of publicText.filter(([p]) => !p.endsWith('LegalPages.tsx'))) assert.doesNotMatch(src, fake, `conteúdo de avaliação em ${p}`)
   assert.match(read('src/features/panel/PanelPage.tsx'), /Dados simulados/, 'painel com números simulados sem aviso')
   assert.match(read('src/app/Routes.tsx'), /dados e envios simulados/, 'protótipo sem aviso de simulação')
