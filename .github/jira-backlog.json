@@ -2153,6 +2153,26 @@
    "points": 2,
    "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
    "description": "Pedidos do Dependabot aceitos; react e react-dom juntos e tsconfig ajustado para o TypeScript 7."
+  },
+  {
+   "key": "KAN-193",
+   "type": "Tarefa",
+   "summary": "Identidade da logo no painel do gestor",
+   "status": "Concluído",
+   "epic": "KAN-113",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Emblema, assinatura \"— em Maceió —\", selo Painel da Prefeitura e silhueta da cidade na barra lateral; títulos com os dois arcos da logo."
+  },
+  {
+   "key": "KAN-194",
+   "type": "Tarefa",
+   "summary": "Localização real do usuário na Trilha (ao vivo, com aviso)",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Mapa segue a pessoa com watchPosition, distâncias reais, check-in por GPS só perto da obra e selo mais perto; aviso antes do pedido, não grava nem envia."
   }
  ]
 }
