@@ -10,13 +10,14 @@ export function AppHome({ user }: { user: SessionUser }) {
   return (
     <main className="min-h-dvh bg-[#f6f3ec] text-black">
       <div className="max-w-[760px] mx-auto px-5 py-8">
+        {user.demo && <p role="note" className="mb-5 rounded-[12px] bg-[#dda93f]/20 px-3 py-2 text-[13.5px] text-[#6b4d0d]">Conta de demonstração: nada do que você fizer aqui é salvo. Para guardar seus carimbos, entre com Google.</p>}
         <div className="flex items-center gap-3">
           {user.picture ? <img src={user.picture} alt="" referrerPolicy="no-referrer" className="w-11 h-11 rounded-full" /> : <Avatar name={user.name} size={44} />}
           <div className="flex-1">
             <h1 className="text-[22px] font-bold leading-tight">Olá, {user.name.split(' ')[0]}</h1>
             <p className="text-[14px] text-black/70">Sua Trilha Cultural</p>
           </div>
-          <button onClick={logout} className="h-9 px-4 rounded-full bg-black/[0.06] text-[14px] font-semibold">Sair</button>
+          <button type="button" onClick={logout} className="mu-press h-11 px-4 rounded-full bg-black/[0.06] text-[14px] font-semibold">Sair</button>
         </div>
 
         <section className="mt-8 rounded-[22px] bg-white p-5">
