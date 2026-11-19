@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Icon, Stamp, RarityPill, Avatar, type IconName } from './ui'
+import { Icon, Stamp, RarityPill, Avatar, Brand, type IconName } from './ui'
 import { byId, levelFor, type Monument, type TrackEvent, type User } from './data'
 import { Scanner, type ScanMode } from './Scanner'
 import { GoogleLogin, demoAccounts } from './GoogleLogin'
@@ -7,7 +7,7 @@ import { Immersive, type ImmersiveMode } from './Immersive'
 import { ReportSheet } from './ReportSheet'
 import type { Report } from './data'
 import { useLiveLocation } from './shared/useLocation'
-import { ExploreScreen, MapScreen, MonumentScreen, OfflineSheet, PassportScreen, ProfileScreen, Photo, PhotoViewer, stampClass, type MobileCtx } from './MobileScreens'
+import { ExploreScreen, MapScreen, MonumentList, MonumentScreen, OfflineSheet, PassportScreen, ProfileScreen, Photo, PhotoViewer, stampClass, type MobileCtx } from './MobileScreens'
 
 // Memória da sessão: o progresso continua quando o visitante sai do app (botão de início) e volta
 const sessionStore: Record<string, unknown> = {}
@@ -214,10 +214,40 @@ export interface Standalone {
   onLogout: () => void
   today: string
   links: { privacy: string; panel?: string }
+  /** Tela de computador: topo como o site do protótipo e painéis centralizados */
+  desktop?: boolean
+}
+
+// Topo da área logada no computador, no desenho do site do protótipo do Figma Make
+function DesktopHeader({ tab, onTab, user, selos, xp, dark, setDark, onScan }: { tab: Tab; onTab: (t: Tab) => void; user: User | null; selos: number; xp: number; dark: boolean; setDark: (v: boolean) => void; onScan: () => void }) {
+  const items: [Tab, IconName, string][] = [['explorar', 'home', 'Explorar'], ['trilha', 'map', 'Trilha'], ['passaporte', 'book', 'Passaporte']]
+  return (
+    <header className="absolute inset-x-0 top-0 z-40 h-[72px] bg-[#f6f3ec]/90 backdrop-blur-2xl border-b border-black/[0.06]">
+      <div className="max-w-[1280px] mx-auto h-full px-8 flex items-center gap-6">
+        <Brand size={40} className="shrink-0 whitespace-nowrap" />
+        <nav aria-label="Abas" className="ml-2 flex items-center gap-1">
+          {items.map(([id, icon, label]) => (
+            <button key={id} onClick={() => onTab(id)} aria-current={tab === id ? 'page' : undefined} className={`h-10 px-4 rounded-full flex items-center gap-2 text-[14.5px] whitespace-nowrap transition-colors ${tab === id ? 'bg-[#2c8585]/12 text-[#1f6b6b] font-semibold' : 'text-black/65 hover:bg-black/[0.05]'}`}>
+              <Icon name={icon} size={18} />{label}
+            </button>
+          ))}
+        </nav>
+        <div className="ml-auto flex items-center gap-2.5">
+          <span className="hidden xl:flex h-9 px-3 rounded-full bg-white text-[13px] font-semibold text-black/70 items-center gap-1.5 tabular-nums whitespace-nowrap"><Icon name="placa" size={15} className="text-[#a87a17]" />{selos} {selos === 1 ? 'selo' : 'selos'} · {xp} pontos</span>
+          <button onClick={() => setDark(!dark)} aria-label={dark ? 'Usar modo claro' : 'Usar modo noturno'} aria-pressed={dark} className="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/[0.08] grid place-items-center text-black/70"><Icon name="moon" size={18} /></button>
+          <button onClick={onScan} aria-label="Ler placa" className="h-10 pl-3 pr-4 rounded-full bg-[#0b2f49] text-white text-[14px] font-semibold flex items-center gap-2 whitespace-nowrap hover:bg-[#113d5e]"><Icon name="scan" size={18} />Ler placa</button>
+          <button onClick={() => onTab('perfil')} aria-label="Abrir perfil" className={`h-10 pl-1 pr-3 rounded-full flex items-center gap-2 text-[14px] font-semibold whitespace-nowrap ${tab === 'perfil' ? 'bg-[#2c8585]/12 text-[#1f6b6b]' : 'hover:bg-black/[0.05] text-black/80'}`}>
+            {user ? <Avatar name={user.name} color={user.color} size={32} /> : <Icon name="person" size={20} />}{user ? user.name.split(' ')[0] : 'Perfil'}
+          </button>
+        </div>
+      </div>
+    </header>
+  )
 }
 
 export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onReport, welcome, welcomeVia, standalone }: { onTrack: (e: NewEvent) => void; session: string; dark: boolean; setDark: (v: boolean) => void; user: User | null; setUser: (u: User | null) => void; onReport: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void | Promise<void>; welcome?: string; welcomeVia?: 'nfc' | 'qr'; standalone?: Standalone }) {
   const simulate = !standalone || standalone.simulate
+  const desktop = !!standalone?.desktop
   // Localização real do aparelho só na área logada (o protótipo continua no ponto fixo da apresentação)
   const location = useLiveLocation(!!standalone)
   const [tab, setTab] = useState<Tab>('explorar')
@@ -379,6 +409,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     today: standalone?.today,
     links: standalone?.links,
     location: standalone ? location : undefined,
+    desktop,
     track,
     collectGps: (id) => {
       const r = collect(id, 'gps')
@@ -410,45 +441,16 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
   ]
   const darkStatus = dark || !!scanner || !!immersive || (!!monument && !scrolled)
 
-  return (
-    <div className="relative w-full h-full overflow-hidden bg-[#f6f3ec] text-black select-none mu-mobile">
-      {!standalone && <StatusBar dark={darkStatus} online={online} />}
+  useEffect(() => {
+    if (!desktop || !monument) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' && !scanner && !report && !shareId && !immersive && !capture && !reward) setMonument(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [desktop, monument, scanner, report, shareId, immersive, capture, reward])
 
-      {/* conteúdo da aba */}
-      {tab === 'trilha' ? (
-        <div style={{ display: monument ? 'none' : 'contents' }}><MapScreen ctx={ctx} /></div>
-      ) : (
-        <div ref={scrollRef} onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)} className="absolute inset-0 overflow-y-auto no-scrollbar pt-[54px]">
-          <div className={`sticky top-0 z-10 h-0 transition-opacity ${scrolled ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="absolute -top-[54px] left-0 right-0 h-[54px] bg-[#f6f3ec]/80 backdrop-blur-2xl border-b border-black/[0.06]" />
-          </div>
-          {tab === 'explorar' && <ExploreScreen ctx={ctx} />}
-          {tab === 'passaporte' && <PassportScreen ctx={ctx} />}
-          {tab === 'perfil' && <ProfileScreen ctx={ctx} />}
-        </div>
-      )}
-
+  const overlays = (
+    <>
       {monument && <MonumentScreen key={monument} id={monument} ctx={ctx} onBack={() => setMonument(null)} />}
-
-      {/* barra de abas flutuante (vidro) + botão de leitura */}
-      {!scanner && !immersive && (
-        <div className="absolute left-0 right-0 bottom-[26px] z-40 px-4 flex items-center gap-2.5">
-          <nav className="flex-1 h-[64px] rounded-full bg-white/70 backdrop-blur-2xl border border-white/70 shadow-[0_10px_36px_rgba(0,0,0,0.14)] flex items-center px-1.5" aria-label="Abas">
-            {tabs.map(([id, icon, label]) => {
-              const active = tab === id && !monument
-              return (
-                <button key={id} onClick={() => { setMonument(null); setTab(id) }} className={`flex-1 h-[54px] rounded-full flex flex-col items-center justify-center gap-0.5 transition-all duration-200 ${active ? 'bg-black/[0.07] text-[#2c8585]' : 'text-black/70'}`} aria-current={active ? 'page' : undefined}>
-                  <Icon name={icon} size={23} stroke={active ? 2.2 : 1.8} />
-                  <span className="text-[10px] font-semibold">{label}</span>
-                </button>
-              )
-            })}
-          </nav>
-          <button onClick={() => ctx.openScanner('qr')} aria-label="Ler placa" className="w-[64px] h-[64px] rounded-full bg-[#0b2f49] text-white grid place-items-center shadow-[0_10px_30px_rgba(11,47,73,0.45)] active:scale-95 transition">
-            <Icon name="scan" size={27} stroke={2} />
-          </button>
-        </div>
-      )}
 
       {scanner && (
         <Scanner
@@ -537,9 +539,78 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
         </div>
       )}
 
+    </>
+  )
+  const overlayOpen = !!(monument || scanner || login || immersive || capture || report || (photoView && photoLog[photoView]) || shareId || offlineSheet || reward)
+  const onlyMonument = !!monument && !(scanner || login || immersive || capture || report || photoView || shareId || offlineSheet || reward)
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-[#f6f3ec] text-black select-none mu-mobile">
+      {!standalone && <StatusBar dark={darkStatus} online={online} />}
+
+      {desktop && <DesktopHeader tab={tab} onTab={(t) => { setMonument(null); setTab(t) }} user={user} selos={collected.length} xp={xp} dark={dark} setDark={setDark} onScan={() => ctx.openScanner('qr')} />}
+
+      {/* conteúdo da aba */}
+      {desktop ? (
+        <div className="absolute inset-x-0 top-[72px] bottom-0">
+          {tab === 'trilha' ? (
+            <div className="h-full max-w-[1280px] mx-auto px-8 py-6 grid grid-cols-[minmax(0,1fr)_400px] gap-6">
+              <div className="relative min-h-0 rounded-[24px] overflow-hidden shadow-[0_1px_0_rgba(0,0,0,0.04)]"><MapScreen ctx={ctx} /></div>
+              <div className="min-h-0 overflow-y-auto no-scrollbar pr-1 pb-6"><MonumentList ctx={ctx} /></div>
+            </div>
+          ) : (
+            <div ref={scrollRef} className="absolute inset-0 overflow-y-auto">
+              {tab === 'explorar' && <ExploreScreen ctx={ctx} />}
+              {tab === 'passaporte' && <div className="max-w-[880px] mx-auto pt-6"><PassportScreen ctx={ctx} /></div>}
+              {tab === 'perfil' && <div className="max-w-[640px] mx-auto pt-6"><ProfileScreen ctx={ctx} /></div>}
+            </div>
+          )}
+        </div>
+      ) : tab === 'trilha' ? (
+        <div style={{ display: monument ? 'none' : 'contents' }}><MapScreen ctx={ctx} /></div>
+      ) : (
+        <div ref={scrollRef} onScroll={(e) => setScrolled(e.currentTarget.scrollTop > 8)} className="absolute inset-0 overflow-y-auto no-scrollbar pt-[54px]">
+          <div className={`sticky top-0 z-10 h-0 transition-opacity ${scrolled ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="absolute -top-[54px] left-0 right-0 h-[54px] bg-[#f6f3ec]/80 backdrop-blur-2xl border-b border-black/[0.06]" />
+          </div>
+          {tab === 'explorar' && <ExploreScreen ctx={ctx} />}
+          {tab === 'passaporte' && <PassportScreen ctx={ctx} />}
+          {tab === 'perfil' && <ProfileScreen ctx={ctx} />}
+        </div>
+      )}
+
+      {/* barra de abas flutuante (vidro) + botão de leitura */}
+      {!desktop && !scanner && !immersive && (
+        <div className="absolute left-0 right-0 bottom-[26px] z-40 px-4 flex items-center gap-2.5">
+          <nav className="flex-1 h-[64px] rounded-full bg-white/70 backdrop-blur-2xl border border-white/70 shadow-[0_10px_36px_rgba(0,0,0,0.14)] flex items-center px-1.5" aria-label="Abas">
+            {tabs.map(([id, icon, label]) => {
+              const active = tab === id && !monument
+              return (
+                <button key={id} onClick={() => { setMonument(null); setTab(id) }} className={`flex-1 h-[54px] rounded-full flex flex-col items-center justify-center gap-0.5 transition-all duration-200 ${active ? 'bg-black/[0.07] text-[#2c8585]' : 'text-black/70'}`} aria-current={active ? 'page' : undefined}>
+                  <Icon name={icon} size={23} stroke={active ? 2.2 : 1.8} />
+                  <span className="text-[10px] font-semibold">{label}</span>
+                </button>
+              )
+            })}
+          </nav>
+          <button onClick={() => ctx.openScanner('qr')} aria-label="Ler placa" className="w-[64px] h-[64px] rounded-full bg-[#0b2f49] text-white grid place-items-center shadow-[0_10px_30px_rgba(11,47,73,0.45)] active:scale-95 transition">
+            <Icon name="scan" size={27} stroke={2} />
+          </button>
+        </div>
+      )}
+
+      {desktop ? (overlayOpen && (
+        // No computador, ficha, leitor, carimbo e avisos abrem num painel centralizado (como um celular sobre a página)
+        <div className="fixed inset-0 z-[80] bg-[#0b2f49]/45 backdrop-blur-sm grid place-items-center p-6 anim-fade" onClick={() => { if (onlyMonument) setMonument(null) }}>
+          <div role="dialog" aria-modal="true" aria-label="Detalhe" className="relative w-[440px] h-[min(880px,calc(100vh-48px))] rounded-[32px] overflow-hidden bg-[#f6f3ec] shadow-[0_30px_80px_rgba(0,0,0,0.35)] pop-in" onClick={(e) => e.stopPropagation()}>
+            {overlays}
+          </div>
+        </div>
+      )) : overlays}
+
       {/* toast estilo Dynamic Island */}
       {toast && (
-        <div className="absolute top-[54px] left-1/2 -translate-x-1/2 z-[70] h-[37px] max-w-[92%] pl-2.5 pr-4 rounded-full bg-black/90 backdrop-blur-xl text-white text-[13px] font-semibold flex items-center gap-2 island-in whitespace-nowrap overflow-hidden text-ellipsis shadow-lg">
+        <div role="status" className={`absolute ${desktop ? 'top-[84px] z-[90]' : 'top-[54px] z-[70]'} left-1/2 -translate-x-1/2 h-[37px] max-w-[92%] pl-2.5 pr-4 rounded-full bg-black/90 backdrop-blur-xl text-white text-[13px] font-semibold flex items-center gap-2 island-in whitespace-nowrap overflow-hidden text-ellipsis shadow-lg`}>
           <span className="w-6 h-6 rounded-full bg-[#34c759] grid place-items-center"><Icon name={toast.icon} size={14} stroke={2.4} /></span>{toast.text}
         </div>
       )}

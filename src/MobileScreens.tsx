@@ -48,6 +48,8 @@ export interface MobileCtx {
   links?: { privacy: string; panel?: string }
   /** Localização real do aparelho (área logada). Sem ela o mapa usa o ponto inicial da trilha. */
   location?: LiveLocation
+  /** Tela de computador (área logada): layout largo como o site do protótipo */
+  desktop?: boolean
 }
 
 const isSim = (ctx: MobileCtx) => ctx.simulate !== false
@@ -169,18 +171,18 @@ function MonumentCard({ m, ctx }: { m: Monument; ctx: MobileCtx }) {
 // ================= EXPLORAR =================
 export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
   const { level, inLevel, need } = levelFor(ctx.xp)
-  return (
-    <div className="px-4 pb-36">
-      {ctx.links && <Brand size={34} className="pt-1 mb-3" />}
-      <div className="flex items-end justify-between pt-2">
+  const head = (
+    <div className="flex items-end justify-between pt-2">
         <div>
           <div className="text-[13px] font-semibold text-black/45 uppercase tracking-[0.04em]">{ctx.today ?? 'Sábado, 7 de novembro'}</div>
           <h1 className="text-[34px] font-bold tracking-[-0.025em] leading-tight text-black">Explorar</h1>
           {ctx.links && <Arcs className="mt-1.5" />}
         </div>
-        <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>
-      </div>
-
+      {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
+    </div>
+  )
+  const side = (
+    <>
       <OfflineBanner ctx={ctx} />
 
       {/* Sem barreira */}
@@ -267,7 +269,23 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
           </Group>
         </>
       )}
-
+    </>
+  )
+  // No computador: duas colunas como no site do protótipo (lista em cartões à esquerda, passaporte e missões ao lado)
+  if (ctx.desktop) return (
+    <div className="max-w-[1280px] mx-auto px-8 pt-8 pb-16">
+      {head}
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)_380px] gap-8 items-start">
+        <div className="min-w-0"><MonumentList ctx={ctx} grid /></div>
+        <aside aria-label="Seu passaporte" className="sticky top-6">{side}</aside>
+      </div>
+    </div>
+  )
+  return (
+    <div className="px-4 pb-36">
+      {ctx.links && <Brand size={34} className="pt-1 mb-3" />}
+      {head}
+      {side}
       {ctx.links && <MonumentList ctx={ctx} />}
     </div>
   )
@@ -284,7 +302,7 @@ type ListFilter = 'perto' | 'todos' | (typeof AREAS)[number]['id']
 
 const fmtM = (d: number) => (d >= 1000 ? (d / 1000).toFixed(1).replace('.', ',') + ' km' : Math.round(d / 10) * 10 + ' m')
 
-function MonumentList({ ctx }: { ctx: MobileCtx }) {
+export function MonumentList({ ctx, grid = false }: { ctx: MobileCtx; grid?: boolean }) {
   const here = ctx.location?.here ?? null
   const [filter, setFilter] = useState<ListFilter>(here ? 'perto' : 'todos')
   // quando a localização chega depois, passa a ordenar por perto (se a pessoa ainda não escolheu outro filtro)
@@ -299,13 +317,13 @@ function MonumentList({ ctx }: { ctx: MobileCtx }) {
     : AREAS.filter((a) => filter === 'todos' || a.id === filter).map((a) => ({ ...a, items: monuments.filter((m) => m.group === a.id) }))
 
   return (
-    <section aria-labelledby="lista-monumentos" className="mt-7" data-testid="lista-monumentos">
+    <section aria-labelledby="lista-monumentos" className={grid ? '' : 'mt-7'} data-testid="lista-monumentos">
       <div className="flex items-end justify-between px-1">
         <h2 id="lista-monumentos" className="text-[22px] font-bold tracking-[-0.02em] text-black">Monumentos</h2>
         <span className="text-[13px] text-black/50 tabular-nums">{got} de {monuments.length} com selo</span>
       </div>
       <div className="mt-1 mx-1 h-[5px] rounded-full bg-black/[0.07] overflow-hidden" aria-hidden="true"><div className="h-full rounded-full bg-gradient-to-r from-[#2c8585] to-[#dda93f]" style={{ width: `${(got / monuments.length) * 100}%` }} /></div>
-      <div role="group" aria-label="Filtrar monumentos" className="mt-3 -mx-4 px-4 flex gap-2 overflow-x-auto no-scrollbar">
+      <div role="group" aria-label="Filtrar monumentos" className={'mt-3 flex gap-2 ' + (grid ? 'flex-wrap' : '-mx-4 px-4 overflow-x-auto no-scrollbar')}>
         {chips.map((c) => (
           <button key={c.id} onClick={() => choose(c.id)} aria-pressed={filter === c.id} className={'shrink-0 h-9 px-3.5 rounded-full text-[13.5px] font-semibold flex items-center gap-1.5 transition-colors ' + (filter === c.id ? 'bg-[#0b2f49] text-white' : 'bg-white text-black/70')}>
             {c.id === 'perto' && <Icon name="pin" size={14} />}{c.label}
@@ -315,6 +333,34 @@ function MonumentList({ ctx }: { ctx: MobileCtx }) {
       {sections.map((s) => (
         <div key={s.id} className="mt-4">
           <div className="px-1 mb-2 flex items-baseline gap-2"><h3 className="text-[15px] font-bold text-black">{s.title}</h3><span className="text-[12.5px] text-black/45">{s.hint} · {s.items.length}</span></div>
+          {grid ? (
+            <ul className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+              {s.items.map((m) => {
+                const has = ctx.collected.includes(m.id)
+                const d = dist(m)
+                return (
+                  <li key={m.id}>
+                    <button onClick={() => ctx.openMonument(m.id)} className="group w-full text-left rounded-[22px] bg-white overflow-hidden shadow-[0_1px_0_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_rgba(11,47,73,0.12)] transition-shadow focus-visible:outline-[3px] focus-visible:outline-[#2c8585]">
+                      <span className="relative block aspect-[4/3] overflow-hidden">
+                        <Photo m={m} className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.03]" />
+                        <span className="absolute left-3 top-3"><KindPill kind={m.kind} /></span>
+                        <span className="absolute right-3 top-3 h-6 px-2 rounded-full bg-black/45 backdrop-blur text-white text-[11.5px] font-semibold grid place-items-center">Placa {m.plate}</span>
+                        {has && <span className="absolute right-3 bottom-3 h-7 pl-1.5 pr-2.5 rounded-full bg-[#2c8585] text-white text-[12px] font-semibold flex items-center gap-1"><Icon name="check" size={14} stroke={3} />Selo coletado</span>}
+                      </span>
+                      <span className="block p-4">
+                        <span className="block text-[16.5px] font-semibold text-black leading-snug">{m.name}</span>
+                        <span className="block text-[13.5px] text-black/55 truncate">{m.role} · {m.area}</span>
+                        <span className="mt-2 flex flex-wrap items-center gap-x-1.5 text-[12.5px] font-semibold whitespace-nowrap">
+                          {has ? <span className="text-[#1f6b6b]">Visitado</span> : m.visit === 'Fechado' ? <span className="text-[#c4402e]">Fechado</span> : m.visit === 'Restrito' ? <span className="text-[#a87a17]">Visita com agendamento</span> : <span className="text-black/45">+{m.xp} pontos</span>}
+                          {d !== null && <><span className="text-black/25" aria-hidden="true">·</span><span className="text-black/55 tabular-nums">{fmtM(d)}</span></>}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : (
           <ul className="bg-white rounded-[20px] overflow-hidden">
             {s.items.map((m, i) => {
               const has = ctx.collected.includes(m.id)
@@ -342,6 +388,7 @@ function MonumentList({ ctx }: { ctx: MobileCtx }) {
               )
             })}
           </ul>
+          )}
         </div>
       ))}
     </section>
@@ -698,7 +745,7 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
         <span className="relative block w-[18px] h-[18px] rounded-full bg-[#2c8585] border-[3px] border-white shadow-md" />
       </div>
 
-      {!selected && (
+      {!selected && !ctx.desktop && (
       <div className="absolute top-[56px] left-3 right-3 z-40 flex items-center gap-3 p-2.5 pr-4 rounded-[22px] bg-white/85 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
         <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={40} /> : <span className="w-10 h-10 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={20} /></span>}</button>
         <div className="flex-1 min-w-0">
@@ -839,7 +886,7 @@ export function PassportScreen({ ctx }: { ctx: MobileCtx }) {
     <div className="px-4 pb-36">
       <div className="pt-2 flex items-center justify-between">
         <div><h1 className="text-[34px] font-bold tracking-[-0.025em] text-black">Passaporte</h1>{ctx.links && <Arcs className="mt-1" />}</div>
-        <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>
+        {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
       </div>
       <div className="text-[14px] text-black/50 mt-0.5">{got.length ? 'Seus selos de Maceió · ' + got.length + (got.length === 1 ? ' selo' : ' selos') + ' · ' + total + (total === 1 ? ' visita' : ' visitas') : 'Seus selos de Maceió aparecem aqui'}</div>
       {got.length > 0 && <div className="mt-3 flex items-center gap-2 rounded-[14px] bg-white px-3 py-2 text-[12.5px] text-black/55"><Icon name="hand" size={15} className="text-[#2c8585] shrink-0" />Toque num selo para ver quando foi, a foto e seus relatos.</div>}
@@ -1002,7 +1049,7 @@ export function ProfileScreen({ ctx }: { ctx: MobileCtx }) {
   )
   return (
     <div className="px-4 pb-36">
-      <button onClick={() => ctx.setTab?.('explorar')} className="pt-1 -ml-1 h-9 flex items-center gap-0.5 text-[17px] text-[#2c8585]"><Icon name="chevL" size={22} stroke={2.6} />Voltar</button>
+      {!ctx.desktop && (<button onClick={() => ctx.setTab?.('explorar')} className="pt-1 -ml-1 h-9 flex items-center gap-0.5 text-[17px] text-[#2c8585]"><Icon name="chevL" size={22} stroke={2.6} />Voltar</button>)}
       <h1 className="text-[34px] font-bold tracking-[-0.025em] text-black">Perfil</h1>
       {ctx.links && <Arcs className="mt-1.5" />}
       {ctx.user ? (
