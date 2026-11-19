@@ -44,6 +44,7 @@ jobs:
             add('tipo:história', '1d76db'); add('tipo:task', '0e8a16'); add('tipo:bug', 'd73a4a'); add('tipo:épico', '5319e7')
             add('status:a-fazer', 'ededed'); add('status:em-andamento', 'fbca04'); add('status:concluído', '0e8a16')
             add('jira', '0052cc', 'Espelhada do Jira KAN')
+            add('urgente', 'b60205', 'Prioridade máxima no Jira'); add('dependências', '0366d6', 'Atualizações do Dependabot'); add('segurança', 'ee0701', 'Atualização ou correção de segurança'); add('ci', '6f42c1', 'Integração contínua')
             const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, { owner, repo, per_page: 100 })
             for (const [name, { color, description }] of wantedLabels) {
               const cur = existingLabels.find((l) => l.name === name)
@@ -82,6 +83,7 @@ jobs:
               if (t.epic && epicName[t.epic]) labels.push(epicName[t.epic])
               if (t.type === 'Epic' && epicName[t.key]) labels.push(epicName[t.key])
               if (t.labels?.includes('bug')) labels.push('tipo:bug')
+              if (t.labels?.includes('urgente')) labels.push('urgente')
               const body = [
                 `**Jira:** [${t.key}](${jiraBase}/browse/${t.key}) · **Story points:** ${t.points ?? '—'} · **Sprint:** ${t.sprint || 'Backlog'}`,
                 '',
