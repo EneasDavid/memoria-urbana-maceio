@@ -100,6 +100,8 @@ export function CookiesPage() {
           ['mu_session', 'Cookie essencial (HttpOnly, Secure)', 'Manter você conectado depois de entrar com Google', '7 dias ou até sair'],
           ['mu_oauth', 'Cookie essencial (HttpOnly, Secure)', 'Proteger o login contra falsificação (state, nonce e PKCE)', '10 minutos'],
           ['mu_cookie_notice', 'Armazenamento local', 'Lembrar que você já viu este aviso', 'Até limpar o navegador'],
+          ['mu_media_ok', 'Armazenamento local', 'Lembrar que você já leu o aviso de câmera e galeria', 'Até limpar o navegador'],
+          ['mu_demo', 'Cookie essencial (HttpOnly)', 'Sessão do acesso de demonstração, sem dado pessoal', '2 horas'],
           ['mu_reports_pending', 'Armazenamento local', 'Guardar relatos de dano até o envio ao servidor', 'Até o envio ou limpar o navegador'],
           ['mu_reports_media', 'IndexedDB (aparelho)', 'Guardar a foto (já sem localização) ou o vídeo do relato até o envio', 'Até o envio ou limpar o navegador'],
         ]}
@@ -197,6 +199,13 @@ export function AboutPage() {
       />
       <H2 id="transparencia">Transparência</H2>
       <p>Não há anúncios, patrocínio pago nem avaliações ou depoimentos de usuários no site. Os números do painel de demonstração são simulados e indicados como tal.</p>
+      <H2 id="ia">Uso de inteligência artificial</H2>
+      <ul className="list-disc pl-5 space-y-2">
+        <li><strong>Construção do site:</strong> o código, os testes e parte dos textos de interface foram feitos com ajuda de IA (Claude, da Anthropic). A equipe revisou tudo, e o código é aberto no GitHub.</li>
+        <li><strong>Narração:</strong> a voz que lê a bio é sintetizada pelo próprio aparelho (leitor de voz do sistema). Não é a gravação de uma pessoa, e nada do que você ouve sai do celular.</li>
+        <li><strong>Conteúdo histórico:</strong> é escrito e conferido pela equipe a partir das fontes citadas em cada página. A IA não inventa datas nem fatos, e erros podem ser relatados pelo botão "Informação errada".</li>
+        <li><strong>Decisões sobre você:</strong> nenhuma decisão automatizada é tomada com seus dados (LGPD, art. 20).</li>
+      </ul>
     </Layout>
   )
 }
