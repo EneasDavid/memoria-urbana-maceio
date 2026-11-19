@@ -60,6 +60,9 @@ jobs:
       - name: Segurança de anexos (tipo real, tamanho, poliglotas, scripts, bombas)
         run: node --experimental-strip-types --no-warnings --test tests/media.test.mjs
 
+      - name: Segurança (cabeçalhos, segredos, XSS, CSRF, injeção, controle de acesso)
+        run: node --experimental-strip-types --no-warnings --test tests/security.test.mjs
+
       - name: SEO (indexável, sitemap, robots, HTML pré-renderizado, JSON-LD)
         run: node --experimental-strip-types --no-warnings --test tests/seo.test.mjs
 
@@ -114,6 +117,12 @@ jobs:
 
       - name: Anexo real no relato (prévia, recodificação sem EXIF, recusa de arquivos perigosos)
         run: node --experimental-strip-types --no-warnings --test tests/attach.test.mjs
+
+      - name: Acesso de demonstração e aviso de câmera/galeria
+        run: node --experimental-strip-types --no-warnings --test tests/access.test.mjs
+
+      - name: Relatório de conformidade (40 requisitos)
+        run: node scripts/audit-report.mjs
 
       - name: Web Interface Guidelines (Vercel) nas páginas públicas
         run: node --experimental-strip-types --no-warnings --test tests/guidelines.test.mjs
