@@ -12,8 +12,16 @@ def generate_narration(monument_id: str, version: int) -> None:
 
 @celery.task(name="media.process_report_photo", **RETRY)
 def process_report_photo(report_id: str) -> None:
-    """Reduz para 1280 px, remove EXIF/GPS, gera miniatura e roda moderação."""
+    """Recodifica a foto (Pillow, Image.MAX_IMAGE_PIXELS = 40_000_000): reduz para 1280 px, remove EXIF/GPS,
+    gera miniatura e roda moderação. Só os pixels recodificados saem da quarentena (app/core/media.py)."""
     raise NotImplementedError("Sprint 7: fotos de relatos")
+
+
+@celery.task(name="media.process_report_video", **RETRY)
+def process_report_video(report_id: str) -> None:
+    """Confere a duração (≤ 30 s) com ffprobe em sandbox (sem rede, limite de CPU e memória), remove metadados
+    (ffmpeg -map_metadata -1, sem recodificar) e gera um quadro de miniatura. Vídeo reprovado é apagado."""
+    raise NotImplementedError("Sprint 7: vídeos de relatos")
 
 
 @celery.task(name="notify.new_report", **RETRY)
