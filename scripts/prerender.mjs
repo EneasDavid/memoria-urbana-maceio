@@ -8,6 +8,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { monuments } from '../src/data.ts'
+import { nearby, fmtDistance } from '../src/shared/geo.ts'
 
 const DIST = path.resolve(import.meta.dirname, '../dist')
 export const SITE = (process.env.SITE_URL || 'https://memoria-urbana-maceio.vercel.app').replace(/\/+$/, '')
@@ -46,8 +47,11 @@ function page({ route, title, description, body = '', jsonld = [], index = true 
     `<meta property="og:title" content="${esc(title)}">`,
     `<meta property="og:description" content="${esc(description)}">`,
     `<meta property="og:url" content="${esc(url)}">`,
-    `<meta property="og:image" content="${SITE}/memoria-urbana-logo.png">`,
-    `<meta name="twitter:card" content="summary">`,
+    `<meta property="og:image" content="${SITE}/og.png">`,
+    `<meta property="og:image:width" content="1200">`,
+    `<meta property="og:image:height" content="630">`,
+    `<meta property="og:image:alt" content="Memória Urbana Maceió: estátuas, praças e museus de Maceió">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="theme-color" content="#f6f3ec" media="(prefers-color-scheme: light)">`,
     `<meta name="theme-color" content="#0e1418" media="(prefers-color-scheme: dark)">`,
     `<meta name="color-scheme" content="light dark">`,
@@ -83,6 +87,8 @@ for (const m of monuments) {
 <p><strong>${esc(m.museum.name)}</strong>, ${esc(m.museum.address)}${m.museum.hours ? ` · ${esc(m.museum.hours)}` : ''}. ${esc(m.museum.why)}</p>
 <h2>Fontes</h2>
 <ul>${m.sources.map((s) => `<li><a href="${esc(s.url)}">${esc(s.label)}</a></li>`).join('')}</ul>
+<h2>Perto daqui</h2>
+<ul>${nearby(m, monuments).map(({ m: n, meters }) => `<li><a href="/monumento/${n.id}">${esc(n.name)}</a> · ${fmtDistance(meters)}</li>`).join('')}</ul>
 <p><a href="/">Ver todos os monumentos de Maceió</a></p>
 </main>`
   const place = {
