@@ -1,11 +1,14 @@
 import { LEGAL_LINKS, ORG } from '../../legal/org'
+import { LogoMark, Skyline } from '../../ui'
 
 // Rodapé de todas as páginas públicas: links legais + natureza do projeto (itens 1, 2, 3, 15).
 export function LegalFooter() {
   return (
-    <footer className="mt-12 border-t border-black/10 pt-6 pb-24 text-[13px] text-black/70">
+    <footer className="mt-12 pb-24 text-[13px] text-black/70">
+      <Skyline className="block w-full max-w-[520px] h-11 opacity-90" />
+      <div className="border-t border-black/10 pt-6">
       <div className="flex items-center gap-2.5">
-        <img src="/memoria-urbana-logo.png" alt="" className="w-7 h-7 rounded-full object-cover mu-multiply" />
+        <LogoMark size={34} />
         <span className="font-semibold text-black">{ORG.nome}</span>
       </div>
       <p className="mt-2 leading-snug">{ORG.natureza} Sem cadastro para ler e sem rastreamento de visitantes.</p>
@@ -16,6 +19,7 @@ export function LegalFooter() {
           ))}
         </ul>
       </nav>
+      </div>
     </footer>
   )
 }
