@@ -10,7 +10,7 @@ export function TrailInvite({ plate, returnTo }: { plate: string; returnTo: stri
   if (s.status === 'authenticated') {
     return (
       <section className="mt-6 rounded-[var(--r-card)] bg-[#0b2f49] mu-navy-grad text-white p-5 flex items-center gap-4">
-        <Icon name="star" size={26} className="text-[#dda93f] shrink-0" />
+        <Icon name="placa" size={26} className="text-[#dda93f] shrink-0" />
         <div className="flex-1">
           <p className="text-[16px] font-semibold">Você está na Trilha, {s.user.name.split(' ')[0]}</p>
           <p className="text-[14px] text-white/70">Leia a placa para ganhar o carimbo desta obra.</p>
@@ -43,7 +43,7 @@ export function LoginPill({ returnTo }: { returnTo: string }) {
   }
   return (
     <a href={entrar(returnTo)} className="mu-hit mu-press absolute right-4 top-4 z-10 h-10 px-3.5 rounded-full bg-black/75 backdrop-blur text-white text-[13px] font-semibold flex items-center gap-1.5">
-      <Icon name="star" size={14} className="text-[#dda93f]" />Entrar · pontuar
+      <Icon name="placa" size={14} className="text-[#dda93f]" />Entrar · pontuar
     </a>
   )
 }
