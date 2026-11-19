@@ -37,3 +37,21 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-78](https://ic-team-yrsngn10.atlassian.net/browse/KAN-78) | Site segue o modo claro/escuro do aparelho | ![Tema](site-tema-claro-escuro.jpg) |
 | [KAN-79](https://ic-team-yrsngn10.atlassian.net/browse/KAN-79) | Convite para entrar na Trilha | ![Convite](site-convite-trilha.jpg) |
 | [KAN-80](https://ic-team-yrsngn10.atlassian.net/browse/KAN-80) | Narração sincronizada | ![Narração](site-narracao-sincronizada.jpg) |
+| [KAN-83](https://ic-team-yrsngn10.atlassian.net/browse/KAN-83) | Conformidade 1/17: Política de privacidade | ![Política de privacidade](conf-privacidade.jpg) |
+| [KAN-84](https://ic-team-yrsngn10.atlassian.net/browse/KAN-84) | Conformidade 2/17: Termos de serviço | ![Termos de serviço](conf-termos.jpg) |
+| [KAN-85](https://ic-team-yrsngn10.atlassian.net/browse/KAN-85) | Conformidade 3/17: Aviso de cookies | ![Aviso de cookies](conf-aviso-cookies.jpg) |
+| [KAN-86](https://ic-team-yrsngn10.atlassian.net/browse/KAN-86) | Conformidade 4/17: Política de reembolso | ![Política de reembolso](conf-termos.jpg) |
+| [KAN-87](https://ic-team-yrsngn10.atlassian.net/browse/KAN-87) | Conformidade 5/17: Formulários na LGPD | ![Formulários na LGPD](conf-relato-lgpd.jpg) |
+| [KAN-88](https://ic-team-yrsngn10.atlassian.net/browse/KAN-88) | Conformidade 6/17: Só dados necessários | ![Só dados necessários](conf-relato-lgpd.jpg) |
+| [KAN-89](https://ic-team-yrsngn10.atlassian.net/browse/KAN-89) | Conformidade 7/17: Scripts de tracking | ![Scripts de tracking](conf-ci-verde.jpg) |
+| [KAN-90](https://ic-team-yrsngn10.atlassian.net/browse/KAN-90) | Conformidade 8/17: Acessibilidade | ![Acessibilidade](conf-acessibilidade.jpg) |
+| [KAN-91](https://ic-team-yrsngn10.atlassian.net/browse/KAN-91) | Conformidade 9/17: Alt nas imagens | ![Alt nas imagens](conf-rodape-legal.jpg) |
+| [KAN-92](https://ic-team-yrsngn10.atlassian.net/browse/KAN-92) | Conformidade 10/17: Contraste corrigido | ![Contraste corrigido](conf-escuro-contraste.jpg) |
+| [KAN-93](https://ic-team-yrsngn10.atlassian.net/browse/KAN-93) | Conformidade 11/17: Navegação por teclado | ![Navegação por teclado](conf-teclado-pular.jpg) |
+| [KAN-94](https://ic-team-yrsngn10.atlassian.net/browse/KAN-94) | Conformidade 12/17: Sem avaliações falsas | ![Sem avaliações falsas](conf-login-termos.jpg) |
+| [KAN-95](https://ic-team-yrsngn10.atlassian.net/browse/KAN-95) | Conformidade 13/17: Sem promessas falsas | ![Sem promessas falsas](conf-relato-lgpd.jpg) |
+| [KAN-96](https://ic-team-yrsngn10.atlassian.net/browse/KAN-96) | Conformidade 14/17: Copyright das imagens | ![Copyright das imagens](conf-creditos.jpg) |
+| [KAN-97](https://ic-team-yrsngn10.atlassian.net/browse/KAN-97) | Conformidade 15/17: Dados da empresa | ![Dados da empresa](conf-sobre.jpg) |
+| [KAN-98](https://ic-team-yrsngn10.atlassian.net/browse/KAN-98) | Conformidade 16/17: Conformidade LGPD | ![Conformidade LGPD](conf-privacidade.jpg) |
+| [KAN-99](https://ic-team-yrsngn10.atlassian.net/browse/KAN-99) | Conformidade 17/17: Riscos jurídicos | ![Riscos jurídicos](conf-ci-verde.jpg) |
+| [KAN-100](https://ic-team-yrsngn10.atlassian.net/browse/KAN-100) | CI: job Conformidade (LGPD, acessibilidade, legal) | ![CI: job Conformidade (LGPD, acessibilidade, legal)](conf-ci-verde.jpg) |
