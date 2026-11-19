@@ -92,3 +92,6 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-169](https://ic-team-yrsngn10.atlassian.net/browse/KAN-169) | Transparência sobre uso de IA | ![Transparência sobre uso de IA](sec-transparencia-ia.jpg) |
 | [KAN-171](https://ic-team-yrsngn10.atlassian.net/browse/KAN-171) | Links internos "Perto daqui" | ![Links internos Perto daqui](seo-perto-daqui.jpg) |
 | [KAN-172](https://ic-team-yrsngn10.atlassian.net/browse/KAN-172) | Imagem de compartilhamento (OG) | ![Imagem de compartilhamento](../../public/og.png) |
+| [KAN-184](https://ic-team-yrsngn10.atlassian.net/browse/KAN-184) | Área logada igual ao Figma | ![Área logada igual ao Figma](ux-app-figma-x-site.jpg) |
+| [KAN-185](https://ic-team-yrsngn10.atlassian.net/browse/KAN-185) | Área logada sem simulações | ![Área logada sem simulações](ux-app-logado.jpg) |
+| [KAN-186](https://ic-team-yrsngn10.atlassian.net/browse/KAN-186) | Aviso antes da câmera do leitor | ![Aviso antes da câmera do leitor](ux-app-camera.jpg) |
