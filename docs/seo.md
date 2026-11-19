@@ -44,3 +44,27 @@ O React substitui o HTML estático ao carregar, então a página continua igual 
 7. Em **Inspeção de URL**, peça a indexação da página inicial e de 2 ou 3 monumentos.
 
 A indexação leva de dias a algumas semanas. Links de fora ajudam: o site da universidade, perfis do projeto, matérias, e o QR das placas quando elas estiverem na rua.
+
+## Checklist de SEO técnico (verificado no CI)
+
+| Item | Situação | Onde |
+|---|---|---|
+| Sem tags noindex nas páginas públicas | ✅ | `tests/seo.test.mjs` |
+| Meta titles únicos (15–90 caracteres) | ✅ | `scripts/prerender.mjs` |
+| Meta descriptions (50–170 caracteres) | ✅ | idem |
+| Texto alt nas imagens | ✅ | `tests/compliance.test.mjs`, axe-core |
+| Core Web Vitals (LCP < 2,5 s, CLS < 0,1 no celular) | ✅ | `tests/guidelines.test.mjs` |
+| sitemap.xml | ✅ | `dist/sitemap.xml` |
+| Imagem OG 1200×630 | ✅ | `public/og.png` |
+| Links quebrados (internos) | ✅ | `tests/seo.test.mjs` |
+| Hierarquia de cabeçalhos e só 1 H1 por página | ✅ | `tests/seo.test.mjs` |
+| Estratégia de backlinks | ⏳ KAN-183 | Ufal, museus, imprensa, perfis do projeto e o QR das placas |
+| Slugs limpos | ✅ | `/monumento/<id>` em minúsculas, sem acento (o teste confere) |
+| Links internos | ✅ | Seção "Perto daqui" com os 3 monumentos mais próximos |
+| Tags canônicas | ✅ | `<link rel="canonical">` em cada página |
+| HTTPS | ✅ | HSTS de 2 anos |
+| Imagens compactadas | ✅ | Logo de 518 KB → 26 KB; fotos de terceiros servidas pela origem |
+| Schema markup | ✅ | JSON-LD `TouristAttraction`, `BreadcrumbList`, `WebSite`, `ItemList` |
+| Search Console | ⏳ KAN-110 | Depende da conta Google do projeto |
+| robots.txt | ✅ | `dist/robots.txt` |
+| Responsividade no celular | ✅ | Sem rolagem lateral em 320, 390 e 768 px (teste) |

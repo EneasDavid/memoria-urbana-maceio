@@ -10,6 +10,8 @@ Documento interno do Memória Urbana Maceió (Lei 13.709/2018). A versão para o
 | Carregamento de fotos de terceiros | IP enviado ao site da foto | Visitantes | Exibir foto creditada | Legítimo interesse | Site de origem | Do site de origem | Sites listados em `/creditos` |
 | Relato de dano | Tipo, detalhe, foto sem EXIF, hash do IP com sal rotativo | Visitantes que relatam | Conservação do patrimônio | Legítimo interesse | Hoje: aparelho (`mu_reports_pending`). Depois: Firestore/Storage | 12 meses, depois anonimizado | Google Cloud (futuro) |
 | Conta da Trilha | `sub` do Google, nome, e-mail, foto, carimbos | Quem entra | Gamificação | Consentimento (art. 7º, I) | Cookie assinado (fase 1); Firestore (fase 3) | Até exclusão; sessão 7 dias | Google (OAuth), Vercel, Google Cloud |
+| Acesso de demonstração | Nenhum dado pessoal: usuário fictício e papel (visitante/gestor) | Quem avalia o projeto | Conhecer Trilha e painel sem conta | Legítimo interesse | Cookie `mu_demo` (HttpOnly) | 2 horas | Vercel |
+| Câmera/galeria no relato | Só o arquivo escolhido; a foto é recodificada sem EXIF/GPS | Visitantes que anexam | Conservação do patrimônio | Legítimo interesse, com aviso antes de abrir (`mu_media_ok`) | Aparelho (IndexedDB) até o envio | Até o envio | — |
 | Papéis de gestor/curador/admin | E-mail e papel | Equipe | Controle de acesso | Execução de contrato/procedimentos (art. 7º, V) | Variável `GESTOR_EMAILS` (fase 1), Firestore (fase 3) | Enquanto durar a função | Vercel, Google Cloud |
 
 Teste de legítimo interesse: a finalidade (segurança, patrimônio) é legítima; o dado é mínimo (sem nome ou contato); o visitante espera que o site registre acessos e relatos; há transparência na política e o IP é guardado só como hash.
@@ -44,6 +46,15 @@ A Vercel, o Google e o Firebase podem processar dados nos EUA, sob as cláusulas
 3. Comunicar a ANPD e os titulares em prazo razoável (orientação da ANPD: até 3 dias úteis) quando houver risco ou dano relevante.
 4. Registrar a ocorrência e as medidas em `docs/incidentes/`.
 
+## Operadores e contratos (art. 39)
+
+| Operador | O que trata | Contrato/DPA | Situação |
+|---|---|---|---|
+| Vercel Inc. | Hospedagem, logs de acesso | Vercel DPA (termos de serviço) | Anexar cópia (KAN-176) |
+| Google (OAuth e Firebase) | Login, Firestore e Storage | Google Cloud Data Processing Addendum | Anexar cópia (KAN-176) |
+| Oracle Cloud | VM do site (após a migração) | Oracle Data Processing Agreement | Anexar cópia (KAN-176) |
+| GitHub | Código e CI (sem dado de visitante) | GitHub DPA | Não trata dado de titular |
+
 ## Verificação contínua
 
-O job **Conformidade** do CI roda `tests/compliance.test.mjs` (17 regras) e `tests/a11y.test.mjs` (axe-core e teclado) a cada push e PR.
+A matriz dos 40 requisitos está em [`docs/conformidade-40.md`](conformidade-40.md), com relatório automático no CI. O job **Conformidade** do CI roda `tests/compliance.test.mjs` (17 regras) e `tests/a11y.test.mjs` (axe-core e teclado) a cada push e PR.
