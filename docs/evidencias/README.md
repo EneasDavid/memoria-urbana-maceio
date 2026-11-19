@@ -101,3 +101,5 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-194](https://ic-team-yrsngn10.atlassian.net/browse/KAN-194) | Localização real na Trilha | ![Localização real na Trilha](ux-app-localizacao.jpg) |
 | [KAN-195](https://ic-team-yrsngn10.atlassian.net/browse/KAN-195) | Identidade da logo na área do visitante | ![Identidade da logo na área do visitante](ux-app-identidade.jpg) |
 | [KAN-196](https://ic-team-yrsngn10.atlassian.net/browse/KAN-196) | Lista de monumentos na área logada | ![Lista de monumentos na área logada](ux-app-lista-monumentos.jpg) |
+| [KAN-197](https://ic-team-yrsngn10.atlassian.net/browse/KAN-197) | Área logada no computador (desenho do site do protótipo) | ![Área logada no computador](ux-app-desktop.jpg) |
+| [KAN-197](https://ic-team-yrsngn10.atlassian.net/browse/KAN-197) | Ficha, leitor, Passaporte e escuro no computador | ![Telas no computador](ux-app-desktop-telas.jpg) |
