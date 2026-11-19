@@ -86,3 +86,9 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-154](https://ic-team-yrsngn10.atlassian.net/browse/KAN-154) | Ferramenta 4/5 · Imagem → código | ![Ferramenta 4/5 · Imagem → código](ux-um-play.jpg) |
 | [KAN-156](https://ic-team-yrsngn10.atlassian.net/browse/KAN-156) | Corrigir: dois plays | ![Corrigir: dois plays](ux-um-play.jpg) |
 | [KAN-157](https://ic-team-yrsngn10.atlassian.net/browse/KAN-157) | Corrigir: home | ![Corrigir: home](ux-home-cabecalho.jpg) |
+| [KAN-163](https://ic-team-yrsngn10.atlassian.net/browse/KAN-163) | Aviso antes de câmera e galeria | ![Aviso antes de câmera e galeria](sec-aviso-camera.jpg) |
+| [KAN-164](https://ic-team-yrsngn10.atlassian.net/browse/KAN-164) | Acesso de demonstração (login) | ![Acesso de demonstração (login)](sec-demo-login.jpg) |
+| [KAN-164](https://ic-team-yrsngn10.atlassian.net/browse/KAN-164) | Acesso de demonstração (painel) | ![Acesso de demonstração (painel)](sec-demo-painel.jpg) |
+| [KAN-169](https://ic-team-yrsngn10.atlassian.net/browse/KAN-169) | Transparência sobre uso de IA | ![Transparência sobre uso de IA](sec-transparencia-ia.jpg) |
+| [KAN-171](https://ic-team-yrsngn10.atlassian.net/browse/KAN-171) | Links internos "Perto daqui" | ![Links internos Perto daqui](seo-perto-daqui.jpg) |
+| [KAN-172](https://ic-team-yrsngn10.atlassian.net/browse/KAN-172) | Imagem de compartilhamento (OG) | ![Imagem de compartilhamento](../../public/og.png) |
