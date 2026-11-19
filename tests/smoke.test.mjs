@@ -54,6 +54,14 @@ test('todos os scripts e estilos do build carregam', async () => {
   }
 })
 
+test('rotas públicas respondem (uma URL por monumento)', async () => {
+  for (const p of ['/', '/monumento/graciliano', '/monumento/nise', '/entrar', '/prototipo']) {
+    const r = await fetch(BASE + p)
+    assert.equal(r.status, 200, `rota ${p}`)
+    assert.match(await r.text(), /<div id="root"><\/div>/)
+  }
+})
+
 test('logo e favicon estão publicados', async () => {
   for (const p of ['/memoria-urbana-logo.png', '/favicon.png']) {
     const r = await fetch(BASE + p)
