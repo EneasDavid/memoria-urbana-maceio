@@ -958,6 +958,43 @@
    "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
    "labels": [],
    "description": "ZAP contra o preview, audits bloqueando alta, k6 com p95 < 500 ms. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-78",
+   "type": "Tarefa",
+   "summary": "Corrigir: site não segue o modo claro/escuro do aparelho",
+   "status": "Concluído",
+   "epic": "KAN-5",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [
+    "bug"
+   ],
+   "description": "Hook useSystemTheme lê prefers-color-scheme, aplica o tema escuro e acompanha a troca ao vivo. Detalhes e print no Jira."
+  },
+  {
+   "key": "KAN-79",
+   "type": "História",
+   "summary": "Convite para entrar na Trilha na página do monumento",
+   "status": "Concluído",
+   "epic": "KAN-7",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Atalho \"Entrar · pontuar\" e card \"Ganhe o carimbo da Placa XX\"; a página continua aberta sem conta. Detalhes e print no Jira."
+  },
+  {
+   "key": "KAN-80",
+   "type": "Tarefa",
+   "summary": "Corrigir: narração fora de sincronia e áudio irregular",
+   "status": "Concluído",
+   "epic": "KAN-5",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [
+    "bug"
+   ],
+   "description": "Narração um trecho por vez, destaque da frase e da palavra faladas, pausa real e voz pt-BR. Detalhes e print no Jira."
   }
  ]
 }
