@@ -32,7 +32,7 @@ const H2 = ({ id, children }: { id?: string; children: ReactNode }) => (
 const Contato = () => (
   <>
     {ORG.contato.email ? <><a className="underline" href={`mailto:${ORG.contato.email}`}>{ORG.contato.email}</a> ou </> : null}
-    <a className="underline" href={ORG.contato.url}>{ORG.contato.descricao.toLowerCase()}</a>
+    <a className="underline" href={ORG.contato.url}>{ORG.contato.descricao.charAt(0).toLowerCase() + ORG.contato.descricao.slice(1)}</a>
   </>
 )
 
@@ -52,7 +52,7 @@ export function PrivacyPage() {
       <p><strong>Resumo:</strong> para ler a página de um monumento você não precisa de cadastro, e não usamos ferramentas de rastreamento, publicidade nem venda de dados. Só tratamos dados quando você envia um relato ou escolhe entrar com sua conta Google.</p>
 
       <H2 id="controlador">Quem é o controlador</H2>
-      <p>{ORG.nome}, {ORG.natureza.toLowerCase()} {ORG.pessoaJuridica} Responsável: {ORG.responsavel}, {ORG.cidade}.</p>
+      <p>O controlador é o {ORG.nome}. {ORG.natureza} {ORG.pessoaJuridica} Responsável: {ORG.responsavel}, {ORG.cidade}.</p>
 
       <H2 id="dados">Quais dados tratamos, para quê e por quanto tempo</H2>
       <Table
