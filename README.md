@@ -22,7 +22,7 @@
 | `/` | todos, sem login | Lista de monumentos (cada card abre em nova aba) |
 | `/monumento/:id` | todos, sem login | Página do monumento, aberta pelo QR/NFC da placa: bio, narração, audiodescrição, convite ao museu e relato de dano. Sem menus nem botão voltar |
 | `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) |
-| `/app` | conta (participante) | Trilha Cultural (em construção) |
+| `/app` | conta (participante) | Trilha Cultural: Explorar, Trilha, Passaporte e leitura da placa (telas do protótipo do Figma) |
 | `/painel` | papel gestor | Painel da prefeitura |
 | `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
 | `/privacidade` `/termos` `/cookies` `/acessibilidade` `/creditos` `/sobre` | todos | Páginas legais, linkadas no rodapé de toda página pública |
@@ -104,6 +104,7 @@ Em `/entrar`, os botões **Como visitante** e **Como gestor** abrem a Trilha e o
 - A sessão (`mu_demo`) dura 2 horas e nada é salvo.
 - O backend não aceita esse cookie para dados reais.
 - Para desligar, defina `DEMO_LOGIN=off`.
+- Na demonstração, a Trilha mantém as simulações do protótipo (caminhada, leitura da placa, amigos por perto) para testar sem ir à rua. Na conta Google nada é simulado: só QR e NFC reais e check-in por GPS com a localização verdadeira.
 
 ## Segurança e auditoria
 
