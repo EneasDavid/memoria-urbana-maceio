@@ -1796,6 +1796,42 @@
    "points": 5,
    "sprint": "Sprint 6 · Fundação do backend e segurança",
    "description": "Ligar de verdade o login com Google (OAuth 2.0 + OIDC). Hoje /api/auth/me responde configured:false. Depende de KAN-59 (cliente OAuth no Google Cloud) e KAN-107 (servidor Node). Cadastrar GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET e GESTOR_EMAILS na Vercel e na VM; testar Entrar → consentimento → callback → sessão → Sair; conferir PKCE, state, nonce, cookies e open redirect em produção; mostrar nome/foto no botão e liberar Trilha, 3D e painel por papel. Aceite: visitante entra com Google no celular, ganha o carimbo e sai; gestor abre o /painel; sem login tudo da placa continua aberto."
+  },
+  {
+   "key": "KAN-159",
+   "type": "Tarefa",
+   "summary": "Corrigir: bordas e contorno de foco cortados na folha de relato",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "O contêiner de altura dinâmica (overflow: hidden) cortava o contorno de foco e as bordas; ganhou 6 px de folga.",
+   "labels": [
+    "bug"
+   ]
+  },
+  {
+   "key": "KAN-160",
+   "type": "Tarefa",
+   "summary": "Animação enquanto verifica e envia foto ou vídeo",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Miniatura com brilho, etapa escrita e barra indeterminada durante a verificação; spinner 'Enviando foto/vídeo…' no envio."
+  },
+  {
+   "key": "KAN-161",
+   "type": "Tarefa",
+   "summary": "Corrigir: vídeos legítimos recusados no relato",
+   "status": "Concluído",
+   "epic": "KAN-9",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Padrão '<%=' gerava falso positivo em vídeos grandes; marcas de celular eram bloqueadas; vídeo não decodificável pelo navegador era recusado. Corrigido no aparelho e no servidor.",
+   "labels": [
+    "bug"
+   ]
   }
  ]
 }
