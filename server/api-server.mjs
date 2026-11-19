@@ -14,6 +14,7 @@ const ROUTES = {
   'GET /api/auth/callback': ['auth/callback.js', 'GET'],
   'GET /api/auth/me': ['auth/me.js', 'GET'],
   'POST /api/auth/logout': ['auth/logout.js', 'POST'],
+  'POST /api/auth/demo': ['auth/demo.js', 'POST'],
 }
 const cache = new Map()
 async function handler(file, method) {
@@ -21,13 +22,14 @@ async function handler(file, method) {
   return cache.get(file)[method]
 }
 
-function toRequest(req) {
+async function toRequest(req) {
   // O Caddy informa o protocolo e o host originais; sem isso o cookie Secure e o redirect_uri sairiam errados.
   const proto = req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http'
   const host = req.headers['x-forwarded-host'] || req.headers.host || `127.0.0.1:${PORT}`
   const headers = new Headers()
   for (const [k, v] of Object.entries(req.headers)) if (v != null) headers.set(k, Array.isArray(v) ? v.join(', ') : v)
-  return new Request(`${proto}://${host}${req.url}`, { method: req.method, headers })
+  const body = req.method === 'GET' || req.method === 'HEAD' ? undefined : await new Promise((ok) => { const c = []; let n = 0; req.on('data', (d) => { n += d.length; if (n > 16_384) req.destroy(); else c.push(d) }); req.on('end', () => ok(Buffer.concat(c))) })
+  return new Request(`${proto}://${host}${req.url}`, { method: req.method, headers, body })
 }
 
 async function send(res, response) {
@@ -46,7 +48,7 @@ export function createServer() {
     try {
       if (!route) return send(res, Response.json({ error: 'não encontrado' }, { status: 404 }))
       const fn = await handler(...route)
-      await send(res, await fn(toRequest(req)))
+      await send(res, await fn(await toRequest(req)))
     } catch (e) {
       console.error(new Date().toISOString(), req.method, req.url, e)
       await send(res, Response.json({ error: 'erro interno' }, { status: 500 }))
