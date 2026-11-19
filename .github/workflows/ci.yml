@@ -106,6 +106,9 @@ jobs:
       - name: Acessibilidade WCAG 2.1 AA (axe-core, claro e escuro) e teclado
         run: node --experimental-strip-types --no-warnings --test tests/a11y.test.mjs
 
+      - name: UX e animação (Fitts, Hick, Miller, Doherty, Postel, Jakob…) e ajustes finos de design
+        run: node --experimental-strip-types --no-warnings --test tests/ux.test.mjs
+
   backend:
     name: Backend (FastAPI, Celery, RBAC)
     runs-on: ubuntu-latest
