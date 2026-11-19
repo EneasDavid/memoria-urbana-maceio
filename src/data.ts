@@ -351,6 +351,7 @@ export interface Report {
   kind: 'Danificado' | 'Sujo ou pichado' | 'Placa / QR / NFC não funciona' | 'Informação errada' | 'Outro'
   note?: string
   photo?: boolean
+  media?: { kind: 'image' | 'video'; mime: string; bytes: number; seconds?: number }
   at: number
   status: 'Novo' | 'Em andamento' | 'Resolvido'
 }

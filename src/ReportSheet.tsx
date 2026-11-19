@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, type ReactNode } from 'react'
 import { AutoHeight, Icon, type IconName } from './ui'
+import { prepareAttachment, type Attachment } from './features/monument/attach'
+import { LIMITS } from './shared/media'
 import type { Monument, Report } from './data'
 
 // Relato do visitante em 2 toques: escolhe o problema → envia. Anônimo, sem conta.
@@ -11,10 +13,24 @@ const kinds: [Report['kind'], IconName][] = [
   ['Outro', 'chat'],
 ]
 
-export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onClose: () => void; onSend: (r: Omit<Report, 'id' | 'at' | 'status'>) => void; sentText?: ReactNode }) {
+export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onClose: () => void; onSend: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void; sentText?: ReactNode }) {
   const [kind, setKind] = useState<Report['kind'] | null>(null)
   const [note, setNote] = useState('')
-  const [photo, setPhoto] = useState(false)
+  const [att, setAtt] = useState<Attachment | null>(null)
+  const [attErr, setAttErr] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+  useEffect(() => () => { if (att) URL.revokeObjectURL(att.preview) }, [att])
+  const pick = async (f: File | undefined) => {
+    if (!f) return
+    setAttErr(null); setBusy(true)
+    try {
+      const r = await prepareAttachment(f)
+      if (r.ok) setAtt(r.att); else { setAtt(null); setAttErr(r.reason) }
+    } catch { setAttErr('Não foi possível ler este arquivo.') }
+    setBusy(false)
+    if (fileRef.current) fileRef.current.value = ''
+  }
   const [sent, setSent] = useState(false)
   const [closing, setClosing] = useState(false)
   const [bounce, setBounce] = useState(0)
@@ -67,9 +83,24 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
               ))}
             </div>
             <textarea aria-label="Detalhe do problema (opcional)" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Detalhe (opcional). Não escreva nomes ou contatos." rows={2} className="mt-3 w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-black placeholder:text-black/35 outline-none resize-none" />
-            <button onClick={() => setPhoto(!photo)} className="mt-2 h-10 px-3 rounded-[12px] bg-white text-[14px] font-medium text-black/70 flex items-center gap-2"><Icon name={photo ? 'check' : 'scan'} size={16} className={photo ? 'text-[#2c8585]' : ''} />{photo ? 'Foto anexada (comprimida, ~80 KB)' : 'Anexar foto (opcional)'}</button>
-            <p className="mt-3 text-[12.5px] leading-snug text-black/70">Não pedimos nome nem contato. Fotos têm a localização removida e não devem mostrar rostos. Saiba mais na <a href="/privacidade" className="underline">Política de Privacidade</a>.</p>
-            <button disabled={!kind} onClick={() => { if (kind) { onSend({ monument: m.id, kind, note: note.trim() || undefined, photo }); setSent(true) } }} className={`mu-press mt-4 w-full h-[54px] rounded-[14px] text-[17px] font-semibold ${kind ? 'bg-[#1f6b6b] text-white' : 'bg-black/[0.08] text-black/45'}`}>Enviar relato</button>
+            {/* anexo real: foto ou vídeo, validado e (foto) recodificado no aparelho — src/shared/media.ts */}
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm" className="sr-only" id="relato-anexo" aria-describedby="relato-anexo-regras" onChange={(e) => pick(e.target.files?.[0])} />
+            {att ? (
+              <div className="mt-2 flex items-center gap-3 rounded-[14px] bg-white p-2 mu-edge" data-testid="anexo">
+                {att.kind === 'image'
+                  ? <img src={att.preview} alt="Prévia da foto anexada" className="w-14 h-14 rounded-[10px] object-cover" />
+                  : <video src={att.preview} className="w-14 h-14 rounded-[10px] object-cover bg-black" muted playsInline aria-label="Prévia do vídeo anexado" />}
+                <span className="flex-1 text-[13.5px] text-black/75 leading-tight">{att.label}</span>
+                <button onClick={() => setAtt(null)} className="mu-press h-11 px-3 rounded-[10px] text-[13.5px] font-semibold text-[#a3321f]">Remover</button>
+              </div>
+            ) : (
+              <label htmlFor="relato-anexo" className={`mu-press mt-2 h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer ${busy ? 'opacity-60' : ''}`}>
+                <Icon name="scan" size={16} stroke={2} />{busy ? 'Verificando arquivo…' : 'Anexar foto ou vídeo (opcional)'}
+              </label>
+            )}
+            {attErr && <p role="alert" className="mt-2 rounded-[12px] bg-[#c4402e]/10 px-3 py-2 text-[13px] leading-snug text-[#a3321f]">{attErr}</p>}
+            <p id="relato-anexo-regras" className="mt-3 text-[12.5px] leading-snug text-black/70">Foto (JPG, PNG, WebP, HEIC) até {LIMITS.imageInBytes / 1024 / 1024} MB ou vídeo (MP4, MOV, WebM) até {LIMITS.videoBytes / 1024 / 1024} MB e {LIMITS.videoSeconds} s. Arquivos compactados e documentos são recusados. Não pedimos nome nem contato. Fotos têm a localização removida e não devem mostrar rostos. Saiba mais na <a href="/privacidade" className="underline">Política de Privacidade</a>.</p>
+            <button disabled={!kind || busy} onClick={() => { if (kind) { onSend({ monument: m.id, kind, note: note.trim() || undefined, photo: att?.kind === 'image', media: att ? { kind: att.kind, mime: att.mime, bytes: att.bytes, seconds: att.seconds } : undefined }, att?.blob); setSent(true) } }} className={`mu-press mt-4 w-full h-[54px] rounded-[14px] text-[17px] font-semibold ${kind ? 'bg-[#1f6b6b] text-white' : 'bg-black/[0.08] text-black/45'}`}>Enviar relato</button>
           </>
         )}
         </AutoHeight>
