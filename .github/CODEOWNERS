@@ -1,0 +1,6 @@
+# Revisão de código (requisito 37): toda mudança passa pelo responsável do projeto.
+*                   @EneasDavid
+/api/               @EneasDavid
+/backend/           @EneasDavid
+/infra/             @EneasDavid
+/.github/workflows/ @EneasDavid

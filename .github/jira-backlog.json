@@ -137,6 +137,11 @@
    "key": "KAN-113",
    "summary": "E14 · UX · animação e design fino",
    "color": "eb2f96"
+  },
+  {
+   "key": "KAN-162",
+   "summary": "E15 · Segurança · conformidade (40 requisitos) e SEO técnico",
+   "color": "cf1322"
   }
  ],
  "issues": [
@@ -1832,6 +1837,216 @@
    "labels": [
     "bug"
    ]
+  },
+  {
+   "key": "KAN-163",
+   "type": "Tarefa",
+   "summary": "Aviso e pedido de permissão para câmera e galeria",
+   "status": "Concluído",
+   "epic": "KAN-8",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Antes de abrir câmera ou galeria, um aviso explica que só o arquivo escolhido é enviado e permite recusar. O navegador não pede permissão para a galeria; a câmera usa capture=environment."
+  },
+  {
+   "key": "KAN-164",
+   "type": "Tarefa",
+   "summary": "Acesso de demonstração sem Google (visitante e gestor)",
+   "status": "Concluído",
+   "epic": "KAN-51",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Botões 'Como visitante' e 'Como gestor' em /entrar. Sessão fictícia de 2 h, sem senha, marcada demo: true, sem acesso a dados reais; desligável com DEMO_LOGIN=off."
+  },
+  {
+   "key": "KAN-165",
+   "type": "Tarefa",
+   "summary": "Proteção CSRF por Origem nas rotas POST da API",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "sameOrigin(req) em /api/auth/demo e /api/auth/logout; requisição sem Origin ou de outro host recebe 403."
+  },
+  {
+   "key": "KAN-166",
+   "type": "Tarefa",
+   "summary": "Testes de segurança automáticos (cabeçalhos, segredos, XSS, CSRF, injeção)",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "tests/security.test.mjs no job build do CI: HSTS, CSP, Permissions-Policy, cookies, PKCE, papéis, varredura de segredos, SQL e limite de taxa."
+  },
+  {
+   "key": "KAN-167",
+   "type": "Tarefa",
+   "summary": "Gestão de vulnerabilidades: Dependabot e SECURITY.md",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Dependabot para npm, pip e GitHub Actions; política de divulgação em SECURITY.md."
+  },
+  {
+   "key": "KAN-168",
+   "type": "Tarefa",
+   "summary": "Revisão de código: CODEOWNERS e template de PR com checklist",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "CODEOWNERS e pull_request_template.md com checklist de segurança, LGPD e acessibilidade."
+  },
+  {
+   "key": "KAN-169",
+   "type": "Tarefa",
+   "summary": "Transparência sobre IA (página Sobre e narração)",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Seção 'Uso de inteligência artificial' em /sobre (art. 20 LGPD) e aviso 'Voz sintetizada pelo seu aparelho' na narração."
+  },
+  {
+   "key": "KAN-170",
+   "type": "Tarefa",
+   "summary": "Matriz dos 40 requisitos e relatório de auditoria no CI",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "docs/conformidade-40.md e scripts/audit-report.mjs, que valida a matriz e publica o resumo no job Conformidade."
+  },
+  {
+   "key": "KAN-171",
+   "type": "Tarefa",
+   "summary": "SEO: links internos \"Perto daqui\" entre monumentos",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Seção com os 3 monumentos mais próximos (haversine), também no HTML pré-renderizado."
+  },
+  {
+   "key": "KAN-172",
+   "type": "Tarefa",
+   "summary": "SEO: imagem OG 1200×630 e logo comprimido",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "public/og.png com og:image, largura, altura e alt; twitter summary_large_image; logo de 518 KB para 26 KB."
+  },
+  {
+   "key": "KAN-173",
+   "type": "Tarefa",
+   "summary": "SEO: um H1, hierarquia de cabeçalhos, slugs limpos e links quebrados no CI",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Asserções novas em tests/seo.test.mjs."
+  },
+  {
+   "key": "KAN-174",
+   "type": "Tarefa",
+   "summary": "SEO: responsividade e Core Web Vitals medidos no CI",
+   "status": "Concluído",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Sem rolagem horizontal em 320, 390 e 768 px; LCP < 2,5 s e CLS < 0,1 em tests/guidelines.test.mjs."
+  },
+  {
+   "key": "KAN-175",
+   "type": "Tarefa",
+   "summary": "Licença de uso do projeto e avisos de licenças de terceiros",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "description": "Escolha da licença pela equipe e arquivo de avisos de terceiros."
+  },
+  {
+   "key": "KAN-176",
+   "type": "Tarefa",
+   "summary": "Contratos com operadores (DPA): Vercel, Google, Firebase e Oracle",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "description": "Aceitar e arquivar os DPAs de cada operador listado em docs/lgpd.md (art. 39)."
+  },
+  {
+   "key": "KAN-177",
+   "type": "Tarefa",
+   "summary": "Registro de consentimento no login (versão dos termos aceita)",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "description": "Gravar data e versão dos termos aceitos por usuário."
+  },
+  {
+   "key": "KAN-178",
+   "type": "Tarefa",
+   "summary": "Logs seguros e estruturados na API e no worker (sem dado pessoal)",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "description": "Logs JSON com id de requisição, sem e-mail, IP completo ou token."
+  },
+  {
+   "key": "KAN-179",
+   "type": "Tarefa",
+   "summary": "Backups automatizados do Firestore e do Storage com teste de restauração",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "description": "Exportação agendada e restauração testada."
+  },
+  {
+   "key": "KAN-180",
+   "type": "Tarefa",
+   "summary": "Monitoramento de ameaças e alertas (erros, 4xx/5xx, picos de relatos)",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 3,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "description": "Alertas por e-mail para picos de erro e de relatos."
+  },
+  {
+   "key": "KAN-181",
+   "type": "Tarefa",
+   "summary": "Privilégios administrativos: 2FA obrigatório e revisão periódica de acesso",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "description": "2FA nas contas do Google Cloud, Vercel, GitHub e Oracle; revisão mensal de papéis."
+  },
+  {
+   "key": "KAN-182",
+   "type": "Tarefa",
+   "summary": "Criptografia de dados sensíveis no Firestore e rotação de segredos",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 2,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "description": "Campos sensíveis cifrados e rotação de SESSION_SECRET e chaves."
+  },
+  {
+   "key": "KAN-183",
+   "type": "Tarefa",
+   "summary": "SEO: estratégia de backlinks (Ufal, museus, imprensa, perfis do projeto)",
+   "status": "A fazer",
+   "epic": "KAN-162",
+   "points": 1,
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "description": "Pedir links da Ufal, dos museus parceiros e da imprensa local."
   }
  ]
 }

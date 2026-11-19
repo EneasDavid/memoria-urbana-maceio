@@ -1,0 +1,28 @@
+# Gestão de vulnerabilidades (requisito 39): atualizações semanais de dependências com PR revisado pelo CI.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:37"
+      timezone: "America/Maceio"
+    open-pull-requests-limit: 5
+    groups:
+      dev:
+        dependency-type: "development"
+    labels: ["dependências", "segurança"]
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:37"
+      timezone: "America/Maceio"
+    labels: ["dependências", "segurança"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependências", "ci"]
