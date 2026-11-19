@@ -19,11 +19,11 @@ export function AuthGate({ children, returnTo, role }: { children: (user: Sessio
 
 function Message({ title, text }: { title: string; text: string }) {
   return (
-    <main className="min-h-dvh grid place-items-center bg-[#f6f3ec] text-black px-6">
+    <main id="conteudo" className="min-h-dvh grid place-items-center bg-[#f6f3ec] text-black px-6">
       <div className="text-center max-w-[440px]">
         <h1 className="text-[22px] font-bold">{title}</h1>
-        {text && <p className="mt-2 text-[15px] text-black/60">{text}</p>}
-        {text && <a href="/" className="mt-5 inline-flex h-11 items-center rounded-full bg-[#2c8585] px-5 text-[15px] font-semibold text-white">Ver monumentos</a>}
+        {text && <p className="mt-2 text-[15px] text-black/70">{text}</p>}
+        {text && <a href="/" className="mt-5 inline-flex h-11 items-center rounded-full bg-[#1f6b6b] px-5 text-[15px] font-semibold text-white">Ver monumentos</a>}
       </div>
     </main>
   )
