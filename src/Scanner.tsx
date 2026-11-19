@@ -33,7 +33,9 @@ export function FakeQR({ seed, size = 132 }: { seed: number; size?: number }) {
 
 interface NdefLike { records: { recordType: string; data?: DataView }[] }
 
-export function Scanner({ initialMode, target, online, collected, onClose, onResult }: {
+export function Scanner({ initialMode, target, online, collected, onClose, onResult, simulate = true }: {
+  /** false na área logada de verdade: nada é lido de mentira, só QR/NFC reais da placa. */
+  simulate?: boolean
   initialMode: ScanMode
   target: string
   online: boolean
@@ -65,7 +67,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
 
   // Leitura simulada automática (quando a câmera real não está ligada)
   useEffect(() => {
-    if (phase !== 'scanning' || (camera === 'on' && hasDetector) || nfcReal === 'waiting') return
+    if (!simulate || phase !== 'scanning' || (camera === 'on' && hasDetector) || nfcReal === 'waiting') return
     const t = window.setTimeout(() => finish(target, mode), mode === 'qr' ? 2400 : 2600)
     return () => window.clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,8 +103,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
             if (codes[0]) {
               const plate = codes[0].rawValue.match(/p\/(\d{2})/)?.[1]
               const found = monuments.find((x) => x.plate === plate)
-              finish(found ? found.id : target, 'qr')
-              return
+              if (found || simulate) { finish(found ? found.id : target, 'qr'); return }
             }
           } catch { /* continua */ }
           window.setTimeout(loop, 400)
@@ -123,7 +124,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
       await reader.scan()
       setNfcReal('waiting')
       reader.onreading = (e) => {
-        let id = target
+        let id: string | null = simulate ? target : null
         for (const r of e.message.records) {
           if (r.recordType === 'url' && r.data) {
             const url = new TextDecoder().decode(r.data)
@@ -132,7 +133,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
             if (found) id = found.id
           }
         }
-        finish(id, 'nfc')
+        if (id) finish(id, 'nfc')
       }
     } catch {
       setNfcReal('unsupported')
@@ -155,6 +156,8 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
           {/* cena da câmera simulada */}
           {camera === 'on' ? (
             <video ref={videoRef} playsInline muted className="absolute inset-0 w-full h-full object-cover" />
+          ) : !simulate ? (
+            <div className="absolute inset-0 bg-[#0e1517]" />
           ) : (
             <div className="absolute inset-0" style={{ background: 'radial-gradient(120% 80% at 50% 30%, #5b7a80 0%, #2a3d42 45%, #0e1517 100%)' }}>
               <div className="absolute left-0 right-0 bottom-0 h-[38%]" style={{ background: 'linear-gradient(180deg, #8d8270 0%, #5e5446 100%)' }} />
@@ -167,6 +170,15 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
             </div>
           )}
           <div className="absolute inset-0 bg-black/25" />
+          {!simulate && camera === 'off' && phase === 'scanning' && (
+            <div role="dialog" aria-labelledby="aviso-camera-qr" data-testid="aviso-camera-qr" className="absolute left-4 right-4 top-[110px] z-20 rounded-[24px] bg-[#f6f3ec] text-black p-5 sheet-up">
+              <span className="w-11 h-11 rounded-[12px] bg-[#2c8585] text-white grid place-items-center"><Icon name="scan" size={22} /></span>
+              <h2 id="aviso-camera-qr" className="mt-3 text-[18px] font-bold leading-tight">Usar a câmera para ler a placa</h2>
+              <p className="mt-1.5 text-[14px] leading-snug text-black/70">O navegador vai pedir permissão. A imagem fica só no seu aparelho: nada é gravado nem enviado, só o código da placa é lido.</p>
+              <button onClick={startCamera} className="mt-4 w-full h-[48px] rounded-[14px] bg-[#2c8585] text-white text-[16px] font-semibold">Permitir câmera</button>
+              <button onClick={onClose} className="mt-1 w-full h-[42px] text-[15px] font-semibold text-[#2c8585]">Agora não</button>
+            </div>
+          )}
           {/* visor */}
           <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-[176px] h-[176px]" style={{ top: 'calc(44% + 50px)' }}>
             {(['tl', 'tr', 'bl', 'br'] as const).map((c) => (
@@ -181,9 +193,11 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
           </div>
           {phase === 'scanning' && (
             <div className="absolute left-0 right-0 bottom-[96px] flex justify-center">
-              {camera === 'off' && <button onClick={startCamera} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold flex items-center gap-1.5"><Icon name="scan" size={15} />Usar câmera real</button>}
-              {camera === 'on' && <button onClick={() => finish(target, 'qr')} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold">Simular leitura</button>}
-              {camera === 'denied' && <span className="text-[12px] text-white/70">Câmera indisponível na pré-visualização · leitura simulada</span>}
+              {simulate && camera === 'off' && <button onClick={startCamera} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold flex items-center gap-1.5"><Icon name="scan" size={15} />Usar câmera real</button>}
+              {simulate && camera === 'on' && <button onClick={() => finish(target, 'qr')} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold">Simular leitura</button>}
+              {simulate && camera === 'denied' && <span className="text-[12px] text-white/70">Câmera indisponível na pré-visualização · leitura simulada</span>}
+              {!simulate && camera === 'on' && !hasDetector && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Este navegador não lê QR dentro do site. Feche e aponte a câmera do próprio celular para a placa.</span>}
+              {!simulate && camera === 'denied' && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Câmera bloqueada. Libere o acesso nas configurações do navegador e tente de novo.</span>}
             </div>
           )}
         </div>
@@ -197,7 +211,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
                 <Icon name="nfc" size={44} stroke={1.6} className="text-[#dda93f]" />
               </div>
             </div>
-            <div className="mt-3 text-[12px] tracking-[0.16em] text-white/50 font-semibold">PLACA {m.plate} · {m.tag.type}</div>
+            {simulate && <div className="mt-3 text-[12px] tracking-[0.16em] text-white/50 font-semibold">PLACA {m.plate} · {m.tag.type}</div>}
           </div>
           {/* folha estilo iOS "Pronto para Ler" */}
           {phase !== 'done' && (
@@ -207,7 +221,11 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
                 {phase === 'reading' ? <Icon name="check" size={44} stroke={3} className="pop-in" /> : <Icon name="nfc" size={42} stroke={2} />}
               </div>
               <p className="text-[15px] leading-snug text-black/80">Aproxime o topo do celular da tag NFC da placa. Funciona sem internet.</p>
-              {hasWebNfc || nfcReal === 'unsupported' ? (
+              {!simulate ? (
+                hasWebNfc && nfcReal !== 'unsupported'
+                  ? <button onClick={startRealNfc} className="mt-3 h-11 px-5 rounded-full bg-[#2c8585] text-white text-[14px] font-semibold">{nfcReal === 'waiting' ? 'Aguardando a tag…' : 'Começar a ler'}</button>
+                  : <p className="mt-3 text-[13px] leading-snug text-black/60">Este aparelho não lê NFC pelo navegador. No iPhone, encoste o celular na placa com a tela desbloqueada: a página do monumento abre sozinha.</p>
+              ) : hasWebNfc || nfcReal === 'unsupported' ? (
                 <button onClick={startRealNfc} className="mt-3 text-[13px] font-semibold text-[#2c8585]">{nfcReal === 'unsupported' ? 'Web NFC indisponível · leitura simulada' : nfcReal === 'waiting' ? 'Aguardando tag real…' : 'Ler tag real (Android)'}</button>
               ) : (
                 <div className="mt-3 text-[12px] text-black/45">Pré-visualização: leitura simulada</div>
@@ -232,7 +250,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
             <RarityPill rarity={result.m.rarity} />
           </div>
 
-          {mode === 'nfc' && (
+          {simulate && mode === 'nfc' && (
             <div className="mt-4 rounded-[16px] bg-white overflow-hidden text-[13px]">
               <div className="px-4 pt-3 pb-1.5 text-[11px] font-semibold tracking-[0.06em] text-black/45">CONTEÚDO LIDO DA TAG (NDEF)</div>
               {[

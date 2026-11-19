@@ -207,7 +207,16 @@ function StatusBar({ dark, online }: { dark: boolean; online: boolean }) {
   )
 }
 
-export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onReport, welcome, welcomeVia }: { onTrack: (e: NewEvent) => void; session: string; dark: boolean; setDark: (v: boolean) => void; user: User | null; setUser: (u: User | null) => void; onReport: (r: Omit<Report, 'id' | 'at' | 'status'>) => void; welcome?: string; welcomeVia?: 'nfc' | 'qr' }) {
+/** Uso de verdade em /app (fora da moldura do celular): sem relógio falso, sem simulações e com saída real. */
+export interface Standalone {
+  simulate: boolean
+  onLogout: () => void
+  today: string
+  links: { privacy: string; panel?: string }
+}
+
+export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onReport, welcome, welcomeVia, standalone }: { onTrack: (e: NewEvent) => void; session: string; dark: boolean; setDark: (v: boolean) => void; user: User | null; setUser: (u: User | null) => void; onReport: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void | Promise<void>; welcome?: string; welcomeVia?: 'nfc' | 'qr'; standalone?: Standalone }) {
+  const simulate = !standalone || standalone.simulate
   const [tab, setTab] = useState<Tab>('explorar')
   const [xp, setXp] = useUserState(user?.email ?? 'anon', 'xp', 0)
   const [collected, setCollected] = useUserState<string[]>(user?.email ?? 'anon', 'collected', [])
@@ -252,11 +261,18 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const [heard, setHeard] = useUserState<string[]>(user?.email ?? 'anon', 'heard', [])
-  const [online, setOnlineState] = useState(true)
+  const [online, setOnlineState] = useState(() => (standalone && typeof navigator !== 'undefined' ? navigator.onLine : true))
+  // Fora do protótipo, "sem internet" é o estado real do aparelho
+  useEffect(() => {
+    if (!standalone) return
+    const on = () => setOnlineState(true), off = () => setOnlineState(false)
+    window.addEventListener('online', on); window.addEventListener('offline', off)
+    return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off) }
+  }, [standalone])
   const [offlinePack, setOfflinePack] = useState(true)
   const [queue, setQueue] = useState(0)
   const [shareRoute, setShareRoute] = useState(true)
-  const [monument, setMonument] = useState<string | null>(welcome ?? 'graciliano') // o app abre na página do monumento da placa lida
+  const [monument, setMonument] = useState<string | null>(welcome ?? (standalone ? null : 'graciliano')) // o app abre na página do monumento da placa lida
   const [scanner, setScanner] = useState<{ mode: ScanMode; target: string } | null>(null)
   const [login, setLogin] = useState(false)
   const [offlineSheet, setOfflineSheet] = useState(false)
@@ -355,7 +371,10 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     setOfflinePack: (v) => { setOfflinePack(v); if (v) showToast('download', 'Pacote offline baixado · 18 MB') },
     setShareRoute,
     sync: () => { onTrack({ type: 'sync', label: `Fila offline sincronizada (${queue})`, offline: false, identified: !!user, synced: true }); showToast('sync', `${queue} evento(s) sincronizado(s)`); setQueue(0) },
-    logout: () => { track('logout', 'Saiu da conta'); setUser(null); showToast('person', 'Você saiu da conta') },
+    logout: () => { track('logout', 'Saiu da conta'); if (standalone) return standalone.onLogout(); setUser(null); showToast('person', 'Você saiu da conta') },
+    simulate,
+    today: standalone?.today,
+    links: standalone?.links,
     track,
     collectGps: (id) => {
       const r = collect(id, 'gps')
@@ -389,7 +408,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#f6f3ec] text-black select-none mu-mobile">
-      <StatusBar dark={darkStatus} online={online} />
+      {!standalone && <StatusBar dark={darkStatus} online={online} />}
 
       {/* conteúdo da aba */}
       {tab === 'trilha' ? (
@@ -434,6 +453,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
           target={scanner.target}
           online={online}
           collected={collected}
+          simulate={simulate}
           onClose={closeScanner}
           onResult={(id, method) => {
             const r = collect(id, method)
@@ -482,7 +502,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
         showToast('star', 'Foto enviada · +50 XP')
       }} />}
 
-      {report && <ReportSheet m={byId(report)} onClose={() => setReport(null)} onSend={(r) => { onReport(r); setMyReports((all) => ({ ...all, [r.monument]: [...(all[r.monument] || []), { kind: r.kind, note: r.note, photo: r.photo, at: Date.now() }] })) }} />}
+      {report && <ReportSheet m={byId(report)} onClose={() => setReport(null)} onSend={async (r, media) => { await onReport(r, media); setMyReports((all) => ({ ...all, [r.monument]: [...(all[r.monument] || []), { kind: r.kind, note: r.note, photo: r.photo, at: Date.now() }] })) }} />}
 
       {photoView && photoLog[photoView] && <PhotoViewer m={byId(photoView)} photo={photoLog[photoView]} onClose={() => setPhotoView(null)} />}
 
@@ -499,7 +519,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
             <div className="mt-3 text-[22px] font-bold tracking-[-0.01em] text-black leading-tight">{reward.m.name}</div>
             <div className="mt-2 flex items-center justify-center gap-2"><RarityPill rarity={reward.m.rarity} /><span className="text-[15px] font-bold text-[#1f6b6b]">{reward.pending ? `+${reward.xp} XP ao entrar` : `+${reward.xp} XP`}</span></div>
             {reward.levelUp && <div className="mt-3 h-8 px-3 mx-auto w-fit rounded-full bg-[#0b2f49] text-white text-[13px] font-semibold flex items-center gap-1.5"><Icon name="star" size={14} />Subiu para o nível {levelFor(xp).level}!</div>}
-            {user && !reward.pending && <GroupPicker options={nearbyFriends(user, reward.m)} value={stampLog[reward.m.id]?.group || []} onChange={(g) => setGroup(reward.m, g)} />}
+            {simulate && user && !reward.pending && <GroupPicker options={nearbyFriends(user, reward.m)} value={stampLog[reward.m.id]?.group || []} onChange={(g) => setGroup(reward.m, g)} />}
             {!user && <p className="mt-3 text-[12.5px] text-black/50 leading-snug">A página continua aberta para você. Entrando com Google, o carimbo é guardado e libera 3D e realidade aumentada.</p>}
             {!user ? (
               <>

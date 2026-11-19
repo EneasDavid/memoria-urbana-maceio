@@ -39,7 +39,15 @@ export interface MobileCtx {
   track: (type: TrackEvent['type'], label: string, monument?: string) => void
   collectGps: (id: string) => void
   markHeard: (id: string) => void
+  /** false na área logada de verdade: some tudo que é simulação do protótipo (caminhada, amigos, rede, tag fictícia). */
+  simulate?: boolean
+  /** Data de hoje já escrita ("Quinta, 19 de novembro"); o protótipo usa a data fixa da apresentação. */
+  today?: string
+  /** Links reais da área logada (página de privacidade, painel da prefeitura). */
+  links?: { privacy: string; panel?: string }
 }
+
+const isSim = (ctx: MobileCtx) => ctx.simulate !== false
 
 const UNIT_M = 5
 const CATCH = 26
@@ -166,7 +174,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
     <div className="px-4 pb-36">
       <div className="flex items-end justify-between pt-2">
         <div>
-          <div className="text-[13px] font-semibold text-black/45 uppercase tracking-[0.04em]">Sábado, 7 de novembro</div>
+          <div className="text-[13px] font-semibold text-black/45 uppercase tracking-[0.04em]">{ctx.today ?? 'Sábado, 7 de novembro'}</div>
           <h1 className="text-[34px] font-bold tracking-[-0.025em] leading-tight text-black">Explorar</h1>
         </div>
         <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>
@@ -194,7 +202,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
                     )) : <span className="w-[58px] h-[58px] rounded-full border-2 border-dashed border-white/40 grid place-items-center text-white/70"><Icon name="qr" size={24} /></span>}
                     <div className="ml-3 leading-tight">
                       <div><b className="text-[22px] font-bold">{ctx.collected.length}</b> <span className="text-[13px] text-white/75">{ctx.collected.length === 1 ? 'selo' : 'selos'}</span></div>
-                      <div className="text-[12.5px] text-white/70 flex items-center gap-1 mt-0.5">{ctx.xp} pontos · <Icon name="flame" size={13} className="text-[#ffb340]" />3 dias</div>
+                      <div className="text-[12.5px] text-white/70 flex items-center gap-1 mt-0.5">{ctx.xp} pontos{isSim(ctx) && <> · <Icon name="flame" size={13} className="text-[#ffb340]" />3 dias</>}</div>
                     </div>
                   </div>
                   {next && (
@@ -530,7 +538,9 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
   const nearest = useMemo(() => [...monuments].sort((x, y) => dist(x) - dist(y))[0], [pos]) // eslint-disable-line react-hooks/exhaustive-deps
   const focus = byId(selected ?? nearest.id)
   const d = dist(focus)
-  const near = d < CATCH_M
+  const sim = isSim(ctx)
+  const located = sim || geo === 'ok'
+  const near = located && d < CATCH_M
   const got = ctx.collected.includes(focus.id)
   const go = (mode: 'transit' | 'walking', dest: string) => {
     const url = 'https://www.google.com/maps/dir/?api=1&origin=' + pos[0] + ',' + pos[1] + '&destination=' + encodeURIComponent(dest) + '&travelmode=' + mode
@@ -607,12 +617,19 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
         <span className="h-px bg-black/10" />
         <button onClick={() => zoomBy(-1)} aria-label="Afastar" className="w-11 h-11 grid place-items-center text-black/70 text-[24px] leading-none">−</button>
         <span className="h-px bg-black/10" />
-        <button onClick={() => (walking ? setWalking(false) : seg.current.i >= ROUTE.length - 1 ? restart() : setWalking(true))} aria-label="Simular caminhada" className={'w-11 h-11 grid place-items-center ' + (walking ? 'text-[#2c8585]' : 'text-black/70')}><Icon name={walking ? 'pause' : 'walk'} size={20} /></button>
+        {sim ? (
+          <button onClick={() => (walking ? setWalking(false) : seg.current.i >= ROUTE.length - 1 ? restart() : setWalking(true))} aria-label="Simular caminhada" className={'w-11 h-11 grid place-items-center ' + (walking ? 'text-[#2c8585]' : 'text-black/70')}><Icon name={walking ? 'pause' : 'walk'} size={20} /></button>
+        ) : (
+          <button onClick={locate} aria-label="Usar minha localização" className={'w-11 h-11 grid place-items-center ' + (geo === 'ok' ? 'text-[#2c8585]' : 'text-black/70')}><Icon name="pin" size={20} /></button>
+        )}
         <span className="h-px bg-black/10" />
         <button onClick={() => { setSelected(null); setCenter(pos) }} aria-label="Centralizar em você" className="w-11 h-11 grid place-items-center text-[#2c8585]"><Icon name="arrowUR" size={18} className="rotate-[-45deg]" /></button>
       </div>
       )}
-      {!selected && !walking && seg.current.i === 0 && seg.current.t === 0 && (
+      {!sim && !selected && geo !== 'ok' && (
+        <button onClick={locate} className="absolute left-1/2 -translate-x-1/2 top-[150px] z-40 h-9 px-4 rounded-full bg-[#2c8585] text-white text-[13px] font-semibold flex items-center gap-1.5 shadow-[0_6px_20px_rgba(44,133,133,0.4)] whitespace-nowrap"><Icon name="pin" size={16} />{geo === 'loading' ? 'Buscando você…' : geo === 'denied' ? 'Localização bloqueada · toque para tentar' : 'Mostrar onde estou'}</button>
+      )}
+      {sim && !selected && !walking && seg.current.i === 0 && seg.current.t === 0 && (
         <button onClick={() => setWalking(true)} className="absolute left-1/2 -translate-x-1/2 top-[150px] z-40 h-9 px-4 rounded-full bg-[#2c8585] text-white text-[13px] font-semibold flex items-center gap-1.5 shadow-[0_6px_20px_rgba(44,133,133,0.4)]"><Icon name="walk" size={16} />Simular caminhada</button>
       )}
 
@@ -622,7 +639,7 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
             <Photo m={focus} className="w-14 h-14 rounded-[16px] shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="text-[17px] font-semibold text-black truncate">{focus.name}</div>
-              <div className="text-[13px] text-black/50 flex items-center gap-1.5"><RarityPill rarity={focus.rarity} /><span>{near ? 'Você está aqui' : d >= 1000 ? 'a ' + (d / 1000).toFixed(1).replace('.', ',') + ' km' : 'a ' + Math.round(d) + ' m'} · +{focus.xp} XP</span></div>
+              <div className="text-[13px] text-black/50 flex items-center gap-1.5"><RarityPill rarity={focus.rarity} /><span>{near ? 'Você está aqui' : !located ? 'Início da trilha' : d >= 1000 ? 'a ' + (d / 1000).toFixed(1).replace('.', ',') + ' km' : 'a ' + Math.round(d) + ' m'} · +{focus.xp} XP</span></div>
             </div>
             {got && <span className="w-8 h-8 rounded-full bg-[#34c759] text-white grid place-items-center"><Icon name="check" size={17} stroke={3} /></span>}
           </div>
@@ -901,17 +918,18 @@ export function ProfileScreen({ ctx }: { ctx: MobileCtx }) {
 
       <SectionTitle>Preferências</SectionTitle>
       <Group>
-        <Line icon="moon" bg="#5856d6" title="Modo noturno" on={ctx.dark} set={ctx.setDark} />
-        <Line icon="download" bg="#34c759" title="Usar sem internet" sub="Textos, áudios e mapa · 18 MB" on={ctx.offlinePack} set={ctx.setOfflinePack} />
-        <Line icon="route" bg="#2c8585" title="Ajudar a prefeitura" sub="Compartilhar trajeto anônimo" on={ctx.shareRoute} set={ctx.setShareRoute} last />
+        <Line icon="moon" bg="#5856d6" title="Modo noturno" on={ctx.dark} set={ctx.setDark} last={!isSim(ctx)} />
+        {isSim(ctx) && <Line icon="download" bg="#34c759" title="Usar sem internet" sub="Textos, áudios e mapa · 18 MB" on={ctx.offlinePack} set={ctx.setOfflinePack} />}
+        {isSim(ctx) && <Line icon="route" bg="#2c8585" title="Ajudar a prefeitura" sub="Compartilhar trajeto anônimo" on={ctx.shareRoute} set={ctx.setShareRoute} last />}
       </Group>
       {ctx.queue > 0 && <button onClick={ctx.sync} className="mt-2 w-full text-[13px] font-semibold text-[#2c8585]">{ctx.queue} leitura(s) aguardando internet · enviar agora</button>}
 
       <div className="mt-6"><Group>
-        <Row icon="shield" iconBg="#8e8e93" title="Meus dados (LGPD)" subtitle="Baixar ou excluir" onClick={() => undefined} last={!ctx.user} />
+        {ctx.links?.panel && <Row icon="chart" iconBg="#0b2f49" title="Painel da prefeitura" subtitle="Monumentos, relatos e visitas" onClick={() => { window.location.href = ctx.links!.panel! }} />}
+        <Row icon="shield" iconBg="#8e8e93" title="Meus dados (LGPD)" subtitle={ctx.links ? 'Como pedir cópia ou exclusão' : 'Baixar ou excluir'} onClick={() => { if (ctx.links) window.location.href = ctx.links.privacy }} last={!ctx.user} />
         {ctx.user && <Row icon="person" iconBg="#ff3b30" title={<span className="text-[#ff3b30]">Sair da conta</span>} onClick={ctx.logout} last />}
       </Group></div>
-      <button onClick={() => ctx.setOnline(!ctx.online)} className="mt-6 mx-auto block text-[11.5px] text-black/35">{ctx.online ? 'Teste do protótipo: simular sem internet' : 'Teste do protótipo: sem internet · tocar para voltar'}</button>
+      {isSim(ctx) && <button onClick={() => ctx.setOnline(!ctx.online)} className="mt-6 mx-auto block text-[11.5px] text-black/35">{ctx.online ? 'Teste do protótipo: simular sem internet' : 'Teste do protótipo: sem internet · tocar para voltar'}</button>}
     </div>
   )
 }
