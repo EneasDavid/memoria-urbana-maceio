@@ -1,11 +1,12 @@
 {
-  "title": "rotacultural",
-  "description": "Explore the Memorial à República, monitor visitor activity, and view a city heat map with hourly monument traffic and distance insights.",
+  "title": "Memória Urbana Maceió",
+  "description": "Quem são as estátuas e praças de Maceió e qual museu continua cada história. Sem cadastro e sem rastreamento.",
   "robots": {
     "index": false
   },
   "accessibility": {
     "addBypassLinks": false,
     "ignoreReducedMotion": false
-  }
+  },
+  "language": "pt-BR"
 }
