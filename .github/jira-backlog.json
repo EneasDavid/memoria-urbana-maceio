@@ -39,18 +39,32 @@
    "goal": "Narração e audiodescrição reais, cache de visitados, repositório + CI/CD (GitHub Actions, testes de integração, Vercel) e sincronização Jira ↔ GitHub. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
   },
   {
-   "name": "Sprint 6 · Segurança e validação",
+   "name": "Sprint 6 · Fundação do backend e segurança",
    "state": "future",
    "start": "2026-11-23",
    "end": "2026-11-26",
-   "goal": "Testes OWASP, proteção da main, CMS conectado e medição da conversão rua → museu. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+   "goal": "Firebase e regras, cliente OAuth no ar, Docker Compose, deploy do backend no Render, estudo de gamificação sem login, OWASP e proteção da main. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
   },
   {
-   "name": "Sprint 7 · Piloto e entrega",
+   "name": "Sprint 7 · Dados, sessões e filas",
    "state": "future",
    "start": "2026-11-27",
    "end": "2026-12-02",
-   "goal": "Piloto com placas físicas e apresentação final. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+   "goal": "Redis e Celery em produção, login migrado para a API com sessão no Redis, níveis de acesso em todas as rotas, APIs de monumentos e relatos, fotos no Storage. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 8 · Processamento assíncrono e painel",
+   "state": "future",
+   "start": "2026-12-03",
+   "end": "2026-12-08",
+   "goal": "Narração TTS, aviso de relatos, contagem de visitas, painel lendo a API, gestão de papéis com auditoria e curadoria no CMS. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+  },
+  {
+   "name": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "state": "future",
+   "start": "2026-12-09",
+   "end": "2026-12-14",
+   "goal": "API de parceiros, mescla do progresso do aparelho, exclusão de dados, ZAP e teste de carga, conversão rua → museu e piloto com placas físicas. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
   }
  ],
  "epics": [
@@ -88,6 +102,26 @@
    "key": "KAN-38",
    "summary": "E7 · Entrega contínua (CI/CD)",
    "color": "0052cc"
+  },
+  {
+   "key": "KAN-48",
+   "summary": "E8 · Backend e APIs (FastAPI)",
+   "color": "1f883d"
+  },
+  {
+   "key": "KAN-49",
+   "summary": "E9 · Dados no Firebase",
+   "color": "fb8c00"
+  },
+  {
+   "key": "KAN-50",
+   "summary": "E10 · Processamento assíncrono (Celery + Redis)",
+   "color": "d4380d"
+  },
+  {
+   "key": "KAN-51",
+   "summary": "E11 · Identidade e níveis de acesso (OAuth + RBAC)",
+   "color": "722ed1"
   }
  ],
  "issues": [
@@ -539,7 +573,7 @@
    "status": "A fazer",
    "epic": "KAN-9",
    "points": 5,
-   "sprint": "Sprint 6 · Segurança e validação",
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
    "labels": [],
    "description": "Testes guiados pelo OWASP Top 10: cabeçalhos, dependências vulneráveis, entrada do relato de dano e dados do login."
   },
@@ -550,7 +584,7 @@
    "status": "A fazer",
    "epic": "KAN-6",
    "points": 5,
-   "sprint": "Sprint 6 · Segurança e validação",
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
    "labels": [],
    "description": "Como gestor, quero saber quantas leituras de placa viram visita ao museu."
   },
@@ -561,7 +595,7 @@
    "status": "A fazer",
    "epic": "KAN-5",
    "points": 5,
-   "sprint": "Sprint 6 · Segurança e validação",
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
    "labels": [],
    "description": "Publicar o CMS e trocar os dados fixos do app pelos do CMS."
   },
@@ -572,7 +606,7 @@
    "status": "A fazer",
    "epic": "KAN-38",
    "points": 2,
-   "sprint": "Sprint 6 · Segurança e validação",
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
    "labels": [],
    "description": "Regra de proteção de branch: PR revisado em par e status check do CI obrigatório."
   },
@@ -583,9 +617,347 @@
    "status": "A fazer",
    "epic": "KAN-4",
    "points": 8,
-   "sprint": "Sprint 7 · Piloto e entrega",
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
    "labels": [],
    "description": "Instalar placas NFC/QR em monumentos piloto e medir leituras reais."
+  },
+  {
+   "key": "KAN-48",
+   "type": "Epic",
+   "summary": "E8 · Backend e APIs (FastAPI)",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [
+    "arquitetura"
+   ],
+   "description": "API REST própria (/api/v1, OpenAPI) em FastAPI, consumindo APIs externas do Google. Ver docs/arquitetura.md §5."
+  },
+  {
+   "key": "KAN-49",
+   "type": "Epic",
+   "summary": "E9 · Dados no Firebase",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [
+    "arquitetura"
+   ],
+   "description": "Firestore e Cloud Storage acessados só pela API (Admin SDK). Ver docs/arquitetura.md §7."
+  },
+  {
+   "key": "KAN-50",
+   "type": "Epic",
+   "summary": "E10 · Processamento assíncrono (Celery + Redis)",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [
+    "arquitetura"
+   ],
+   "description": "Áudio TTS, fotos, notificações e agregações fora da requisição do visitante. Ver docs/arquitetura.md §6."
+  },
+  {
+   "key": "KAN-51",
+   "type": "Epic",
+   "summary": "E11 · Identidade e níveis de acesso (OAuth + RBAC)",
+   "status": "Em andamento",
+   "epic": null,
+   "points": null,
+   "sprint": null,
+   "labels": [
+    "arquitetura"
+   ],
+   "description": "OAuth 2.0 + OIDC com PKCE e papéis anônimo, participante, curador, gestor, admin e parceiro. Ver docs/arquitetura.md §3 e §4."
+  },
+  {
+   "key": "KAN-52",
+   "type": "História",
+   "summary": "Rotas públicas só de monumentos (sem menus nem voltar)",
+   "status": "Concluído",
+   "epic": "KAN-4",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Uma URL por monumento (/monumento/:id), lista em /, sem cabeçalho, sem botão voltar e sem login. Protótipo em /prototipo. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-53",
+   "type": "Tarefa",
+   "summary": "OAuth fase 1: Authorization Code + PKCE em Vercel Functions",
+   "status": "Concluído",
+   "epic": "KAN-51",
+   "points": 5,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "/api/auth/login, callback, me e logout; state, nonce, PKCE S256, claims validadas, cookie HttpOnly assinado; 9 testes. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-54",
+   "type": "Tarefa",
+   "summary": "Estruturar o front em app/ e features/",
+   "status": "Concluído",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "Roteador sem dependências, features monument/auth/trail/panel, área logada e protótipo carregados sob demanda. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-55",
+   "type": "Tarefa",
+   "summary": "Documento de arquitetura (OAuth, APIs, Celery, Redis, Firebase, RBAC)",
+   "status": "Concluído",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "docs/arquitetura.md com diagramas, contratos de API, tasks do Celery, chaves Redis, modelo Firestore e OWASP. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-56",
+   "type": "Tarefa",
+   "summary": "Esqueleto do backend FastAPI + Celery com RBAC e testes",
+   "status": "Concluído",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [],
+   "description": "backend/ com FastAPI, RBAC, rate limit, Celery e beat, Docker Compose, regras do Firebase e 12 testes pytest. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-57",
+   "type": "Tarefa",
+   "summary": "Criar projeto Firebase e Firestore",
+   "status": "A fazer",
+   "epic": "KAN-49",
+   "points": 2,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "Projeto no console, Firestore em southamerica-east1, Storage, conta de serviço com papéis mínimos. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-58",
+   "type": "Tarefa",
+   "summary": "Publicar regras e índices do Firestore e Storage",
+   "status": "A fazer",
+   "epic": "KAN-49",
+   "points": 2,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "firebase deploy das regras de firebase/ e teste no emulador. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-59",
+   "type": "Tarefa",
+   "summary": "Configurar cliente OAuth no Google Cloud e variáveis na Vercel",
+   "status": "A fazer",
+   "epic": "KAN-51",
+   "points": 1,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "Tela de consentimento, ID do cliente Web, redirect /api/auth/callback; GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, GESTOR_EMAILS. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-60",
+   "type": "Tarefa",
+   "summary": "Ambiente de desenvolvimento com Docker Compose",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "API, worker, beat, Redis e emulador com um comando; seed dos monumentos. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-61",
+   "type": "Tarefa",
+   "summary": "Deploy do backend no Render e rewrite /api/v1 na Vercel",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "render.yaml (web, worker, beat, Key Value) e rewrite na Vercel; health em /api/v1/health. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-62",
+   "type": "Tarefa",
+   "summary": "Estudo: cache do aparelho para gamificação sem login",
+   "status": "A fazer",
+   "epic": "KAN-7",
+   "points": 3,
+   "sprint": "Sprint 6 · Fundação do backend e segurança",
+   "labels": [],
+   "description": "Spike: localStorage x IndexedDB x Cache API, Safari ITP, fraude (token de carimbo HMAC), LGPD e mescla na conta. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-63",
+   "type": "Tarefa",
+   "summary": "Redis e Celery em produção (filas default, media, notify)",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 3,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "Worker e beat no Render, acks_late, retry com backoff, time_limit. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-64",
+   "type": "Tarefa",
+   "summary": "OAuth fase 3: migrar login para a API com sessão no Redis",
+   "status": "A fazer",
+   "epic": "KAN-51",
+   "points": 5,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "Mesmo contrato /api/auth/*, sessão sess:{sid} revogável, upsert users/{sub}, apagar api/. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-65",
+   "type": "Tarefa",
+   "summary": "Níveis de acesso: papéis no Firestore e require() em todas as rotas",
+   "status": "A fazer",
+   "epic": "KAN-51",
+   "points": 3,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "Middleware de sessão, bootstrap do admin, teste de autorização por rota. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-66",
+   "type": "História",
+   "summary": "API de monumentos no Firestore com cache Redis",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 5,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "Migração do data.ts, GET /monuments com cache e ETag, front com fallback. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-67",
+   "type": "História",
+   "summary": "API de relatos de dano (anônima, com rate limit)",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "POST /reports no Firestore, 5/h por hash de IP, front envia a fila local. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-68",
+   "type": "Tarefa",
+   "summary": "Task process_report_photo: foto do relato no Storage sem EXIF",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 3,
+   "sprint": "Sprint 7 · Dados, sessões e filas",
+   "labels": [],
+   "description": "Redimensiona, remove EXIF/GPS, miniatura, moderação opcional. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-69",
+   "type": "Tarefa",
+   "summary": "Narração em MP3 com Google Cloud Text-to-Speech ao publicar",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 5,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "labels": [],
+   "description": "Task media.generate_narration, voz pt-BR, MP3 no Storage. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-70",
+   "type": "Tarefa",
+   "summary": "Avisar a equipe de patrimônio sobre relato novo",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 2,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "labels": [],
+   "description": "E-mail ou Telegram, sem dado pessoal. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-71",
+   "type": "Tarefa",
+   "summary": "Contagem de visitas no Redis e agregação no Firestore",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 3,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "labels": [],
+   "description": "INCR + HyperLogLog, flush a cada 15 min, saúde das placas. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-72",
+   "type": "História",
+   "summary": "Painel da prefeitura lendo a API",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 5,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "labels": [],
+   "description": "Relatos, visitas e placas com dados reais; só gestor/admin. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-73",
+   "type": "Tarefa",
+   "summary": "Gestão de papéis com auditoria",
+   "status": "A fazer",
+   "epic": "KAN-51",
+   "points": 3,
+   "sprint": "Sprint 8 · Processamento assíncrono e painel",
+   "labels": [],
+   "description": "PATCH /admin/users/{uid}/role, audit_log, sessões derrubadas. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-74",
+   "type": "Tarefa",
+   "summary": "API de parceiros com chave e escopo (fluxo agregado)",
+   "status": "A fazer",
+   "epic": "KAN-48",
+   "points": 3,
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "labels": [],
+   "description": "Chave com hash, escopo flow:read, rate limit por minuto. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-75",
+   "type": "Tarefa",
+   "summary": "Mesclar progresso do aparelho na conta",
+   "status": "A fazer",
+   "epic": "KAN-50",
+   "points": 5,
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "labels": [],
+   "description": "POST /me/merge-device, valida tokens de carimbo, sem duplicar. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-76",
+   "type": "Tarefa",
+   "summary": "Exclusão de conta e retenção de dados (LGPD)",
+   "status": "A fazer",
+   "epic": "KAN-51",
+   "points": 3,
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "labels": [],
+   "description": "DELETE /me, purge_expired, página de privacidade. Detalhes e critério de aceite no Jira."
+  },
+  {
+   "key": "KAN-77",
+   "type": "Tarefa",
+   "summary": "OWASP ZAP baseline, pip-audit e teste de carga no CI",
+   "status": "A fazer",
+   "epic": "KAN-9",
+   "points": 3,
+   "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+   "labels": [],
+   "description": "ZAP contra o preview, audits bloqueando alta, k6 com p95 < 500 ms. Detalhes e critério de aceite no Jira."
   }
  ]
 }
