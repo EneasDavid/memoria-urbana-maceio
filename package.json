@@ -3,10 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node --experimental-strip-types --no-warnings scripts/prerender.mjs",
     "preview": "vite preview",
+    "build:server": "tsc -p tsconfig.api.json --noEmit false --outDir server/build/api",
+    "start:api": "node server/api-server.mjs",
     "format": "oxfmt"
   },
   "dependencies": {

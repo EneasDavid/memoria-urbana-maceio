@@ -77,6 +77,7 @@ O último dia de cada sprint é de review (demo do incremento), retrospectiva e 
 | CI | GitHub Actions (`.github/workflows/ci.yml`) | Em todo push ou PR na `main`: instala, checa tipos (`tsc`), gera o build, roda os testes de dados e de integração e audita dependências |
 | CD | Vercel (integração Git) | Todo push na `main` publica em https://memoria-urbana-maceio.vercel.app. PRs ganham uma URL de preview |
 | Backlog | GitHub Actions (`.github/workflows/jira-sync.yml`) | Espelha o backlog do Jira em Issues e milestones |
+| CD Oracle | GitHub Actions (`.github/workflows/deploy-oracle.yml`) | Depois do CI verde, publica na VM Oracle Cloud via SSH (Caddy + Node). Fica desligado até existirem as variáveis `ORACLE_HOST` e `SITE_URL`. Guia em [docs/oracle.md](docs/oracle.md) |
 
 ### Testes
 
@@ -120,6 +121,10 @@ O job **Conformidade** do CI barra o merge quando algum destes 17 itens quebra:
 | 17 | Riscos jurídicos | `docs/riscos-juridicos.md` | matriz com probabilidade, impacto, mitigação e dono |
 
 O que falta, e está no Jira: autorização das fotos de terceiros, e-mail do encarregado, revisão jurídica pelo orientador e acessibilidade do `/prototipo`.
+
+## SEO
+
+O build gera HTML próprio para cada monumento (título, descrição, canonical, texto e JSON-LD `TouristAttraction`), além de `robots.txt` e `sitemap.xml` (`scripts/prerender.mjs`). Contas, painel e protótipo ficam com `noindex`. `tests/seo.test.mjs` impede que a indexação volte a ser bloqueada. O passo a passo do Search Console está em [docs/seo.md](docs/seo.md).
 
 ## Rodar localmente
 
