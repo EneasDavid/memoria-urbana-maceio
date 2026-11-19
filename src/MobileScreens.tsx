@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Icon, Group, Row, SectionTitle, Toggle, RarityPill, Stamp, Avatar, Segmented, GoogleG, Narrator, type IconName } from './ui'
 import { monuments, byId, walkPath, quests, badges, levelFor, type Monument, type User, type TrackEvent } from './data'
 import type { ScanMode } from './Scanner'
+import type { LiveLocation } from './shared/useLocation'
 import { createPortal } from 'react-dom'
 
 export interface MobileCtx {
@@ -45,6 +46,8 @@ export interface MobileCtx {
   today?: string
   /** Links reais da área logada (página de privacidade, painel da prefeitura). */
   links?: { privacy: string; panel?: string }
+  /** Localização real do aparelho (área logada). Sem ela o mapa usa o ponto inicial da trilha. */
+  location?: LiveLocation
 }
 
 const isSim = (ctx: MobileCtx) => ctx.simulate !== false
@@ -193,7 +196,13 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
             {(() => {
               const order = ['montepio', 'pedro2', 'martirios', 'sinimbu', 'paulo', 'graciliano', 'emilio', 'aurelio', 'ledo', 'nise', 'farol', 'ufal', 'lucena', 'santoantonio', 'solarnunes']
               const recent = monuments.filter((m) => ctx.collected.includes(m.id)).sort((a, b) => (ctx.stampLog[b.id]?.last || ctx.stampLog[b.id]?.at || 0) - (ctx.stampLog[a.id]?.last || ctx.stampLog[a.id]?.at || 0)).slice(0, 4)
-              const next = order.map((id) => monuments.find((m) => m.id === id)).find((m) => m && !ctx.collected.includes(m.id) && m.visit !== 'Fechado')
+              const here = ctx.location?.here
+              const open = (m?: Monument) => !!m && !ctx.collected.includes(m.id) && m.visit !== 'Fechado'
+              // Com a localização real, o próximo selo é a obra aberta mais perto de você
+              const next = here
+                ? [...monuments].filter((m) => open(m)).sort((a, b) => meters(here, [a.lat, a.lng]) - meters(here, [b.lat, b.lng]))[0]
+                : order.map((id) => monuments.find((m) => m.id === id)).find((m) => open(m))
+              const nextDist = here && next ? meters(here, [next.lat, next.lng]) : null
               return (
                 <>
                   <div className="relative mt-4 flex items-center">
@@ -208,7 +217,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
                   {next && (
                     <button onClick={() => ctx.setTab?.('trilha')} className="relative mt-4 w-full flex items-center gap-2.5 rounded-[14px] bg-white/10 px-3 py-2.5 text-left">
                       <Icon name="pin" size={18} className="text-[#dda93f] shrink-0" />
-                      <span className="flex-1 min-w-0"><span className="block text-[11.5px] text-white/60">Próximo selo na trilha</span><span className="block text-[14px] font-semibold truncate">{next.name} · {next.area}</span></span>
+                      <span className="flex-1 min-w-0"><span className="block text-[11.5px] text-white/60">{nextDist !== null ? 'Selo mais perto de você · ' + (nextDist >= 1000 ? (nextDist / 1000).toFixed(1).replace('.', ',') + ' km' : Math.round(nextDist / 10) * 10 + ' m') : 'Próximo selo na trilha'}</span><span className="block text-[14px] font-semibold truncate">{next.name} · {next.area}</span></span>
                       <Icon name="chevR" size={16} className="text-white/60" />
                     </button>
                   )}
@@ -480,8 +489,22 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
   const [pos, setPos] = useState<[number, number]>(ROUTE[0])
   const [walking, setWalking] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
-  const [geo, setGeo] = useState<'idle' | 'loading' | 'ok' | 'denied'>('idle')
+  const live = ctx.location
+  const [geoLocal, setGeo] = useState<'idle' | 'loading' | 'ok' | 'denied'>('idle')
+  const geo = live ? ({ ok: 'ok', asking: 'loading', denied: 'denied', unavailable: live.here ? 'ok' : 'loading', idle: 'idle' } as const)[live.status] : geoLocal
+  const [askGeo, setAskGeo] = useState(true)
+  // Segue a localização real enquanto não está simulando a caminhada; centraliza na primeira leitura
+  const followed = useRef(false)
+  const following = useRef(true)
+  useEffect(() => { live?.resume(); return () => live?.stop() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!live?.here || walking) return
+    setPos(live.here)
+    // acompanha a pessoa andando até ela arrastar o mapa; "Centralizar em você" volta a acompanhar
+    if (!followed.current || following.current) { followed.current = true; setCenter(live.here) }
+  }, [live?.here, walking]) // eslint-disable-line react-hooks/exhaustive-deps
   const locate = () => {
+    if (live) { setWalking(false); live.start(); if (live.here) { setPos(live.here); setCenter(live.here) } return }
     if (typeof navigator === 'undefined' || !navigator.geolocation) return setGeo('denied')
     setGeo('loading')
     navigator.geolocation.getCurrentPosition(
@@ -561,6 +584,7 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
     const g = drag.current
     if (!g) return
     if (walking) setWalking(false)
+    following.current = false
     const p0 = project(g.c[0], g.c[1], z)
     setCenter(unproject(p0[0] - (e.clientX - g.x), p0[1] - (e.clientY - g.y), z))
   }
@@ -575,12 +599,13 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
       <svg className="absolute inset-0 w-full h-full pointer-events-none">
         <polyline points={route} fill="none" stroke="#2c8585" strokeOpacity="0.6" strokeWidth="5" strokeDasharray="1 10" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx={me[0]} cy={me[1]} r={Math.max(10, CATCH_M / mPerPx)} fill="#2c8585" fillOpacity="0.1" stroke="#2c8585" strokeOpacity="0.35" />
+        {live?.accuracy && geo === 'ok' && !walking && live.accuracy / mPerPx > 14 && <circle cx={me[0]} cy={me[1]} r={live.accuracy / mPerPx} fill="#0b2f49" fillOpacity="0.06" stroke="#0b2f49" strokeOpacity="0.25" strokeDasharray="3 4" />}
       </svg>
       {monuments.map((m) => {
         const [x, y] = toScreen(m.lat, m.lng)
         if (x < -40 || y < -60 || x > size.w + 40 || y > size.h + 60) return null
         const g = ctx.collected.includes(m.id)
-        const isNear = dist(m) < CATCH_M
+        const isNear = located && dist(m) < CATCH_M
         const ring = m.rarity === 'Lendário' ? '#dda93f' : m.rarity === 'Raro' ? '#2c8585' : '#8e8e93'
         const sel = (selected ?? nearest.id) === m.id
         return (
@@ -623,10 +648,19 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
           <button onClick={locate} aria-label="Usar minha localização" className={'w-11 h-11 grid place-items-center ' + (geo === 'ok' ? 'text-[#2c8585]' : 'text-black/70')}><Icon name="pin" size={20} /></button>
         )}
         <span className="h-px bg-black/10" />
-        <button onClick={() => { setSelected(null); setCenter(pos) }} aria-label="Centralizar em você" className="w-11 h-11 grid place-items-center text-[#2c8585]"><Icon name="arrowUR" size={18} className="rotate-[-45deg]" /></button>
+        <button onClick={() => { setSelected(null); setCenter(pos); following.current = true }} aria-label="Centralizar em você" className="w-11 h-11 grid place-items-center text-[#2c8585]"><Icon name="arrowUR" size={18} className="rotate-[-45deg]" /></button>
       </div>
       )}
-      {!sim && !selected && geo !== 'ok' && (
+      {live && geo === 'idle' && askGeo && !selected && (
+        <div role="dialog" aria-labelledby="aviso-localizacao-titulo" data-testid="aviso-localizacao" className="absolute left-3 right-3 top-[132px] z-50 rounded-[24px] bg-white p-5 shadow-[0_12px_40px_rgba(0,0,0,0.18)] sheet-up">
+          <span className="w-11 h-11 rounded-[12px] bg-[#2c8585] text-white grid place-items-center"><Icon name="pin" size={22} /></span>
+          <h2 id="aviso-localizacao-titulo" className="mt-3 text-[18px] font-bold leading-tight text-black">Usar sua localização na Trilha</h2>
+          <p className="mt-1.5 text-[14px] leading-snug text-black/70">Para mostrar onde você está, a distância até cada obra e liberar o check-in por GPS. Fica só no seu aparelho: não é gravada nem enviada, e para quando você sai da Trilha.</p>
+          <button onClick={() => { setAskGeo(false); locate() }} className="mt-4 w-full h-[48px] rounded-[14px] bg-[#2c8585] text-white text-[16px] font-semibold">Permitir localização</button>
+          <button onClick={() => setAskGeo(false)} className="mt-1 w-full h-[42px] text-[15px] font-semibold text-[#2c8585]">Agora não</button>
+        </div>
+      )}
+      {!sim && !selected && geo !== 'ok' && !(live && geo === 'idle' && askGeo) && (
         <button onClick={locate} className="absolute left-1/2 -translate-x-1/2 top-[150px] z-40 h-9 px-4 rounded-full bg-[#2c8585] text-white text-[13px] font-semibold flex items-center gap-1.5 shadow-[0_6px_20px_rgba(44,133,133,0.4)] whitespace-nowrap"><Icon name="pin" size={16} />{geo === 'loading' ? 'Buscando você…' : geo === 'denied' ? 'Localização bloqueada · toque para tentar' : 'Mostrar onde estou'}</button>
       )}
       {sim && !selected && !walking && seg.current.i === 0 && seg.current.t === 0 && (

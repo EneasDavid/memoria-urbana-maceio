@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Icon, Segmented, Waves, type IconName } from './ui'
+import { Icon, Segmented, LogoMark, EmMaceio, Skyline, type IconName } from './ui'
 import { monuments, kpis, origins, weekly, hourly, fmt, eventTemplates, type Monument, type Report, type TrackEvent } from './data'
 import { Photo } from './MobileScreens'
 import { Card, Kpi, HourChart } from './DashboardViews'
@@ -287,9 +287,15 @@ export function Dashboard({ events, reports, setReports, bump, onPublic }: { eve
   return (
     <div className="flex h-full bg-[#f6f3ec] text-black mu-desktop">
       <aside className="w-[232px] shrink-0 bg-white/60 backdrop-blur-2xl border-r border-black/[0.06] flex flex-col pt-5 pb-4 px-3">
-        <div className="flex items-center gap-2.5 px-2 mb-6">
-          <img src="/memoria-urbana-logo.png" alt="" className="w-9 h-9 rounded-full object-cover bg-white" />
-          <div className="leading-tight"><div className="text-[14px] font-semibold">Memória Urbana</div><div className="text-[12px] text-black/45">Painel · Prefeitura</div></div>
+        <div className="px-2 mb-6">
+          <div className="flex items-center gap-2.5">
+            <LogoMark size={44} />
+            <div className="leading-tight">
+              <div className="text-[14.5px] font-bold text-[#0b2f49] mu-ink">Memória Urbana</div>
+              <EmMaceio className="text-[11.5px] gap-1.5 [&>span]:w-3" />
+            </div>
+          </div>
+          <div className="mt-3 inline-flex h-6 items-center gap-1.5 rounded-full bg-[#0b2f49]/[0.07] px-2.5 text-[11.5px] font-semibold text-[#0b2f49] mu-ink"><Icon name="placa" size={13} />Painel da Prefeitura</div>
         </div>
         <nav className="space-y-0.5">
           {nav.map(([id, ic, l, tag]) => (
@@ -300,8 +306,8 @@ export function Dashboard({ events, reports, setReports, bump, onPublic }: { eve
             </button>
           ))}
         </nav>
-        <Waves className="w-full h-4 mt-6 opacity-60" />
         <div className="mt-auto">
+          <Skyline className="block w-full h-9 mb-3 opacity-80" />
           <button onClick={() => onPublic()} className="w-full h-9 px-2.5 rounded-[10px] flex items-center gap-2.5 text-[14px] text-black/65 hover:bg-black/[0.04]"><Icon name="globe" size={17} />Ver site público</button>
           <div className="flex items-center gap-2.5 px-2 pt-3 mt-2 border-t border-black/[0.08]">
             <span className="w-8 h-8 rounded-full bg-[#0b2f49] text-white text-[12px] font-semibold grid place-items-center">FM</span>
@@ -312,7 +318,9 @@ export function Dashboard({ events, reports, setReports, bump, onPublic }: { eve
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-[1120px] mx-auto px-8 pt-8 pb-12">
           <h1 className="text-[32px] font-bold tracking-[-0.025em]">{titles[view][0]}</h1>
-          <p className="mb-6 text-[14.5px] text-black/50">{titles[view][1]}</p>
+          {/* os dois arcos da logo: verde-água e dourado */}
+          <div aria-hidden="true" className="mt-2 flex gap-1"><span className="h-[3px] w-12 rounded-full bg-[#2c8585]" /><span className="h-[3px] w-6 rounded-full bg-[#dda93f]" /></div>
+          <p className="mt-2 mb-6 text-[14.5px] text-black/50">{titles[view][1]}</p>
           {view === 'monumentos' && <Monumentos reports={reports} onEdit={setEditing} onNew={newMonument} />}
           {view === 'relatos' && <Relatos reports={reports} setStatus={(id, s) => setReports(reports.map((r) => (r.id === id ? { ...r, status: s } : r)))} onEdit={setEditing} />}
           {view === 'visitas' && <Visitas events={events} />}

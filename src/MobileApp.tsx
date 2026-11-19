@@ -6,6 +6,7 @@ import { GoogleLogin, demoAccounts } from './GoogleLogin'
 import { Immersive, type ImmersiveMode } from './Immersive'
 import { ReportSheet } from './ReportSheet'
 import type { Report } from './data'
+import { useLiveLocation } from './shared/useLocation'
 import { ExploreScreen, MapScreen, MonumentScreen, OfflineSheet, PassportScreen, ProfileScreen, Photo, PhotoViewer, stampClass, type MobileCtx } from './MobileScreens'
 
 // Memória da sessão: o progresso continua quando o visitante sai do app (botão de início) e volta
@@ -217,6 +218,8 @@ export interface Standalone {
 
 export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onReport, welcome, welcomeVia, standalone }: { onTrack: (e: NewEvent) => void; session: string; dark: boolean; setDark: (v: boolean) => void; user: User | null; setUser: (u: User | null) => void; onReport: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void | Promise<void>; welcome?: string; welcomeVia?: 'nfc' | 'qr'; standalone?: Standalone }) {
   const simulate = !standalone || standalone.simulate
+  // Localização real do aparelho só na área logada (o protótipo continua no ponto fixo da apresentação)
+  const location = useLiveLocation(!!standalone)
   const [tab, setTab] = useState<Tab>('explorar')
   const [xp, setXp] = useUserState(user?.email ?? 'anon', 'xp', 0)
   const [collected, setCollected] = useUserState<string[]>(user?.email ?? 'anon', 'collected', [])
@@ -375,6 +378,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     simulate,
     today: standalone?.today,
     links: standalone?.links,
+    location: standalone ? location : undefined,
     track,
     collectGps: (id) => {
       const r = collect(id, 'gps')
