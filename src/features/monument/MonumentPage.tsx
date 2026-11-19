@@ -6,6 +6,9 @@ import { Photo, KindPill, VisitBanner } from '../../MobileScreens'
 import { ReportSheet } from '../../ReportSheet'
 import { NotFound } from './NotFound'
 import { queueReport } from './reports'
+import { monuments } from '../../data'
+import { fmtDistance, nearby } from '../../shared/geo'
+import { monumentUrl } from '../../app/router'
 import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
 
@@ -77,7 +80,7 @@ export function MonumentPage({ id }: { id: string }) {
             <Icon name="pin" size={17} stroke={2.4} />Museu
           </a>
           <button type="button" onClick={share} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
-            <Icon name="arrowUR" size={17} stroke={2.4} />{copied ? 'Link copiado' : 'Compartilhar'}
+            <Icon name="share" size={17} stroke={2.4} />{copied ? 'Link copiado' : 'Compartilhar'}
           </button>
           <button type="button" onClick={() => setReport(true)} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#c4402e]/10 text-[#a3321f] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="flag" size={17} stroke={2.4} />Relatar
@@ -94,7 +97,7 @@ export function MonumentPage({ id }: { id: string }) {
             playId="narrar"
             onPlayingChange={setNarrating}
             title={mode === 'bio' ? `Narração · ${m.name}` : `Audiodescrição · ${m.name}`}
-            subtitle="Toque no play para ouvir"
+            subtitle="Voz sintetizada pelo seu aparelho"
             accent="#1f6b6b"
             text={mode === 'bio' ? m.summary : audioDescription(m)}
             textClassName="mt-5 text-[18px] sm:text-[20px] leading-[1.6] text-black/85"
@@ -149,6 +152,22 @@ export function MonumentPage({ id }: { id: string }) {
           </span>
           <Icon name="chevR" size={15} className="text-black/30" />
         </button>
+
+        {/* Links internos: os três monumentos mais perto (bom para a caminhada e para o Google) */}
+        <section aria-labelledby="perto" className="mt-10">
+          <h2 id="perto" className="text-[22px] font-bold tracking-[-0.02em]">Perto daqui</h2>
+          <ul className="mt-3 grid gap-2">
+            {nearby(m, monuments).map(({ m: n, meters }) => (
+              <li key={n.id}>
+                <a href={monumentUrl(n.id)} className="mu-press flex items-center gap-3 rounded-[16px] bg-white px-4 py-3 min-h-[56px] mu-edge mu-raise-1">
+                  <span className="flex-1 min-w-0"><span className="block text-[15.5px] font-semibold leading-tight">{n.name}</span><span className="block text-[13px] text-black/70">{n.kind} · {n.area}</span></span>
+                  <span className="text-[13px] font-semibold text-[#1f6b6b] tabular">{fmtDistance(meters)}</span>
+                  <Icon name="chevR" size={15} stroke={2.2} className="text-black/40" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <h2 className="mt-10 text-[22px] font-bold tracking-[-0.02em]">Fontes</h2>
         <ul className="mt-3 bg-white rounded-[20px] divide-y divide-black/[0.06] mu-edge mu-raise-1">
