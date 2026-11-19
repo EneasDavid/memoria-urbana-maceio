@@ -752,11 +752,13 @@
    "key": "KAN-57",
    "type": "Tarefa",
    "summary": "Criar projeto Firebase e Firestore",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-49",
    "points": 2,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "labels": [],
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [
+    "urgente"
+   ],
    "description": "Projeto no console, Firestore em southamerica-east1, Storage, conta de serviço com papéis mínimos. Detalhes e critério de aceite no Jira."
   },
   {
@@ -774,11 +776,13 @@
    "key": "KAN-59",
    "type": "Tarefa",
    "summary": "Configurar cliente OAuth no Google Cloud e variáveis na Vercel",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-51",
    "points": 1,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "labels": [],
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "labels": [
+    "urgente"
+   ],
    "description": "Tela de consentimento, ID do cliente Web, redirect /api/auth/callback; GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, GESTOR_EMAILS. Detalhes e critério de aceite no Jira."
   },
   {
@@ -1260,11 +1264,14 @@
    "key": "KAN-105",
    "type": "Tarefa",
    "summary": "Criar conta Oracle Cloud (Always Free) e a VM Ampere A1",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-82",
    "points": 2,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "description": "Responsável: dono do projeto (exige cartão para verificação e login). Região sa-saopaulo-1, shape VM.Standard.A1.Flex com até 2 OCPU e 12 GB (limite grátis desde jun/2026), Ubuntu 24.04, chave SSH. Abrir portas 80 e 443 na security list. Atenção: conta parada por 30 dias pode ser recuperada pela Oracle."
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Responsável: dono do projeto (exige cartão para verificação e login). Região sa-saopaulo-1, shape VM.Standard.A1.Flex com até 2 OCPU e 12 GB (limite grátis desde jun/2026), Ubuntu 24.04, chave SSH. Abrir portas 80 e 443 na security list. Atenção: conta parada por 30 dias pode ser recuperada pela Oracle.",
+   "labels": [
+    "urgente"
+   ]
   },
   {
    "key": "KAN-106",
@@ -1310,11 +1317,14 @@
    "key": "KAN-110",
    "type": "Tarefa",
    "summary": "Verificar o site no Google Search Console e enviar o sitemap",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-82",
    "points": 1,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "description": "Responsável: dono do projeto (conta Google). Adicionar a propriedade, colar o código de verificação (meta tag google-site-verification) e enviar /sitemap.xml. Pedir indexação das páginas dos monumentos."
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Responsável: dono do projeto (conta Google). Adicionar a propriedade, colar o código de verificação (meta tag google-site-verification) e enviar /sitemap.xml. Pedir indexação das páginas dos monumentos.",
+   "labels": [
+    "urgente"
+   ]
   },
   {
    "key": "KAN-111",
@@ -1962,21 +1972,27 @@
    "key": "KAN-175",
    "type": "Tarefa",
    "summary": "Licença de uso do projeto e avisos de licenças de terceiros",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-162",
    "points": 1,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "description": "Escolha da licença pela equipe e arquivo de avisos de terceiros."
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Escolha da licença pela equipe e arquivo de avisos de terceiros.",
+   "labels": [
+    "urgente"
+   ]
   },
   {
    "key": "KAN-176",
    "type": "Tarefa",
    "summary": "Contratos com operadores (DPA): Vercel, Google, Firebase e Oracle",
-   "status": "A fazer",
+   "status": "Em andamento",
    "epic": "KAN-162",
    "points": 1,
-   "sprint": "Sprint 6 · Fundação do backend e segurança",
-   "description": "Aceitar e arquivar os DPAs de cada operador listado em docs/lgpd.md (art. 39)."
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Aceitar e arquivar os DPAs de cada operador listado em docs/lgpd.md (art. 39).",
+   "labels": [
+    "urgente"
+   ]
   },
   {
    "key": "KAN-177",
@@ -2107,6 +2123,36 @@
    "points": 2,
    "sprint": "Sprint 7 · Dados, sessões e filas",
    "description": "Safari não tem BarcodeDetector; adicionar decodificador JS leve, carregado só no leitor."
+  },
+  {
+   "key": "KAN-190",
+   "type": "Tarefa",
+   "summary": "Identidade visual com os detalhes da logo (arcos, \"em Maceió\", onda e silhueta da cidade)",
+   "status": "Em andamento",
+   "epic": "KAN-113",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Arcos verde-água e dourado, assinatura \"— em Maceió —\", onda da orla e silhueta da base da placa no rodapé e no login."
+  },
+  {
+   "key": "KAN-191",
+   "type": "Tarefa",
+   "summary": "Trocar a estrela por ícones da identidade (placa e estátua)",
+   "status": "Em andamento",
+   "epic": "KAN-113",
+   "points": 1,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "A estrela parecia nota de avaliação; entram o ícone da placa de rua da logo e o de estátua."
+  },
+  {
+   "key": "KAN-192",
+   "type": "Tarefa",
+   "summary": "Atualizar dependências: React 19.3, TypeScript 7, Vite 8.3 e GitHub Actions",
+   "status": "Em andamento",
+   "epic": "KAN-9",
+   "points": 2,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "Pedidos do Dependabot aceitos; react e react-dom juntos e tsconfig ajustado para o TypeScript 7."
   }
  ]
 }
