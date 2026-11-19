@@ -2193,6 +2193,16 @@
    "points": 2,
    "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
    "description": "Seção Monumentos no Explorar: progresso, filtro por área e Perto de você, foto, situação, distância e placa."
+  },
+  {
+   "key": "KAN-197",
+   "type": "Tarefa",
+   "summary": "Área logada no computador no desenho do site do protótipo (Figma Make)",
+   "status": "Concluído",
+   "epic": "KAN-113",
+   "points": 3,
+   "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+   "description": "A partir de 1024 px: topo como o site do protótipo, Explorar em duas colunas com cartões, Trilha com mapa e lista ao lado, ficha e leitor em painel centralizado. O celular não muda."
   }
  ]
 }
