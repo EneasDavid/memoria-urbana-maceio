@@ -61,3 +61,21 @@ test('sniff identifica bloqueados com nome claro', () => {
   assert.equal(sniff(f('arquivo.zip')).kind, 'blocked')
   assert.equal(sniff(new Uint8Array([0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0, 0, 0, 0, 0, 0])).what, 'arquivo RAR')
 })
+
+test('vídeo grande e legítimo não é recusado por coincidência ("<%=" e afins aparecem por acaso em 20 MB)', () => {
+  const v = new Uint8Array(20 * 1024 * 1024)
+  let x = 987654321
+  for (let i = 0; i < v.length; i++) { x = (x * 1664525 + 1013904223) >>> 0; v[i] = x >>> 24 }
+  v.set(f('video.mp4'))
+  for (let i = 4096; i < v.length; i += 1_000_003) v.set([0x3c, 0x25, 0x3d], i) // "<%=" espalhado
+  const t0 = performance.now()
+  const r = checkBytes(v, 'video/mp4')
+  assert.equal(r.ok, true, r.reason)
+  assert.ok(performance.now() - t0 < 3000, 'checagem lenta demais')
+})
+
+test('marcas de vídeo de celular variadas são aceitas; áudio M4A não', () => {
+  const ftyp = (brand) => { const b = new Uint8Array(64); b.set([0, 0, 0, 24]); b.set([...'ftyp'].map((c) => c.charCodeAt(0)), 4); b.set([...brand].map((c) => c.charCodeAt(0)), 8); return b }
+  for (const brand of ['3gp6', '3g2a', 'XAVC', 'mp71', 'iso8', 'qt  ']) assert.equal(checkBytes(ftyp(brand), 'video/mp4').ok, true, brand)
+  assert.equal(checkBytes(ftyp('M4A '), 'video/mp4').ok, false)
+})

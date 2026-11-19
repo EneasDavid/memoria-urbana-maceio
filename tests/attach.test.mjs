@@ -58,6 +58,42 @@ for (const [file, msg] of [['zip-renomeado.jpg', /ZIP/], ['poliglota.jpg', /comp
   })
 }
 
+test('vídeo que este navegador não decodifica é aceito (duração conferida no envio) e o envio mostra animação', async () => {
+  const { ctx, page } = await sheet()
+  await page.setInputFiles('#relato-anexo', 'tests/fixtures/media/video.mp4')
+  await page.getByTestId('anexo').waitFor({ timeout: 10000 })
+  assert.match(await page.getByTestId('anexo').textContent(), /Vídeo .*duração conferida no envio/)
+  await page.getByRole('button', { name: 'Danificado' }).click()
+  await page.getByRole('button', { name: 'Enviar relato' }).click()
+  await page.getByRole('button', { name: /Enviando vídeo/ }).waitFor()
+  await page.getByText('Obrigado!').waitFor()
+  await ctx.close()
+})
+
+test('enquanto verifica o arquivo aparece a animação de processamento', async () => {
+  const { ctx, page } = await sheet()
+  await page.evaluate(() => { const orig = File.prototype.arrayBuffer; File.prototype.arrayBuffer = function () { return new Promise((r) => setTimeout(() => r(orig.call(this)), 600)) } })
+  await page.setInputFiles('#relato-anexo', 'tests/fixtures/media/foto.jpg')
+  const p = page.getByTestId('anexo-processando')
+  await p.waitFor()
+  assert.match(await p.textContent(), /Lendo o arquivo|Verificando/)
+  await page.getByTestId('anexo').waitFor()
+  await ctx.close()
+})
+
+test('o contorno de foco do campo de detalhe não é cortado pela folha', async () => {
+  const { ctx, page } = await sheet()
+  await page.locator('textarea').focus()
+  await page.keyboard.press('Tab'); await page.keyboard.press('Shift+Tab')
+  const r = await page.evaluate(() => {
+    const t = document.querySelector('textarea').getBoundingClientRect()
+    const clip = document.querySelector('[data-autoheight]').getBoundingClientRect()
+    return { left: t.left - clip.left, right: clip.right - t.right }
+  })
+  await ctx.close()
+  assert.ok(r.left >= 4 && r.right >= 4, `folga ${JSON.stringify(r)} (precisa de ≥ 4 px para o contorno de 3 px)`)
+})
+
 test('arquivo acima de 25 MB é barrado antes de ser lido', async () => {
   const { ctx, page } = await sheet()
   await page.setInputFiles('#relato-anexo', { name: 'grande.mp4', mimeType: 'video/mp4', buffer: Buffer.alloc(26 * 1024 * 1024) })
