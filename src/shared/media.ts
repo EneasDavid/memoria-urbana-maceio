@@ -34,8 +34,11 @@ export function sniff(b: Uint8Array): Sniffed {
   if (ascii(b, 4, 4) === 'ftyp') {
     const brand = ascii(b, 8, 4)
     if (['heic', 'heix', 'hevc', 'heim', 'heis', 'mif1', 'msf1', 'avif'].includes(brand)) return { kind: 'image', mime: brand === 'avif' ? 'image/avif' : 'image/heic' }
-    if (['isom', 'iso2', 'iso4', 'iso5', 'iso6', 'mp41', 'mp42', 'avc1', 'M4V ', 'qt  ', 'MSNV', 'dash', '3gp4', '3gp5'].includes(brand)) return { kind: 'video', mime: brand === 'qt  ' ? 'video/quicktime' : 'video/mp4' }
-    return { kind: 'blocked', what: `contêiner ftyp "${brand.trim()}"` }
+    // Áudio e imagem JPEG 2000 no mesmo contêiner não são vídeo de relato
+    if (['M4A ', 'M4B ', 'M4P ', 'F4A ', 'F4B ', 'jp2 ', 'jpx ', 'crx '].includes(brand)) return { kind: 'blocked', what: `arquivo "${brand.trim()}" (não é vídeo)` }
+    // Qualquer outra marca ISO-BMFF é vídeo: celulares usam dezenas (isom, mp42, qt, 3gp6, 3g2a, MSNV, XAVC…).
+    // A segurança vem das outras checagens (tamanho, conteúdo escondido) e do ffprobe no servidor.
+    return { kind: 'video', mime: brand === 'qt  ' ? 'video/quicktime' : brand.startsWith('3g') ? 'video/3gpp' : 'video/mp4' }
   }
   if (has(b, [0x1a, 0x45, 0xdf, 0xa3])) return { kind: 'video', mime: 'video/webm' }
   // bloqueados explicitamente (mensagem mais clara para quem envia)
@@ -59,7 +62,9 @@ const SIX = [
   [0x52, 0x61, 0x72, 0x21, 0x1a, 0x07], // RAR
   [0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c], // 7z
 ]
-const SCRIPT = /<script|<\?php|<%[=@ ]|<svg[\s>]|<html|<iframe|javascript:|onerror\s*=|onload\s*=|<!entity|\beval\s*\(/i
+// Só marcadores com 5+ caracteres: padrões curtos (como "<%=", 3 bytes) aparecem por acaso em vídeos de 20 MB
+// e recusavam vídeos legítimos.
+const SCRIPT = /<script|<\?php|<svg[\s>]|<html|<iframe|javascript:|onerror\s*=|onload\s*=|<!entity|\beval\s*\(/i
 
 function zipInside(b: Uint8Array): boolean {
   for (let i = 1; i + 30 <= b.length; i++) {
@@ -84,12 +89,10 @@ export function hiddenPayload(b: Uint8Array): string | null {
     }
   }
   // texto: decodifica como latin1 em blocos (com sobreposição) para achar marcadores de script
-  const CH = 1 << 15
+  const CH = 1 << 20
+  const dec = new TextDecoder('latin1')
   for (let i = 0; i < b.length; i += CH - 32) {
-    let s = ''
-    const end = Math.min(b.length, i + CH)
-    for (let k = i; k < end; k++) s += String.fromCharCode(b[k])
-    if (SCRIPT.test(s)) return 'código/script escondido dentro da mídia'
+    if (SCRIPT.test(dec.decode(b.subarray(i, Math.min(b.length, i + CH))))) return 'código/script escondido dentro da mídia'
   }
   return null
 }
