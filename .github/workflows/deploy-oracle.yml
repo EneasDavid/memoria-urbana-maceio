@@ -1,0 +1,87 @@
+name: Deploy Oracle
+
+# Publica o site na VM da Oracle Cloud depois que o CI passa na main.
+# Fica desligado até o dono do repositório cadastrar (Settings → Secrets and variables → Actions):
+#   variáveis: ORACLE_HOST (IP ou domínio da VM), SITE_URL (ex.: https://memoriaurbana.com.br)
+#   segredos:  ORACLE_SSH_KEY (chave privada do usuário deploy), ORACLE_KNOWN_HOSTS (saída de ssh-keyscan)
+#   opcional:  GOOGLE_SITE_VERIFICATION (variável, código do Search Console)
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-oracle
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build e envio para a VM
+    if: ${{ vars.ORACLE_HOST != '' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: oracle
+      url: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Build do site (SEO com a URL da Oracle)
+        run: pnpm build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+
+      - name: Build da API de login
+        run: pnpm build:server
+
+      - name: Chave SSH (host fixado em known_hosts)
+        env:
+          KEY: ${{ secrets.ORACLE_SSH_KEY }}
+          KNOWN: ${{ secrets.ORACLE_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
+
+      - name: Enviar release e trocar o link "current"
+        env:
+          HOST: ${{ vars.ORACLE_HOST }}
+          RELEASE: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          SSH="ssh -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes"
+          DIR=/srv/memoria-urbana/releases/$RELEASE
+          $SSH deploy@$HOST "mkdir -p $DIR"
+          rsync -az --delete -e "$SSH" dist server infra package.json deploy@$HOST:$DIR/
+          $SSH deploy@$HOST "ln -sfn $DIR /srv/memoria-urbana/current.new && mv -T /srv/memoria-urbana/current.new /srv/memoria-urbana/current \
+            && sudo /usr/bin/systemctl restart memoria-urbana-api \
+            && ls -1dt /srv/memoria-urbana/releases/* | tail -n +6 | xargs -r rm -rf"
+
+      - name: Conferir o site no ar
+        env:
+          URL: ${{ vars.SITE_URL }}
+        run: |
+          for p in / /monumento/graciliano /robots.txt /sitemap.xml /api/auth/me; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$URL$p")
+            echo "$p → $code"; [ "$code" = 200 ] || [ "$p" = /api/auth/me -a "$code" = 401 ] || exit 1
+          done
