@@ -95,3 +95,5 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-184](https://ic-team-yrsngn10.atlassian.net/browse/KAN-184) | Área logada igual ao Figma | ![Área logada igual ao Figma](ux-app-figma-x-site.jpg) |
 | [KAN-185](https://ic-team-yrsngn10.atlassian.net/browse/KAN-185) | Área logada sem simulações | ![Área logada sem simulações](ux-app-logado.jpg) |
 | [KAN-186](https://ic-team-yrsngn10.atlassian.net/browse/KAN-186) | Aviso antes da câmera do leitor | ![Aviso antes da câmera do leitor](ux-app-camera.jpg) |
+| [KAN-190](https://ic-team-yrsngn10.atlassian.net/browse/KAN-190) | Identidade com os detalhes da logo | ![Identidade com os detalhes da logo](ux-identidade-logo.jpg) |
+| [KAN-191](https://ic-team-yrsngn10.atlassian.net/browse/KAN-191) | Estrela trocada por placa e estátua | ![Rodapé com a silhueta da cidade](ux-identidade-rodape.jpg) |
