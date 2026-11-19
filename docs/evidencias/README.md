@@ -99,3 +99,5 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-191](https://ic-team-yrsngn10.atlassian.net/browse/KAN-191) | Estrela trocada por placa e estátua | ![Rodapé com a silhueta da cidade](ux-identidade-rodape.jpg) |
 | [KAN-193](https://ic-team-yrsngn10.atlassian.net/browse/KAN-193) | Identidade da logo no painel do gestor | ![Identidade da logo no painel do gestor](ux-painel-identidade.jpg) |
 | [KAN-194](https://ic-team-yrsngn10.atlassian.net/browse/KAN-194) | Localização real na Trilha | ![Localização real na Trilha](ux-app-localizacao.jpg) |
+| [KAN-195](https://ic-team-yrsngn10.atlassian.net/browse/KAN-195) | Identidade da logo na área do visitante | ![Identidade da logo na área do visitante](ux-app-identidade.jpg) |
+| [KAN-196](https://ic-team-yrsngn10.atlassian.net/browse/KAN-196) | Lista de monumentos na área logada | ![Lista de monumentos na área logada](ux-app-lista-monumentos.jpg) |
