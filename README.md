@@ -96,6 +96,21 @@ cd backend && pytest                                          # RBAC, cache, rel
 - `tests/smoke.test.mjs` sobe o build com `vite preview` e confere a página inicial, todos os JS/CSS, a logo e o favicon. Também garante que não há sourcemap inline nem segredos no bundle.
 - Camada OWASP: `pnpm audit` (A06, componentes vulneráveis) e cabeçalhos de segurança em `vercel.json` (nosniff, frame-options, referrer, permissions e HSTS).
 
+## Acesso de demonstração (sem Google)
+
+Em `/entrar`, os botões **Como visitante** e **Como gestor** abrem a Trilha e o painel sem conta Google.
+
+- Não há senha e o usuário é fictício.
+- A sessão (`mu_demo`) dura 2 horas e nada é salvo.
+- O backend não aceita esse cookie para dados reais.
+- Para desligar, defina `DEMO_LOGIN=off`.
+
+## Segurança e auditoria
+
+- `SECURITY.md`: como relatar falhas.
+- `docs/conformidade-40.md`: matriz dos 40 requisitos. O CI publica o relatório no resumo de cada execução.
+- `tests/security.test.mjs`: cabeçalhos, segredos, XSS, CSRF, injeção e controle de acesso.
+
 ## Conformidade legal, LGPD e acessibilidade
 
 O job **Conformidade** do CI barra o merge quando algum destes 17 itens quebra:
