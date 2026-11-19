@@ -24,8 +24,11 @@ export function safeReturnTo(value: string | null | undefined, fallback = '/app'
 export function matchRoute(pathname: string, search = ''): Route {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/') return { name: 'index' }
-  const m = path.match(/^\/monumento\/([a-z0-9-]+)$/)
+  // Postel: aceita caixa alta, acentos, número da placa e /placa/:n (a página resolve e corrige a URL)
+  const m = path.match(/^\/(?:monumento|placa|p)\/([^/]+)$/i)
   if (m) return { name: 'monument', id: m[1] }
+  const lower = path.toLowerCase()
+  if (lower !== path && !lower.startsWith('/monumento/')) return matchRoute(lower, search)
   if (path === '/entrar') return { name: 'login', returnTo: safeReturnTo(new URLSearchParams(search).get('returnTo')) }
   if (path === '/app') return { name: 'app' }
   if (path === '/painel') return { name: 'panel' }
