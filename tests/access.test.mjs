@@ -205,3 +205,41 @@ test('lista de monumentos: com localização, ordena por perto e mostra a distâ
   assert.match(await lista.locator('li').first().textContent(), /Graciliano Ramos.*\d+ m/)
   await ctx.close()
 })
+
+// Área logada no computador: site largo como o protótipo, não a coluna do celular
+for (const width of [1024, 1440]) {
+  test(`computador (${width} px): topo com abas, lista em cartões e ficha em painel`, async () => {
+    const { ctx, page } = await withFakeApi(REAL, 'light', { viewport: { width, height: 860 } })
+    await page.goto(BASE + '/app')
+    const abas = page.getByRole('navigation', { name: 'Abas' })
+    await abas.getByRole('button', { name: 'Explorar', exact: true }).waitFor()
+    assert.equal(await page.getByRole('navigation', { name: 'Abas' }).count(), 1, 'só o topo, sem a barra de baixo do celular')
+    const box = await page.getByTestId('lista-monumentos').boundingBox()
+    assert.ok(box && box.width > 500, 'lista ocupa a largura do computador (não a coluna de 480 px)')
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'rolagem horizontal')
+    const top = await page.locator('header').first().boundingBox()
+    assert.ok(top && top.height <= 80, 'topo em uma linha')
+    await page.getByTestId('lista-monumentos').getByRole('button', { name: /Graciliano Ramos/ }).first().click()
+    await page.getByRole('dialog', { name: 'Detalhe' }).waitFor()
+    await page.keyboard.press('Escape')
+    await page.getByRole('dialog', { name: 'Detalhe' }).waitFor({ state: 'detached' })
+    await abas.getByRole('button', { name: 'Trilha', exact: true }).click()
+    await page.getByTestId('lista-monumentos').waitFor()
+    await ctx.close()
+  })
+}
+
+for (const scheme of ['light', 'dark']) {
+  test(`computador sem violações de acessibilidade (${scheme === 'light' ? 'claro' : 'escuro'})`, async () => {
+    const { ctx, page } = await withFakeApi(REAL, scheme, { viewport: { width: 1440, height: 900 } })
+    await page.goto(BASE + '/app')
+    for (const tab of ['Explorar', 'Trilha', 'Passaporte']) {
+      await page.getByRole('navigation', { name: 'Abas' }).getByRole('button', { name: tab, exact: true }).click()
+      await page.waitForTimeout(500)
+      const r = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze()
+      const bad = r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')
+      assert.equal(bad.length, 0, tab + ': ' + bad.map((v) => v.id + ' ' + v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(', ')).join(' | '))
+    }
+    await ctx.close()
+  })
+}
