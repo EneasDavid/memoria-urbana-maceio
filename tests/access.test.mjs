@@ -17,8 +17,8 @@ before(async () => {
 })
 after(async () => { await browser?.close(); try { process.kill(-server.pid) } catch {} })
 
-async function withFakeApi(start = null, colorScheme = 'light') {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme })
+async function withFakeApi(start = null, colorScheme = 'light', extra = {}) {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme, ...extra })
   await ctx.addInitScript(() => localStorage.setItem('mu_cookie_notice', '1'))
   let user = start
   await ctx.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort())
@@ -97,6 +97,7 @@ test('área logada com conta real: nada simulado (sem caminhada, sem leitura fal
   assert.equal(await page.getByText('9:41').count(), 0)
   assert.equal(await page.getByText('Sábado, 7 de novembro').count(), 0, 'data fixa do protótipo')
   await page.getByRole('navigation', { name: 'Abas' }).getByRole('button', { name: 'Trilha', exact: true }).click()
+  await page.getByTestId('aviso-localizacao').getByRole('button', { name: 'Agora não' }).click()
   await page.getByRole('button', { name: 'Mostrar onde estou' }).waitFor()
   assert.equal(await page.getByText('Simular caminhada').count(), 0)
   assert.equal(await page.getByText('Sem placa? Check-in por GPS').count(), 0, 'check-in sem localização real')
@@ -135,3 +136,43 @@ for (const scheme of ['light', 'dark']) {
     await ctx.close()
   })
 }
+
+// Localização real do aparelho no mapa da Trilha
+const trilha = (page) => page.getByRole('navigation', { name: 'Abas' }).getByRole('button', { name: 'Trilha', exact: true }).click()
+
+test('localização: aviso antes do pedido do navegador, com opção de recusar', async () => {
+  const { ctx, page } = await withFakeApi(REAL)
+  await page.goto(BASE + '/app')
+  await trilha(page)
+  const aviso = page.getByTestId('aviso-localizacao')
+  await aviso.waitFor()
+  assert.match(await aviso.textContent(), /não é gravada nem enviada/)
+  await aviso.getByRole('button', { name: 'Agora não' }).click()
+  await page.getByRole('button', { name: 'Mostrar onde estou' }).waitFor()
+  assert.equal(await page.getByText('Você está aqui').count(), 0, 'sem localização não há "Você está aqui"')
+  await ctx.close()
+})
+
+test('localização: com permissão, mostra onde a pessoa está, libera o GPS e acompanha o movimento', async () => {
+  const { ctx, page } = await withFakeApi(REAL, 'light', { permissions: ['geolocation'], geolocation: { latitude: -9.66705, longitude: -35.71245, accuracy: 25 } })
+  await page.goto(BASE + '/app')
+  await trilha(page)
+  assert.equal(await page.getByTestId('aviso-localizacao').count(), 0, 'permissão já dada: sem pedir de novo')
+  await page.getByText('Você está aqui').waitFor()
+  await page.getByText(/Check-in por GPS/).first().waitFor()
+  await ctx.setGeolocation({ latitude: -9.665, longitude: -35.735 })
+  await page.getByText('Praça dos Martírios').first().waitFor()
+  await page.getByRole('navigation', { name: 'Abas' }).getByRole('button', { name: 'Explorar', exact: true }).click()
+  assert.match(await page.getByText(/Selo mais perto de você/).first().textContent(), /\d+ m/)
+  await ctx.close()
+})
+
+test('painel do gestor com a identidade da logo e sem estrela', async () => {
+  const { ctx, page } = await withFakeApi({ sub: 'demo-gestor', name: 'Gestora Demonstração', email: 'g@demo.invalid', role: 'gestor', demo: true })
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto(BASE + '/painel')
+  await page.getByText('Painel da Prefeitura').waitFor()
+  assert.equal(await page.locator('.mu-skyline').count() > 0, true, 'silhueta da cidade')
+  assert.equal(await page.locator('path[d^="m12 3 2.7 5.6"]').count(), 0, 'estrela no painel')
+  await ctx.close()
+})
