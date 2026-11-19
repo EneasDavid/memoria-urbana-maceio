@@ -23,6 +23,16 @@ export function AppHome({ user }: { user: SessionUser }) {
     setDarkState(v)
   }, [])
 
+  // Computador (1024 px ou mais): layout largo como o site do protótipo; abaixo disso, o app do celular
+  const [desktop, setDesktop] = useState(() => typeof window !== 'undefined' && !!window.matchMedia?.('(min-width: 1024px)').matches)
+  useEffect(() => {
+    const mq = window.matchMedia?.('(min-width: 1024px)')
+    if (!mq) return
+    const on = () => setDesktop(mq.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+
   useEffect(() => {
     const prev = document.title
     document.title = 'Trilha Cultural · Memória Urbana Maceió'
@@ -37,11 +47,12 @@ export function AppHome({ user }: { user: SessionUser }) {
     onLogout: () => { void logout() },
     today: hoje(),
     links: { privacy: '/privacidade', panel: user.role === 'gestor' ? '/painel' : undefined },
-  }), [user.demo, user.role])
+    desktop,
+  }), [user.demo, user.role, desktop])
 
   return (
     <main id="conteudo" className="fixed inset-0 bg-[#f6f3ec] mu-app-shell">
-      <div className="relative mx-auto h-full w-full max-w-[480px] sm:border-x sm:border-black/[0.06]">
+      <div className={desktop ? 'relative h-full w-full' : 'relative mx-auto h-full w-full max-w-[480px] sm:border-x sm:border-black/[0.06]'}>
         <MobileApp
           standalone={standalone}
           user={appUser}
@@ -54,7 +65,7 @@ export function AppHome({ user }: { user: SessionUser }) {
         />
       </div>
       {user.demo && (
-        <p role="note" className="fixed left-1/2 top-3 z-[999] w-max -translate-x-1/2 rounded-full bg-[#c4402e] px-3 py-1 text-[12px] font-semibold text-white pointer-events-none">
+        <p role="note" className={(desktop ? 'fixed left-4 bottom-4' : 'fixed left-1/2 top-3 -translate-x-1/2') + ' z-[999] w-max rounded-full bg-[#c4402e] px-3 py-1 text-[12px] font-semibold text-white pointer-events-none'}>
           Demonstração · nada é salvo
         </p>
       )}
