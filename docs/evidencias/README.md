@@ -34,3 +34,6 @@ Prints usados nos comentários de "como foi feito" das tasks do Jira (projeto KA
 | [KAN-54](https://ic-team-yrsngn10.atlassian.net/browse/KAN-54) | Estruturar o front em app/ e features/ | ![Estruturar o front em app/ e features/](site-app-protegida.jpg) |
 | [KAN-55](https://ic-team-yrsngn10.atlassian.net/browse/KAN-55) | Documento de arquitetura | ![Documento de arquitetura](github-arquitetura.jpg) |
 | [KAN-56](https://ic-team-yrsngn10.atlassian.net/browse/KAN-56) | Esqueleto do backend FastAPI + Celery com RBAC | ![Esqueleto do backend FastAPI + Celery com RBAC](github-backend.jpg) |
+| [KAN-78](https://ic-team-yrsngn10.atlassian.net/browse/KAN-78) | Site segue o modo claro/escuro do aparelho | ![Tema](site-tema-claro-escuro.jpg) |
+| [KAN-79](https://ic-team-yrsngn10.atlassian.net/browse/KAN-79) | Convite para entrar na Trilha | ![Convite](site-convite-trilha.jpg) |
+| [KAN-80](https://ic-team-yrsngn10.atlassian.net/browse/KAN-80) | Narração sincronizada | ![Narração](site-narracao-sincronizada.jpg) |
