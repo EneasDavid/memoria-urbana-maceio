@@ -24,10 +24,9 @@ MAX_PIXELS = 40_000_000
 MAX_SIDE = 12_000
 
 HEIF_BRANDS = {b"heic", b"heix", b"hevc", b"heim", b"heis", b"mif1", b"msf1", b"avif"}
-VIDEO_BRANDS = {
-    b"isom", b"iso2", b"iso4", b"iso5", b"iso6", b"mp41", b"mp42", b"avc1", b"M4V ", b"qt  ", b"MSNV", b"dash", b"3gp4", b"3gp5",
-}
-SCRIPT = re.compile(rb"<script|<\?php|<%[=@ ]|<svg[\s>]|<html|<iframe|javascript:|onerror\s*=|onload\s*=|<!entity|\beval\s*\(", re.I)
+NOT_VIDEO = {b"M4A ", b"M4B ", b"M4P ", b"F4A ", b"F4B ", b"jp2 ", b"jpx ", b"crx "}
+# só marcadores com 5+ caracteres: "<%=" (3 bytes) aparecia por acaso em vídeos grandes
+SCRIPT = re.compile(rb"<script|<\?php|<svg[\s>]|<html|<iframe|javascript:|onerror\s*=|onload\s*=|<!entity|\beval\s*\(", re.I)
 SIX = (b"Rar!\x1a\x07", b"7z\xbc\xaf\x27\x1c")
 
 
@@ -58,9 +57,12 @@ def sniff(b: bytes) -> tuple[str, str]:
         brand = b[8:12]
         if brand in HEIF_BRANDS:
             return "image", "image/avif" if brand == b"avif" else "image/heic"
-        if brand in VIDEO_BRANDS:
-            return "video", "video/quicktime" if brand == b"qt  " else "video/mp4"
-        return "blocked", f'contêiner ftyp "{brand.decode("latin1").strip()}"'
+        if brand in NOT_VIDEO:
+            return "blocked", f'arquivo "{brand.decode("latin1").strip()}" (não é vídeo)'
+        # qualquer outra marca ISO-BMFF é vídeo (celulares usam dezenas); o ffprobe no worker confere
+        if brand == b"qt  ":
+            return "video", "video/quicktime"
+        return "video", "video/3gpp" if brand.startswith(b"3g") else "video/mp4"
     if b.startswith(b"\x1a\x45\xdf\xa3"):
         return "video", "video/webm"
     blocked = [
