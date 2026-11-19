@@ -25,6 +25,17 @@ export function MonumentPage({ id }: { id: string }) {
   const [mode, setMode] = useState<'bio' | 'desc'>('bio')
   const [report, setReport] = useState(false)
   const [narrating, setNarrating] = useState(false)
+  const [copied, setCopied] = useState(false)
+  // Lei de Jakob: compartilhar usa a folha nativa do celular; sem ela, copia o link
+  const share = async () => {
+    if (!m) return
+    const url = `${window.location.origin}/monumento/${m.id}`
+    try {
+      if (navigator.share) return await navigator.share({ title: `${m.name} · Memória Urbana Maceió`, url })
+      await navigator.clipboard.writeText(url)
+      setCopied(true); window.setTimeout(() => setCopied(false), 2000)
+    } catch { /* cancelado pelo usuário */ }
+  }
 
   useEffect(() => {
     if (!m) return
@@ -61,13 +72,14 @@ export function MonumentPage({ id }: { id: string }) {
       <div className="max-w-[760px] mx-auto px-5 pb-12">
         {/* Princípio 20 (frequência de uso) + 13 (Fitts): o que quase todo visitante faz fica no topo, em alvos grandes */}
         <nav aria-label="Ações rápidas" className="mu-stage -mt-6 relative z-10 grid grid-cols-3 gap-2 rounded-[var(--r-card)] bg-white p-2 mu-edge mu-raise-2 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
-          <button onClick={() => { const b = document.getElementById('narrar'); b?.scrollIntoView({ behavior: 'smooth', block: 'center' }); if (!narrating) b?.click() }} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b] text-white text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
-            <Icon name="play" size={17} stroke={2.4} />Ouvir
-          </button>
-          <a href="#museu" className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
+          {/* O play da narração é um só (no cartão logo abaixo); aqui ficam as outras ações mais usadas */}
+          <a href="#museu" className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b] text-white text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="pin" size={17} stroke={2.4} />Museu
           </a>
-          <button onClick={() => setReport(true)} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#c4402e]/10 text-[#a3321f] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
+          <button type="button" onClick={share} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
+            <Icon name="arrowUR" size={17} stroke={2.4} />{copied ? 'Link copiado' : 'Compartilhar'}
+          </button>
+          <button type="button" onClick={() => setReport(true)} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#c4402e]/10 text-[#a3321f] text-[13.5px] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="flag" size={17} stroke={2.4} />Relatar
           </button>
         </nav>

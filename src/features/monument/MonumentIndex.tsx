@@ -24,14 +24,16 @@ export function MonumentIndex() {
   return (
     <main id="conteudo" className="min-h-dvh bg-[#f6f3ec] text-black">
       <div className="relative max-w-[1160px] mx-auto px-5 py-8">
-        <div className="absolute right-5 top-8 [&>a]:static"><LoginPill returnTo="/app" /></div>
-        <div className="flex items-center gap-3 pr-36">
-          <img src="/memoria-urbana-logo.png" alt="" className="w-11 h-11 rounded-full object-cover mu-multiply" />
-          <div>
-            <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">Memória Urbana Maceió</h1>
-            <p className="text-[14.5px] text-black/70">Quem são as estátuas e praças da cidade, e qual museu continua cada história.</p>
+        {/* Cabeçalho: logo e entrada na mesma linha; nome e descrição com a largura toda, sem espremer o título */}
+        <header className="max-w-[640px]">
+          <div className="flex items-center justify-between gap-3">
+            <img src="/memoria-urbana-logo.png" alt="" width={56} height={56} className="w-14 h-14 rounded-full object-cover mu-multiply" />
+            <div className="[&>a]:static"><LoginPill returnTo="/app" /></div>
           </div>
-        </div>
+          <h1 className="mt-5 text-[32px] sm:text-[40px] font-bold tracking-[-0.025em] leading-[1.05] [text-wrap:balance]">Memória Urbana Maceió</h1>
+          <p className="mt-3 text-[17px] leading-[1.5] text-black/75 max-w-[34ch] [text-wrap:pretty]">Quem são as estátuas e praças de Maceió, e qual museu continua cada história.</p>
+          <p className="mt-2 text-[14.5px] leading-[1.5] text-black/70 max-w-[42ch]">Aponte a câmera para o QR da placa ou encoste o celular no NFC. Ou escolha uma obra abaixo: não precisa de cadastro.</p>
+        </header>
 
         {GROUPS.map((g) => {
           const list = monuments.filter((m) => m.group === g.id)
