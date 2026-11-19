@@ -2,7 +2,7 @@
   "title": "Memória Urbana Maceió",
   "description": "Quem são as estátuas e praças de Maceió e qual museu continua cada história. Sem cadastro e sem rastreamento.",
   "robots": {
-    "index": false
+    "index": true
   },
   "accessibility": {
     "addBypassLinks": false,
