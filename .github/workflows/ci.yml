@@ -67,6 +67,39 @@ jobs:
           path: dist
           retention-days: 7
 
+  conformidade:
+    name: Conformidade (LGPD, acessibilidade, legal)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+
+      - name: Build de produção (Vite)
+        run: pnpm build
+
+      - name: 17 regras legais (privacidade, termos, cookies, LGPD, rastreadores, créditos, riscos)
+        run: node --experimental-strip-types --no-warnings --test tests/compliance.test.mjs
+
+      - name: Instalar Chromium (Playwright)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Acessibilidade WCAG 2.1 AA (axe-core, claro e escuro) e teclado
+        run: node --experimental-strip-types --no-warnings --test tests/a11y.test.mjs
+
   backend:
     name: Backend (FastAPI, Celery, RBAC)
     runs-on: ubuntu-latest
