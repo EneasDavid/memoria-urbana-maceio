@@ -36,6 +36,11 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
     }
   }
   const fileRef = useRef<HTMLInputElement>(null)
+  // Aviso antes de abrir câmera/galeria (pedido de permissão explicado). Lembrado no aparelho em mu_media_ok.
+  const [askMedia, setAskMedia] = useState(false)
+  const mediaOk = () => { try { return localStorage.getItem('mu_media_ok') === '1' } catch { return false } }
+  const [knowsMedia, setKnowsMedia] = useState(mediaOk)
+  const acceptMedia = () => { try { localStorage.setItem('mu_media_ok', '1') } catch { /* aba anônima */ } setKnowsMedia(true); setAskMedia(false) }
   useEffect(() => () => { if (att) URL.revokeObjectURL(att.preview) }, [att])
   const pick = async (f: File | undefined) => {
     if (!f) return
@@ -100,7 +105,8 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
             </div>
             <textarea aria-label="Detalhe do problema (opcional)" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Detalhe (opcional). Não escreva nomes ou contatos." rows={2} className="mt-3 w-full rounded-[14px] bg-white px-4 py-3 text-[16px] text-black placeholder:text-black/45 mu-edge resize-none focus-visible:outline-[3px]" />
             {/* anexo real: foto ou vídeo, validado e (foto) recodificado no aparelho — src/shared/media.ts */}
-            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm" className="sr-only" id="relato-anexo" aria-describedby="relato-anexo-regras" onChange={(e) => pick(e.target.files?.[0])} />
+            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm" className="sr-only" id="relato-anexo" tabIndex={-1} aria-hidden="true" onChange={(e) => pick(e.target.files?.[0])} />
+            <input type="file" accept="image/*,video/*" capture="environment" className="sr-only" id="relato-camera" tabIndex={-1} aria-hidden="true" onChange={(e) => { pick(e.target.files?.[0]); e.target.value = '' }} />
             {att ? (
               <div className="mt-2 flex items-center gap-3 rounded-[14px] bg-white p-2 mu-edge" data-testid="anexo">
                 {att.kind === 'image'
@@ -119,9 +125,26 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
                   </span>
                 </div>
               ) : (
-                <label htmlFor="relato-anexo" className="mu-press mt-2 h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer">
-                  <Icon name="scan" size={16} stroke={2} />Anexar foto ou vídeo (opcional)
-                </label>
+                askMedia && !knowsMedia ? (
+                  <div className="mt-2 rounded-[14px] bg-white p-4 mu-edge" role="dialog" aria-labelledby="perm-titulo" data-testid="aviso-permissao">
+                    <h3 id="perm-titulo" className="text-[15px] font-semibold flex items-center gap-2"><Icon name="shield" size={17} stroke={2.2} className="text-[#1f6b6b]" />Acesso à câmera ou à galeria</h3>
+                    <p className="mt-1.5 text-[13.5px] leading-snug text-black/75">O celular vai pedir permissão para abrir a câmera ou as suas fotos. O site recebe <strong>só o arquivo que você escolher</strong>: não vê as outras fotos, não grava nada sozinho e tira a localização da foto antes de guardar. Você pode negar e enviar o relato sem anexo.</p>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <label htmlFor="relato-camera" onClick={acceptMedia} className="mu-press h-12 rounded-[12px] bg-[#1f6b6b] text-white text-[14px] font-semibold inline-flex items-center justify-center gap-2 cursor-pointer"><Icon name="scan" size={16} stroke={2.2} />Câmera</label>
+                      <label htmlFor="relato-anexo" onClick={acceptMedia} className="mu-press h-12 rounded-[12px] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[14px] font-semibold inline-flex items-center justify-center gap-2 cursor-pointer"><Icon name="image" size={16} stroke={2.2} />Galeria</label>
+                    </div>
+                    <button type="button" onClick={() => setAskMedia(false)} className="mt-2 w-full h-11 text-[14px] font-semibold text-black/70">Agora não</button>
+                  </div>
+                ) : knowsMedia ? (
+                  <div className="mt-2 flex gap-2">
+                    <label htmlFor="relato-camera" className="mu-press h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer"><Icon name="scan" size={16} stroke={2} />Câmera</label>
+                    <label htmlFor="relato-anexo" className="mu-press h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer"><Icon name="image" size={16} stroke={2} />Galeria (foto ou vídeo)</label>
+                  </div>
+                ) : (
+                  <button type="button" onClick={() => setAskMedia(true)} className="mu-press mt-2 h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2" aria-describedby="relato-anexo-regras">
+                    <Icon name="scan" size={16} stroke={2} />Anexar foto ou vídeo (opcional)
+                  </button>
+                )
               )
             )}
             {attErr && <p role="alert" className="mt-2 rounded-[12px] bg-[#c4402e]/10 px-3 py-2 text-[13px] leading-snug text-[#a3321f]">{attErr}</p>}
