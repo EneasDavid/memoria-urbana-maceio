@@ -122,3 +122,106 @@
 .mu-dark .text-\[\#6b4d0d\] { color: #f2d48a !important; }
 .mu-dark .text-\[\#a3321f\] { color: #ff9c8c !important; }
 .mu-dark .bg-\[\#1f6b6b\] { background-color: #1f6b6b !important; }
+
+/* =====================================================================================
+   Design v2 · 20 princípios de UX/animação + 10 ajustes finos (épico E14)
+   Tokens em OKLCH, movimento com tempos curtos e curvas de entrada/saída, profundidade no escuro.
+   tests/ux.test.mjs confere estes tokens e os comportamentos no navegador.
+   ===================================================================================== */
+:root {
+  /* Ajuste 3 · paleta em OKLCH (luminosidade perceptual uniforme; mesmos tons da marca) */
+  --c-navy: oklch(29% 0.06 240);      /* ≈ #0b2f49 */
+  --c-teal: oklch(47% 0.08 195);      /* ≈ #1f6b6b, AA sobre areia e branco */
+  --c-teal-soft: oklch(47% 0.08 195 / 0.12);
+  --c-gold: oklch(76% 0.13 80);       /* ≈ #dda93f */
+  --c-sand: oklch(96.5% 0.012 85);    /* ≈ #f6f3ec */
+  --c-red: oklch(55% 0.16 33);        /* ≈ #c4402e */
+  --c-ink: oklch(20% 0.01 240);
+  /* Ajuste 2 · borda com transparência: some no fundo e acompanha o tema */
+  --edge: oklch(0% 0 0 / 0.07);
+  --edge-strong: oklch(0% 0 0 / 0.12);
+  /* Princípios 6 e 9 · curvas de entrada/saída e tempos curtos */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1); /* princípio 5 · passa um pouco e assenta */
+  --dur-1: 110ms;  /* toque, pressão */
+  --dur-2: 200ms;  /* troca de estado */
+  --dur-3: 320ms;  /* entrada de painel */
+  /* Ajuste 1 · raio concêntrico: interno = externo − espaçamento */
+  --r-card: 22px;
+  --r-pad: 20px;
+  --r-inner: calc(var(--r-card) - var(--r-pad) * 0.5);
+}
+
+/* Princípio 1 · squash & stretch: botão achata um pouco ao apertar e volta com mola */
+.mu-press { transition: transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out); }
+.mu-press:active { transform: scale(0.97, 0.94); transition-duration: var(--dur-1); transition-timing-function: var(--ease-out); }
+
+/* Princípio 2 · antecipação: a seta recua antes de avançar */
+@keyframes mu-windup { 0% { transform: translateX(0) } 35% { transform: translateX(-3px) } 100% { transform: translateX(4px) } }
+.mu-windup:hover .mu-windup-icon, .mu-windup:focus-visible .mu-windup-icon { animation: mu-windup 360ms var(--ease-in-out) both; }
+
+/* Princípio 3 · encenar o foco: enquanto a narração toca, o resto da página recua */
+[data-staged="narracao"] .mu-stage { opacity: 0.45; filter: saturate(0.7); transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out); }
+.mu-stage { transition: opacity var(--dur-3) var(--ease-out), filter var(--dur-3) var(--ease-out); }
+
+/* Princípios 4 e 5 · pose a pose (entrada e saída definidas) com follow-through na folha */
+@keyframes mu-sheet-in { 0% { transform: translateY(100%) } 78% { transform: translateY(-1.2%) } 100% { transform: translateY(0) } }
+@keyframes mu-sheet-out { from { transform: translateY(0) } to { transform: translateY(100%) } }
+@keyframes mu-veil-out { from { opacity: 1 } to { opacity: 0 } }
+.mu-sheet-in { animation: mu-sheet-in var(--dur-3) var(--ease-out) both; }
+.mu-sheet-out { animation: mu-sheet-out 220ms var(--ease-in-out) both; }
+.mu-veil-out { animation: mu-veil-out 220ms var(--ease-in-out) both; }
+
+/* Princípio 7 · movimento em arco: o aviso de cookies sai descendo em curva */
+@keyframes mu-arc-out { 0% { transform: translate(0, 0) rotate(0); opacity: 1 } 50% { transform: translate(12px, 10px) rotate(1.5deg) } 100% { transform: translate(40px, 140px) rotate(4deg); opacity: 0 } }
+.mu-arc-out { animation: mu-arc-out 300ms var(--ease-in-out) both; }
+
+/* Princípio 8 · ação secundária: barras de áudio dançam enquanto a voz fala */
+@keyframes mu-eq { 0%, 100% { transform: scaleY(0.35) } 50% { transform: scaleY(1) } }
+.mu-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
+.mu-eq > i { display: block; width: 3px; height: 100%; border-radius: 2px; background: currentColor; transform-origin: bottom; animation: mu-eq 700ms var(--ease-in-out) infinite; }
+.mu-eq > i:nth-child(2) { animation-delay: -240ms } .mu-eq > i:nth-child(3) { animation-delay: -480ms }
+
+/* Princípio 10 · feedback exagerado: escolha "pula" e o envio explode em anel */
+@keyframes mu-boing { 0% { transform: scale(1) } 35% { transform: scale(1.06, 0.94) } 65% { transform: scale(0.98, 1.03) } 100% { transform: scale(1) } }
+.mu-boing { animation: mu-boing 340ms var(--ease-spring); }
+@keyframes mu-burst { 0% { transform: scale(0.6); opacity: 0.7 } 100% { transform: scale(2.4); opacity: 0 } }
+.mu-burst { position: absolute; inset: 0; border-radius: 9999px; border: 3px solid var(--c-teal); animation: mu-burst 600ms var(--ease-out) both; pointer-events: none; }
+
+/* Princípio 11 · desenho sólido em 3D: cartão inclina com perspectiva e sombra em camadas */
+.mu-tilt { transform: perspective(700px) rotateX(0) translateY(0); transition: transform var(--dur-3) var(--ease-out), box-shadow var(--dur-3) var(--ease-out); box-shadow: 0 1px 2px oklch(0% 0 0 / 0.06), 0 4px 10px oklch(0% 0 0 / 0.04); }
+@media (hover: hover) { .mu-tilt:hover { transform: perspective(700px) rotateX(3deg) translateY(-3px); box-shadow: 0 2px 4px oklch(0% 0 0 / 0.06), 0 14px 30px oklch(0% 0 0 / 0.12); } }
+
+/* Princípios 13 e 14 · Fitts e áreas de toque maiores: alvo invisível de 44px em volta de botões pequenos */
+.mu-hit:not(.absolute):not(.fixed) { position: relative; }
+.mu-hit::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+
+/* Ajuste 2 · borda com transparência em cartões e fotos */
+.mu-edge { box-shadow: inset 0 0 0 1px var(--edge); }
+.mu-photo-edge::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px oklch(100% 0 0 / 0.1), inset 0 0 0 1px oklch(0% 0 0 / 0.06); pointer-events: none; }
+
+/* Ajuste 4 · degradês em OKLCH: sem "meio cinza" entre a foto e o azul */
+.mu-hero-veil { background: linear-gradient(in oklch 180deg, oklch(0% 0 0 / 0.28) 0%, oklch(0% 0 0 / 0) 24%, oklch(0% 0 0 / 0) 36%, oklch(22% 0.05 240 / 0.92) 100%); }
+.mu-navy-grad { background: linear-gradient(in oklch 145deg, oklch(29% 0.06 240), oklch(36% 0.07 215)); }
+
+/* Ajuste 6 · pontas com máscara: listas que rolam de lado somem suavemente nas bordas */
+.mu-fade-x { overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%); }
+.mu-fade-x::-webkit-scrollbar { display: none; }
+
+/* Ajuste 7 · troca com desfoque: Bio ↔ Audiodescrição */
+@keyframes mu-blur-in { from { opacity: 0; filter: blur(6px); transform: translateY(4px) } to { opacity: 1; filter: blur(0); transform: none } }
+.mu-blur-in { animation: mu-blur-in var(--dur-3) var(--ease-out) both; }
+
+/* Ajuste 9 · altura dinâmica: o contêiner anima a altura quando o conteúdo muda */
+.mu-autoheight { transition: height var(--dur-3) var(--ease-out); overflow: hidden; }
+
+/* Ajuste 10 · mistura multiply: logo de fundo branco se funde com a areia */
+.mu-multiply { mix-blend-mode: multiply; }
+.mu-dark .mu-multiply { mix-blend-mode: normal; }
+
+/* Ajuste 8 · profundidade no escuro: camadas mais altas ficam mais claras, com fio de luz no topo */
+.mu-dark { --edge: oklch(100% 0 0 / 0.08); --edge-strong: oklch(100% 0 0 / 0.14); }
+.mu-dark .mu-raise-1 { background-color: oklch(24% 0.015 230) !important; box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.06), inset 0 0 0 1px var(--edge); }
+.mu-dark .mu-raise-2 { background-color: oklch(28% 0.018 230) !important; box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.08), inset 0 0 0 1px var(--edge), 0 -12px 40px oklch(0% 0 0 / 0.45); }
+.mu-dark .mu-tilt { box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.06); }

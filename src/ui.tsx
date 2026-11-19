@@ -68,7 +68,7 @@ export function Icon({ name, size = 20, className = '', stroke = 1.8, style }: {
 
 export function Segmented<T extends string>({ value, options, onChange, dark = false, size = 'md' }: { value: T; options: { value: T; label: ReactNode }[]; onChange: (v: T) => void; dark?: boolean; size?: 'sm' | 'md' }) {
   return (
-    <div className={`inline-flex p-[3px] rounded-[10px] ${dark ? 'bg-white/12' : 'bg-[rgba(118,118,128,0.12)]'}`} role="tablist">
+    <div className={`inline-flex p-[3px] rounded-[12px] ${dark ? 'bg-white/12' : 'bg-[rgba(118,118,128,0.12)]'}`} role="tablist">
       {options.map((o) => {
         const active = o.value === value
         return (
@@ -77,7 +77,7 @@ export function Segmented<T extends string>({ value, options, onChange, dark = f
             role="tab"
             aria-selected={active}
             onClick={() => onChange(o.value)}
-            className={`${size === 'sm' ? 'px-2.5 h-7 text-[12px]' : 'px-3.5 h-8 text-[13px]'} rounded-[8px] font-semibold transition-all duration-200 ${
+            className={`${size === 'sm' ? 'px-2.5 h-7 text-[12px]' : 'px-4 h-10 text-[14px]'} rounded-[9px] font-semibold mu-press ${
               active ? (dark ? 'bg-white/25 text-white shadow-sm' : 'bg-white text-black shadow-[0_3px_8px_rgba(0,0,0,0.12),0_3px_1px_rgba(0,0,0,0.04)]') : dark ? 'text-white/70' : 'text-black/60'
             }`}
           >
@@ -235,8 +235,8 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
 // alto-falante, e a palavra atual acompanha o evento onboundary quando o navegador o envia
 // (Chrome, Edge, Safari). Sem onboundary, a palavra avança por estimativa de tempo.
 // O primeiro trecho é falado dentro do toque (exigência do iOS); os seguintes, no onend.
-export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', autoPlay = false, onStart, onEnd, textClassName = 'mt-4 text-[17px] leading-relaxed text-black/85' }: {
-  text: string; extra?: string; title: string; subtitle?: string; accent?: string; autoPlay?: boolean; onStart?: () => void; onEnd?: () => void; textClassName?: string
+export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', autoPlay = false, onStart, onEnd, textClassName = 'mt-4 text-[17px] leading-relaxed text-black/85', playId, onPlayingChange }: {
+  text: string; extra?: string; title: string; subtitle?: string; accent?: string; autoPlay?: boolean; onStart?: () => void; onEnd?: () => void; textClassName?: string; playId?: string; onPlayingChange?: (playing: boolean) => void
 }) {
   const shown = useMemo(() => splitSpeech(text), [text])
   const parts = useMemo(() => [...shown, ...(extra ? splitSpeech(extra) : [])], [shown, extra])
@@ -367,6 +367,8 @@ export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', aut
     return () => { document.removeEventListener('visibilitychange', onHide); stop() }
   }, [text]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => { onPlayingChange?.(playing) }, [playing]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const pct = playing || idx > 0 ? ((idx + frac) / parts.length) * 100 : 0
   const renderPart = (p: string, i: number) => {
     const active = playing && i === idx
@@ -379,16 +381,34 @@ export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', aut
   }
   return (
     <div className="mt-3">
-      <div className="bg-white rounded-[18px] p-3.5 flex items-center gap-3">
-        <button onClick={toggle} aria-label={playing ? 'Pausar narração' : 'Ouvir narração'} aria-pressed={playing} className="w-11 h-11 rounded-full grid place-items-center text-white shrink-0 active:scale-95 transition" style={{ background: accent }}><Icon name={playing ? 'pause' : 'play'} size={20} stroke={2.2} /></button>
+      <div className="bg-white rounded-[18px] p-3.5 flex items-center gap-3 mu-edge mu-raise-1">
+        <button id={playId} onClick={toggle} aria-label={playing ? 'Pausar narração' : 'Ouvir narração'} aria-pressed={playing} className="w-12 h-12 rounded-full grid place-items-center text-white shrink-0 mu-press" style={{ background: accent }}><Icon name={playing ? 'pause' : 'play'} size={20} stroke={2.2} /></button>
         <div className="flex-1 min-w-0">
-          <div className="text-[14px] font-semibold text-black leading-tight">{title}</div>
+          <div className="text-[14px] font-semibold text-black leading-tight flex items-center gap-2">{title}{playing && <span className="mu-eq" style={{ color: accent }} aria-hidden="true"><i /><i /><i /></span>}</div>
           <div className="text-[12px] text-black/70 truncate" aria-live="polite">{note ?? (playing ? `Trecho ${idx + 1} de ${parts.length} · destaque acompanha a voz` : subtitle)}</div>
           <div className="mt-1.5 h-1 rounded-full bg-black/10 overflow-hidden"><div className="h-full rounded-full" style={{ width: pct + '%', background: accent, transition: 'width 120ms linear' }} /></div>
         </div>
       </div>
       {playing && idx >= shown.length && <div className="mt-2 rounded-[14px] bg-black/80 text-white px-4 py-2.5 text-[15px] leading-snug" aria-live="polite"><span className="block text-[10.5px] font-semibold uppercase tracking-[0.08em] text-white/55 mb-0.5">Legenda · ficha da obra</span>{parts[idx]}</div>}
-      <p className={textClassName}>{shown.map(renderPart)}</p>
+      <p className={textClassName + ' mu-blur-in'}>{shown.map(renderPart)}</p>
+    </div>
+  )
+}
+
+/** Ajuste 9 · altura dinâmica: o contêiner acompanha a altura do conteúdo com transição suave. */
+export function AutoHeight({ children, className = '' }: { children: ReactNode; className?: string }) {
+  const inner = useRef<HTMLDivElement>(null)
+  const [h, setH] = useState<number | undefined>(undefined)
+  useEffect(() => {
+    const el = inner.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(() => setH(el.offsetHeight))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div className={'mu-autoheight ' + className} style={{ height: h }} data-autoheight>
+      <div ref={inner}>{children}</div>
     </div>
   )
 }
