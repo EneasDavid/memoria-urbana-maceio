@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { monuments } from '../../data'
 import { Photo, KindPill } from '../../MobileScreens'
 import { monumentUrl } from '../../app/router'
+import { LoginPill } from '../auth/TrailInvite'
 
 // Lista pública. Cada card é um link comum (<a href>), então dá para abrir cada monumento
 // em uma aba nova (Ctrl/⌘ + clique ou toque longo). Sem menu, sem login.
@@ -12,8 +13,9 @@ export function MonumentIndex() {
 
   return (
     <main className="min-h-dvh bg-[#f6f3ec] text-black">
-      <div className="max-w-[1160px] mx-auto px-5 py-8">
-        <div className="flex items-center gap-3">
+      <div className="relative max-w-[1160px] mx-auto px-5 py-8">
+        <div className="absolute right-5 top-8 [&>a]:static"><LoginPill returnTo="/app" /></div>
+        <div className="flex items-center gap-3 pr-36">
           <img src="/memoria-urbana-logo.png" alt="" className="w-11 h-11 rounded-full object-cover bg-white" />
           <div>
             <h1 className="text-[26px] font-bold tracking-[-0.02em] leading-tight">Memória Urbana Maceió</h1>

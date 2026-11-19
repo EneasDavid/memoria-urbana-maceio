@@ -5,9 +5,10 @@ import { Photo, KindPill, VisitBanner } from '../../MobileScreens'
 import { ReportSheet } from '../../ReportSheet'
 import { NotFound } from './NotFound'
 import { queueReport } from './reports'
+import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 
 // Página pública do monumento: é o que abre quando alguém lê o QR ou encosta no NFC da placa.
-// Regras: sem login, sem menu, sem botão "voltar" desenhado (o navegador já tem), uma URL por
+// Regras: abre sem login (a conta é só um convite opcional), sem menu, sem botão "voltar" desenhado (o navegador já tem), uma URL por
 // monumento (/monumento/:id), o convite ao museu sempre visível e o relato de dano em 2 toques.
 
 export function audioDescription(m: Monument): string {
@@ -34,7 +35,8 @@ export function MonumentPage({ id }: { id: string }) {
       {/* foto e nome */}
       <section className="relative h-[52vh] min-h-[320px] max-h-[520px]">
         <Photo m={m} className="absolute inset-0" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(5,20,32,0.9) 100%)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 35%, rgba(5,20,32,0.9) 100%)' }} />
+        <LoginPill returnTo={`/monumento/${m.id}`} />
         <div className="absolute inset-x-0 bottom-0">
           <div className="max-w-[760px] mx-auto px-5 pb-6 text-white">
             <div className="flex items-center gap-2 mb-3">
@@ -82,6 +84,8 @@ export function MonumentPage({ id }: { id: string }) {
             <Icon name="route" size={16} />Como chegar
           </a>
         </section>
+
+        <TrailInvite plate={m.plate} returnTo={`/monumento/${m.id}`} />
 
         <h2 className="mt-10 text-[22px] font-bold tracking-[-0.02em]">Ficha</h2>
         <dl className="mt-3 bg-white rounded-[20px] divide-y divide-black/[0.06]">
