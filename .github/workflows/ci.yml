@@ -57,6 +57,12 @@ jobs:
       - name: Testes de integração (smoke no build servido)
         run: node --experimental-strip-types --no-warnings --test tests/smoke.test.mjs
 
+      - name: SEO (indexável, sitemap, robots, HTML pré-renderizado, JSON-LD)
+        run: node --experimental-strip-types --no-warnings --test tests/seo.test.mjs
+
+      - name: Servidor Oracle (API Node, Caddyfile igual à Vercel, deploy seguro)
+        run: pnpm build:server && node --experimental-strip-types --no-warnings --test tests/oracle.test.mjs
+
       - name: Auditoria de dependências (OWASP A06)
         run: pnpm audit --prod --audit-level high
         continue-on-error: true
