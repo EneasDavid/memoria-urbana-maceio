@@ -94,3 +94,39 @@ test('só um controle de narração por página (sem "dois plays")', async () =>
   await ctx.close()
   assert.equal(n, 1)
 })
+
+for (const width of [320, 390, 768]) {
+  test(`responsivo em ${width} px: nenhuma página rola para o lado`, async () => {
+    const ctx = await browser.newContext({ viewport: { width, height: 800 } })
+    await ctx.addInitScript(() => localStorage.setItem('mu_cookie_notice', '1'))
+    const page = await ctx.newPage()
+    await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort())
+    const bad = []
+    for (const path of ROUTES) {
+      await page.goto(BASE + path)
+      await page.waitForTimeout(300)
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+      if (over > 1) bad.push(`${path} (+${over}px)`)
+    }
+    await ctx.close()
+    assert.deepEqual(bad, [])
+  })
+}
+
+test('Core Web Vitals no celular: LCP < 2,5 s e CLS < 0,1 na página do monumento', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+  await ctx.addInitScript(() => {
+    localStorage.setItem('mu_cookie_notice', '1')
+    window.__lcp = 0; window.__cls = 0
+    new PerformanceObserver((l) => { for (const e of l.getEntries()) window.__lcp = e.startTime }).observe({ type: 'largest-contentful-paint', buffered: true })
+    new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value }).observe({ type: 'layout-shift', buffered: true })
+  })
+  const page = await ctx.newPage()
+  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort())
+  await page.goto(BASE + '/monumento/graciliano')
+  await page.waitForTimeout(1200)
+  const v = await page.evaluate(() => ({ lcp: window.__lcp, cls: window.__cls }))
+  await ctx.close()
+  assert.ok(v.lcp < 2500, `LCP ${Math.round(v.lcp)} ms`)
+  assert.ok(v.cls < 0.1, `CLS ${v.cls.toFixed(3)}`)
+})

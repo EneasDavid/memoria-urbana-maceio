@@ -67,6 +67,35 @@ test('rotas de conta, protótipo e fallback do SPA ficam fora do índice', () =>
 test('og:image não usa foto de terceiro com autorização pendente', () => {
   for (const r of PUBLIC) {
     const img = html(r).match(/<meta property="og:image" content="([^"]+)"/)?.[1]
-    assert.ok(img?.endsWith('/memoria-urbana-logo.png'), `${r}: ${img}`)
+    assert.ok(img?.endsWith('/og.png'), `${r}: ${img}`)
   }
+})
+
+test('cabeçalhos: um só H1 por página e sem pular nível (h1 → h2 → h3)', () => {
+  for (const r of PUBLIC) {
+    const body = html(r).split('<div id="root">')[1]
+    const levels = [...body.matchAll(/<h([1-6])[\s>]/g)].map((m) => Number(m[1]))
+    assert.equal(levels.filter((l) => l === 1).length, 1, `${r}: ${levels.filter((l) => l === 1).length} H1`)
+    for (let i = 1; i < levels.length; i++) assert.ok(levels[i] <= levels[i - 1] + 1, `${r}: pula de h${levels[i - 1]} para h${levels[i]}`)
+  }
+})
+
+test('links internos: nenhum link quebrado no HTML gerado e cada monumento liga para 3 vizinhos', () => {
+  const ok = new Set(['/', ...PUBLIC, '/entrar', '/app', '/painel', '/prototipo'])
+  for (const r of PUBLIC) {
+    for (const [, href] of html(r).matchAll(/<a href="(\/[^"#?]*)/g)) assert.ok(ok.has(href) || existsSync('dist' + href), `${r} → ${href} quebrado`)
+  }
+  for (const m of monuments) assert.equal((html(`/monumento/${m.id}`).split('Perto daqui')[1] || '').match(/href="\/monumento\//g)?.length >= 3, true, `${m.id} sem "Perto daqui"`)
+})
+
+test('imagem OG 1200×630 existe e é leve; logo comprimido', () => {
+  const og = readFileSync('dist/og.png')
+  assert.equal(og.readUInt32BE(16), 1200); assert.equal(og.readUInt32BE(20), 630)
+  assert.ok(og.length < 200_000, `og.png com ${og.length} bytes`)
+  assert.ok(readFileSync('dist/memoria-urbana-logo.png').length < 80_000, 'logo pesado (Core Web Vitals)')
+  assert.match(html('/'), /og:image:width" content="1200"/)
+})
+
+test('slugs limpos: URLs de monumento só com minúsculas e sem acento', () => {
+  for (const m of monuments) assert.match(m.id, /^[a-z0-9-]+$/)
 })

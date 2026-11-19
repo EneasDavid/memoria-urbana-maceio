@@ -48,7 +48,7 @@ after(() => server?.close())
 test('API Node responde /api/auth/me como na Vercel (sem OAuth configurado)', async () => {
   const r = await fetch(base + '/api/auth/me')
   assert.equal(r.status, 200)
-  assert.deepEqual(await r.json(), { configured: false, user: null })
+  assert.deepEqual(await r.json(), { configured: false, demoAvailable: true, user: null })
 })
 
 test('API Node: login sem configuração responde 503, rota desconhecida 404, método errado 404', async () => {
@@ -58,8 +58,41 @@ test('API Node: login sem configuração responde 503, rota desconhecida 404, m�
 })
 
 test('API Node: logout limpa o cookie de sessão respeitando o protocolo do proxy', async () => {
-  const r = await fetch(base + '/api/auth/logout', { method: 'POST', headers: { 'x-forwarded-proto': 'https' } })
+  const host = new URL(base).host
+  assert.equal((await fetch(base + '/api/auth/logout', { method: 'POST' })).status, 403, 'logout sem Origin deveria ser recusado (CSRF)')
+  const r = await fetch(base + '/api/auth/logout', { method: 'POST', headers: { 'x-forwarded-proto': 'https', origin: `https://${host}` } })
   const c = r.headers.get('set-cookie') || ''
   assert.match(c, /mu_session=;/)
   assert.match(c, /Secure/)
+})
+
+test('acesso de demonstração: entra como visitante ou gestor, /me reconhece com demo: true, sai', async () => {
+  const origin = base
+  const r = await fetch(base + '/api/auth/demo', { method: 'POST', headers: { origin, 'content-type': 'application/json' }, body: JSON.stringify({ role: 'gestor' }) })
+  assert.equal(r.status, 200)
+  const body = await r.json()
+  assert.equal(body.user.role, 'gestor'); assert.equal(body.user.demo, true)
+  const set = r.headers.get('set-cookie')
+  assert.match(set, /mu_demo=[^;]+; Path=\/; HttpOnly; SameSite=Lax; Max-Age=7200/)
+  const me = await fetch(base + '/api/auth/me', { headers: { cookie: set.split(';')[0] } }).then((x) => x.json())
+  assert.equal(me.user.name, 'Gestora Demonstração'); assert.equal(me.user.demo, true); assert.equal(me.demoAvailable, true)
+})
+
+test('acesso de demonstração: recusa outra origem (CSRF), papel admin e corpo inválido', async () => {
+  const post = (headers, body) => fetch(base + '/api/auth/demo', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body })
+  assert.equal((await post({ origin: 'https://evil.example' }, JSON.stringify({ role: 'gestor' }))).status, 403)
+  assert.equal((await post({}, JSON.stringify({ role: 'gestor' }))).status, 403)
+  assert.equal((await post({ origin: base }, JSON.stringify({ role: 'admin' }))).status, 400)
+  assert.equal((await post({ origin: base }, 'não é json')).status, 400)
+})
+
+test('acesso de demonstração: cookie adulterado para admin é ignorado; DEMO_LOGIN=off desliga', async () => {
+  const fake = Buffer.from(JSON.stringify({ sub: 'x', role: 'admin', demo: true, exp: 9999999999 })).toString('base64url') + '.assinatura'
+  const me = await fetch(base + '/api/auth/me', { headers: { cookie: `mu_demo=${fake}` } }).then((x) => x.json())
+  assert.equal(me.user, null)
+  process.env.DEMO_LOGIN = 'off'
+  try {
+    const r = await fetch(base + '/api/auth/demo', { method: 'POST', headers: { origin: base, 'content-type': 'application/json' }, body: JSON.stringify({ role: 'visitante' }) })
+    assert.equal(r.status, 404)
+  } finally { delete process.env.DEMO_LOGIN }
 })
