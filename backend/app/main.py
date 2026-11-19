@@ -18,8 +18,17 @@ class InMemoryReports:
         self.items.append(data | {"id": rid})
         return rid
 
+    def get(self, rid: str) -> dict | None:
+        return next((r for r in self.items if r["id"] == rid), None)
+
+    def attach(self, rid: str, data: bytes, info) -> None:
+        r = self.get(rid)
+        if r is not None:
+            r["media"] = {"kind": info.kind, "mime": info.mime, "bytes": info.size}
+            r["_blob"] = data  # em produção: Cloud Storage (pasta de quarentena até o worker processar)
+
     def list(self) -> list[dict]:
-        return [{k: v for k, v in r.items() if k != "ipHash"} for r in self.items]
+        return [{k: v for k, v in r.items() if k not in ("ipHash", "_blob")} for r in self.items]
 
 
 def create_app(redis: Redis | None = None, monument_repo: MonumentRepo | None = None, enqueue=None) -> FastAPI:
