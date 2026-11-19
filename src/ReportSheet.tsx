@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, type ReactNode } from 'react'
 import { AutoHeight, Icon, type IconName } from './ui'
-import { prepareAttachment, type Attachment } from './features/monument/attach'
+import { prepareAttachment, type Attachment, type Stage } from './features/monument/attach'
 import { LIMITS } from './shared/media'
 import type { Monument, Report } from './data'
 
@@ -13,19 +13,35 @@ const kinds: [Report['kind'], IconName][] = [
   ['Outro', 'chat'],
 ]
 
-export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onClose: () => void; onSend: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void; sentText?: ReactNode }) {
+export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onClose: () => void; onSend: (r: Omit<Report, 'id' | 'at' | 'status'>, media?: Blob) => void | Promise<void>; sentText?: ReactNode }) {
   const [kind, setKind] = useState<Report['kind'] | null>(null)
   const [note, setNote] = useState('')
   const [att, setAtt] = useState<Attachment | null>(null)
   const [attErr, setAttErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [stage, setStage] = useState<Stage>('lendo')
+  const [sending, setSending] = useState(false)
+  const STAGE: Record<Stage, string> = { lendo: 'Lendo o arquivo…', verificando: 'Verificando a segurança do arquivo…', 'preparando-foto': 'Preparando a foto (tirando a localização)…', 'lendo-video': 'Conferindo o vídeo…' }
+  const send = async () => {
+    if (!kind || sending) return
+    setSending(true)
+    const started = Date.now()
+    try {
+      await onSend({ monument: m.id, kind, note: note.trim() || undefined, photo: att?.kind === 'image', media: att ? { kind: att.kind, mime: att.mime, bytes: att.bytes, seconds: att.seconds } : undefined }, att?.blob)
+    } finally {
+      // com anexo, mostra o envio por pelo menos 600 ms: o visitante vê que algo aconteceu
+      if (att) await new Promise((r) => setTimeout(r, Math.max(0, 600 - (Date.now() - started))))
+      setSending(false)
+      setSent(true)
+    }
+  }
   const fileRef = useRef<HTMLInputElement>(null)
   useEffect(() => () => { if (att) URL.revokeObjectURL(att.preview) }, [att])
   const pick = async (f: File | undefined) => {
     if (!f) return
     setAttErr(null); setBusy(true)
     try {
-      const r = await prepareAttachment(f)
+      const r = await prepareAttachment(f, setStage)
       if (r.ok) setAtt(r.att); else { setAtt(null); setAttErr(r.reason) }
     } catch { setAttErr('Não foi possível ler este arquivo.') }
     setBusy(false)
@@ -94,13 +110,23 @@ export function ReportSheet({ m, onClose, onSend, sentText }: { m: Monument; onC
                 <button onClick={() => setAtt(null)} className="mu-press h-11 px-3 rounded-[10px] text-[13.5px] font-semibold text-[#a3321f]">Remover</button>
               </div>
             ) : (
-              <label htmlFor="relato-anexo" className={`mu-press mt-2 h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer ${busy ? 'opacity-60' : ''}`}>
-                <Icon name="scan" size={16} stroke={2} />{busy ? 'Verificando arquivo…' : 'Anexar foto ou vídeo (opcional)'}
-              </label>
+              busy ? (
+                <div className="mt-2 flex items-center gap-3 rounded-[14px] bg-white p-2 mu-edge" role="status" aria-live="polite" data-testid="anexo-processando">
+                  <span className="w-14 h-14 rounded-[10px] mu-shimmer shrink-0" aria-hidden="true" />
+                  <span className="flex-1 min-w-0">
+                    <span className="block text-[13.5px] text-black/75 leading-tight">{STAGE[stage]}</span>
+                    <span className="mt-2 block mu-indet" aria-hidden="true" />
+                  </span>
+                </div>
+              ) : (
+                <label htmlFor="relato-anexo" className="mu-press mt-2 h-11 px-3 rounded-[12px] bg-white mu-edge text-[14px] font-medium text-black/75 inline-flex items-center gap-2 cursor-pointer">
+                  <Icon name="scan" size={16} stroke={2} />Anexar foto ou vídeo (opcional)
+                </label>
+              )
             )}
             {attErr && <p role="alert" className="mt-2 rounded-[12px] bg-[#c4402e]/10 px-3 py-2 text-[13px] leading-snug text-[#a3321f]">{attErr}</p>}
             <p id="relato-anexo-regras" className="mt-3 text-[12.5px] leading-snug text-black/70">Foto (JPG, PNG, WebP, HEIC) até {LIMITS.imageInBytes / 1024 / 1024} MB ou vídeo (MP4, MOV, WebM) até {LIMITS.videoBytes / 1024 / 1024} MB e {LIMITS.videoSeconds} s. Arquivos compactados e documentos são recusados. Não pedimos nome nem contato. Fotos têm a localização removida e não devem mostrar rostos. Saiba mais na <a href="/privacidade" className="underline">Política de Privacidade</a>.</p>
-            <button disabled={!kind || busy} onClick={() => { if (kind) { onSend({ monument: m.id, kind, note: note.trim() || undefined, photo: att?.kind === 'image', media: att ? { kind: att.kind, mime: att.mime, bytes: att.bytes, seconds: att.seconds } : undefined }, att?.blob); setSent(true) } }} className={`mu-press mt-4 w-full h-[54px] rounded-[14px] text-[17px] font-semibold ${kind ? 'bg-[#1f6b6b] text-white' : 'bg-black/[0.08] text-black/45'}`}>Enviar relato</button>
+            <button disabled={!kind || busy || sending} aria-busy={sending} onClick={send} className={`mu-press mt-4 w-full h-[54px] rounded-[14px] text-[17px] font-semibold inline-flex items-center justify-center gap-2.5 ${kind ? 'bg-[#1f6b6b] text-white' : 'bg-black/[0.08] text-black/45'}`}>{sending ? <><span className="mu-spin" aria-hidden="true" />{att?.kind === 'video' ? 'Enviando vídeo…' : att ? 'Enviando foto…' : 'Enviando…'}</> : 'Enviar relato'}</button>
           </>
         )}
         </AutoHeight>
