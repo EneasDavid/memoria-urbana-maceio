@@ -254,6 +254,24 @@ export function Skyline({ className = '' }: { className?: string }) {
   )
 }
 
+// Os dois arcos da logo (verde-água e dourado) como traço curto sob os títulos
+export function Arcs({ className = '' }: { className?: string }) {
+  return <div aria-hidden="true" className={`flex gap-1 ${className}`}><span className="h-[3px] w-12 rounded-full bg-[#2c8585]" /><span className="h-[3px] w-6 rounded-full bg-[#dda93f]" /></div>
+}
+
+// Assinatura completa: emblema + "Memória Urbana" + "— em Maceió —" (mesma do painel e do site)
+export function Brand({ size = 34, className = '' }: { size?: number; className?: string }) {
+  return (
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <LogoMark size={size} />
+      <span className="leading-tight">
+        <span className="block text-[13.5px] font-bold text-[#0b2f49] mu-ink">Memória Urbana</span>
+        <EmMaceio className="text-[11px] gap-1.5 [&>span]:w-3" />
+      </span>
+    </span>
+  )
+}
+
 export function Waves({ className = '', color = '#2c8585' }: { className?: string; color?: string }) {
   return (
     <svg viewBox="0 0 120 16" preserveAspectRatio="none" className={className} aria-hidden="true">

@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Icon, Segmented, LogoMark, EmMaceio, Skyline, type IconName } from './ui'
+import { Icon, Segmented, LogoMark, EmMaceio, Skyline, Arcs, type IconName } from './ui'
 import { monuments, kpis, origins, weekly, hourly, fmt, eventTemplates, type Monument, type Report, type TrackEvent } from './data'
 import { Photo } from './MobileScreens'
 import { Card, Kpi, HourChart } from './DashboardViews'
@@ -318,8 +318,7 @@ export function Dashboard({ events, reports, setReports, bump, onPublic }: { eve
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-[1120px] mx-auto px-8 pt-8 pb-12">
           <h1 className="text-[32px] font-bold tracking-[-0.025em]">{titles[view][0]}</h1>
-          {/* os dois arcos da logo: verde-água e dourado */}
-          <div aria-hidden="true" className="mt-2 flex gap-1"><span className="h-[3px] w-12 rounded-full bg-[#2c8585]" /><span className="h-[3px] w-6 rounded-full bg-[#dda93f]" /></div>
+          <Arcs className="mt-2" />
           <p className="mt-2 mb-6 text-[14.5px] text-black/50">{titles[view][1]}</p>
           {view === 'monumentos' && <Monumentos reports={reports} onEdit={setEditing} onNew={newMonument} />}
           {view === 'relatos' && <Relatos reports={reports} setStatus={(id, s) => setReports(reports.map((r) => (r.id === id ? { ...r, status: s } : r)))} onEdit={setEditing} />}
