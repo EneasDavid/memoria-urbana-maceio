@@ -4,6 +4,7 @@ import { Photo, KindPill } from '../../MobileScreens'
 import { monumentUrl } from '../../app/router'
 import { LoginPill } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
+import { LogoMark, EmMaceio, Waves } from '../../ui'
 
 // Lista pública. Cada card é um link comum (<a href>), então dá para abrir cada monumento
 // em uma aba nova (Ctrl/⌘ + clique ou toque longo). Sem menu, sem login.
@@ -27,10 +28,12 @@ export function MonumentIndex() {
         {/* Cabeçalho: logo e entrada na mesma linha; nome e descrição com a largura toda, sem espremer o título */}
         <header className="max-w-[640px]">
           <div className="flex items-center justify-between gap-3">
-            <img src="/memoria-urbana-logo.png" alt="" width={56} height={56} className="w-14 h-14 rounded-full object-cover mu-multiply" />
+            <LogoMark size={68} />
             <div className="[&>a]:static"><LoginPill returnTo="/app" /></div>
           </div>
-          <h1 className="mt-5 text-[32px] sm:text-[40px] font-bold tracking-[-0.025em] leading-[1.05] [text-wrap:balance]">Memória Urbana Maceió</h1>
+          <h1 className="mt-5 text-[32px] sm:text-[40px] font-bold tracking-[-0.025em] leading-[1.05] [text-wrap:balance] text-[#0b2f49] mu-ink">Memória Urbana<span className="sr-only"> Maceió</span></h1>
+          <EmMaceio className="mt-1.5 text-[15px] tracking-[0.02em]" />
+          <Waves className="mt-4 w-[132px] h-4" />
           <p className="mt-3 text-[17px] leading-[1.5] text-black/75 max-w-[34ch] [text-wrap:pretty]">Quem são as estátuas e praças de Maceió, e qual museu continua cada história.</p>
           <p className="mt-2 text-[14.5px] leading-[1.5] text-black/70 max-w-[42ch]">Aponte a câmera para o QR da placa ou encoste o celular no NFC. Ou escolha uma obra abaixo: não precisa de cadastro.</p>
         </header>
