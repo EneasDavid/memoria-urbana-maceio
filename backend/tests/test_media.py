@@ -84,3 +84,23 @@ def test_upload_corta_arquivo_grande_pelo_content_length(make_client):
 def test_upload_em_relato_inexistente(make_client):
     r = make_client().put("/api/v1/reports/r999/media", content=read("foto.jpg"), headers={"content-type": "image/jpeg"})
     assert r.status_code == 404
+
+
+def test_video_grande_nao_e_falso_positivo():
+    import random
+    rnd = random.Random(42)
+    data = bytearray(read("video.mp4")) + rnd.randbytes(20 * 1024 * 1024)
+    for i in range(4096, len(data), 1_000_003):
+        data[i:i + 3] = b"<%="
+    assert validate(bytes(data), "video/mp4").kind == "video"
+
+
+@pytest.mark.parametrize("brand", [b"3gp6", b"3g2a", b"XAVC", b"mp71", b"iso8", b"qt  "])
+def test_marcas_de_video_de_celular(brand):
+    data = b"\x00\x00\x00\x18ftyp" + brand + b"\x00" * 64
+    assert validate(data, "video/mp4").kind == "video"
+
+
+def test_audio_m4a_recusado():
+    with pytest.raises(MediaRejected, match="não é vídeo"):
+        validate(b"\x00\x00\x00\x18ftypM4A " + b"\x00" * 64, "video/mp4")
