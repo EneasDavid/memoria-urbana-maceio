@@ -102,3 +102,8 @@
 .mu-dark .bg-white\/88, .mu-dark .bg-white\/90, .mu-dark .bg-white\/92, .mu-dark .bg-white\/95, .mu-dark .bg-white\/85, .mu-dark .bg-white\/80 { border-color: rgba(255,255,255,0.08) !important; box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important; }
 .mu-dark .bg-\[\#2c8585\] { background-color: #2a7f80 !important; }
 .mu-dark .bg-\[\#0b2f49\] { background-color: #1f5a73 !important; }
+
+/* Antes do JS carregar: fundo no tema do aparelho, sem piscar branco no modo escuro */
+@media (prefers-color-scheme: dark) { html { background-color: #0e1418; } }
+/* palavra falada na narração */
+.mu-dark mark { color: #fff !important; }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react'
+import { splitSpeech, estimateMs, wordAt, pickVoice } from './shared/speech'
 
 // Ícones em linha fina, no espírito dos SF Symbols
 const paths: Record<string, ReactNode> = {
@@ -215,111 +216,179 @@ export function Waves({ className = '', color = '#2c8585' }: { className?: strin
 }
 
 
-// Escolhe a melhor voz em português do Brasil disponível no aparelho (vozes neurais/online primeiro)
+// Voz em português do Brasil disponível no aparelho (vozes neurais/online primeiro)
 let voiceCache: SpeechSynthesisVoice | null | undefined
 function bestVoice(): SpeechSynthesisVoice | null {
   if (typeof window === 'undefined' || !window.speechSynthesis) return null
   if (voiceCache) return voiceCache
   const all = window.speechSynthesis.getVoices()
   if (!all.length) return null
-  const pt = all.filter((v) => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith('pt'))
-  const score = (v: SpeechSynthesisVoice) => {
-    const n = v.name.toLowerCase(); const br = v.lang.toLowerCase().replace('_', '-') === 'pt-br'
-    let p = br ? 100 : 0
-    if (/natural|neural|online|premium|enhanced|aprimorad/.test(n)) p += 60
-    if (/francisca|thalita|antonio|luciana|felipe|google português do brasil|google portugu/.test(n)) p += 40
-    if (!v.localService) p += 10
-    if (/compact|espeak/.test(n)) p -= 50
-    return p
-  }
-  voiceCache = pt.sort((a, b) => score(b) - score(a))[0] || null
+  voiceCache = pickVoice(all)
   return voiceCache
 }
 if (typeof window !== 'undefined' && window.speechSynthesis) {
   try { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => { voiceCache = undefined; bestVoice() }) } catch { /* sem vozes */ }
 }
 
-// Narração em áudio com legenda: o texto é lido em voz (pt-BR) e a frase narrada fica destacada.
-// Serve para "Ler e ouvir" (texto + áudio juntos) e para a audiodescrição.
+// Narração em áudio com legenda sincronizada.
+// Fala UM trecho por vez (encadeado no onend): a frase destacada é sempre a que está saindo no
+// alto-falante, e a palavra atual acompanha o evento onboundary quando o navegador o envia
+// (Chrome, Edge, Safari). Sem onboundary, a palavra avança por estimativa de tempo.
+// O primeiro trecho é falado dentro do toque (exigência do iOS); os seguintes, no onend.
 export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', autoPlay = false, onStart, onEnd, textClassName = 'mt-4 text-[17px] leading-relaxed text-black/85' }: {
   text: string; extra?: string; title: string; subtitle?: string; accent?: string; autoPlay?: boolean; onStart?: () => void; onEnd?: () => void; textClassName?: string
 }) {
-  const split = (t: string) => (t.match(/[^.!?…]+[.!?…]+["”']?|[^.!?…]+$/g) || [t]).map((p) => p.trim()).filter(Boolean)
-  const shown = useMemo(() => split(text), [text]) // eslint-disable-line react-hooks/exhaustive-deps
-  const parts = useMemo(() => [...shown, ...(extra ? split(extra) : [])], [shown, extra]) // eslint-disable-line react-hooks/exhaustive-deps
+  const shown = useMemo(() => splitSpeech(text), [text])
+  const parts = useMemo(() => [...shown, ...(extra ? splitSpeech(extra) : [])], [shown, extra])
   const [playing, setPlaying] = useState(false)
   const [idx, setIdx] = useState(0)
   const [frac, setFrac] = useState(0)
-  const [blocked, setBlocked] = useState(false)
+  const [word, setWord] = useState<{ start: number; end: number } | null>(null)
+  const [note, setNote] = useState<string | null>(null)
   const run = useRef(0)
-  const timer = useRef<number | null>(null)
-  const held = useRef<SpeechSynthesisUtterance[]>([]) // Safari descarta falas sem referência e não chama onend
+  const timers = useRef<number[]>([])
+  const raf = useRef<number | null>(null)
+  const held = useRef<SpeechSynthesisUtterance | null>(null) // Safari descarta fala sem referência
   const synthOk = () => typeof window !== 'undefined' && !!window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined'
+
+  const clearTimers = () => {
+    timers.current.forEach((t) => window.clearTimeout(t))
+    timers.current = []
+    if (raf.current) cancelAnimationFrame(raf.current)
+    raf.current = null
+  }
   const stop = () => {
     run.current++
-    try { if (synthOk() && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) window.speechSynthesis.cancel() } catch { /* sem voz */ }
-    if (timer.current) window.clearTimeout(timer.current)
-    timer.current = null
-    held.current = []
+    clearTimers()
+    held.current = null
+    try { if (synthOk()) window.speechSynthesis.cancel() } catch { /* ok */ }
   }
-  const finish = (token: number) => { if (token !== run.current) return; setPlaying(false); setIdx(0); setFrac(0); held.current = []; onEnd?.() }
-  // legenda por tempo, quando o aparelho não tem voz
-  const silent = (from: number, token: number) => {
-    const step = (i: number) => {
+  const finish = (token: number) => {
+    if (token !== run.current) return
+    clearTimers()
+    setPlaying(false); setIdx(0); setFrac(0); setWord(null); held.current = null
+    onEnd?.()
+  }
+
+  // anima a legenda por tempo enquanto o trecho toca (substituída pelo onboundary quando existe)
+  const animate = (i: number, token: number, est: number, startedAt: number, real: { boundary: boolean }) => {
+    const step = () => {
       if (token !== run.current) return
-      if (i >= parts.length) return finish(token)
-      setIdx(i); setFrac(0)
-      timer.current = window.setTimeout(() => step(i + 1), Math.max(1600, parts[i].length * 60))
+      const f = Math.min(0.98, (performance.now() - startedAt) / est)
+      if (!real.boundary) {
+        setFrac(f)
+        const t = parts[i]
+        const pos = Math.floor(f * t.length)
+        const ws = t.lastIndexOf(' ', pos) + 1
+        setWord(wordAt(t, ws))
+      }
+      raf.current = requestAnimationFrame(step)
     }
-    step(from)
+    raf.current = requestAnimationFrame(step)
   }
-  // Todas as frases entram na fila de uma vez, dentro do toque — exigência do Safari/iOS
-  const speakAll = (from: number, token: number) => {
-    if (!synthOk()) return silent(from, token)
+
+  const speakAt = (i: number, token: number, first: boolean) => {
+    if (token !== run.current) return
+    clearTimers()
+    if (i >= parts.length) return finish(token)
+    setIdx(i); setFrac(0); setWord(null)
+    const t = parts[i]
+
+    if (!synthOk()) {
+      // sem voz no navegador: legenda anda sozinha, no ritmo de leitura
+      const est = estimateMs(t)
+      animate(i, token, est, performance.now(), { boundary: false })
+      timers.current.push(window.setTimeout(() => speakAt(i + 1, token, false), est))
+      return
+    }
+
     const synth = window.speechSynthesis
-    try { synth.resume() } catch { /* ok */ }
+    const u = new SpeechSynthesisUtterance(t)
     const voice = bestVoice()
+    u.lang = 'pt-BR'
+    if (voice) u.voice = voice
+    u.rate = voice && /natural|neural|online|google|premium|enhanced|aprimorad/i.test(voice.name) ? 1 : 0.95
+    u.pitch = 1
+    u.volume = 1
+    const real = { boundary: false }
     let started = false
-    held.current = parts.slice(from).map((p, k) => {
-      const i = from + k
-      const u = new SpeechSynthesisUtterance(p)
-      u.lang = 'pt-BR'
-      if (voice) u.voice = voice
-      u.rate = voice && /natural|neural|online|google|premium|enhanced|aprimorad/i.test(voice.name) ? 1 : 0.95
-      u.pitch = 1
-      u.volume = 1
-      u.onstart = () => { if (token !== run.current) return; started = true; setBlocked(false); setIdx(i); setFrac(0) }
-      u.onboundary = (e) => { if (token === run.current && e.charIndex) setFrac(Math.min(1, e.charIndex / p.length)) }
-      if (i === parts.length - 1) u.onend = () => finish(token)
-      u.onerror = (e) => { if (token === run.current && i === parts.length - 1 && (e as SpeechSynthesisErrorEvent).error !== 'interrupted') finish(token) }
-      return u
-    })
-    held.current.forEach((u) => synth.speak(u))
-    // se o navegador não começou a falar (autoplay bloqueado), pede um toque
-    timer.current = window.setTimeout(() => {
+    u.onstart = () => {
+      if (token !== run.current) return
+      started = true
+      setNote(null)
+      animate(i, token, estimateMs(t, u.rate), performance.now(), real)
+    }
+    u.onboundary = (e) => {
+      if (token !== run.current || (e.name && e.name !== 'word')) return
+      real.boundary = true
+      setWord(wordAt(t, e.charIndex, (e as SpeechSynthesisEvent & { charLength?: number }).charLength))
+      setFrac(Math.min(1, e.charIndex / t.length))
+    }
+    u.onend = () => {
+      if (token !== run.current) return
+      held.current = null
+      speakAt(i + 1, token, false)
+    }
+    u.onerror = (e) => {
+      if (token !== run.current) return
+      const err = (e as SpeechSynthesisErrorEvent).error
+      if (err === 'interrupted' || err === 'canceled') return
+      if (err === 'not-allowed') { stop(); setPlaying(false); setNote('Toque no play para ouvir'); return }
+      speakAt(i + 1, token, false) // trecho com erro: segue para o próximo
+    }
+    held.current = u
+    try { synth.resume() } catch { /* ok */ }
+    synth.speak(u)
+    // se o navegador não começar a falar (autoplay bloqueado ou fila travada), avisa
+    timers.current.push(window.setTimeout(() => {
       if (token !== run.current || started) return
-      try { synth.cancel() } catch { /* ok */ }
-      setPlaying(false); setBlocked(true)
-    }, 2500)
+      stop(); setPlaying(false)
+      setNote(first ? 'Toque no play para ouvir' : 'A narração parou. Toque no play para continuar')
+    }, first ? 3000 : 6000))
   }
-  const play = (from: number) => { stop(); const tk = run.current; setPlaying(true); setBlocked(false); onStart?.(); speakAll(from, tk) }
-  const toggle = () => { if (playing) { stop(); setPlaying(false) } else play(idx) }
-  useEffect(() => { stop(); setPlaying(false); setIdx(0); setFrac(0); setBlocked(false); if (autoPlay) play(0); return () => stop() }, [text]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const play = (from: number) => {
+    stop()
+    const token = run.current
+    setPlaying(true); setNote(null)
+    onStart?.()
+    if (synthOk() && !bestVoice() && window.speechSynthesis.getVoices().length > 0) setNote('Sem voz em português neste aparelho; usando a voz padrão')
+    speakAt(from, token, true)
+  }
+  const toggle = () => {
+    if (playing) { stop(); setPlaying(false); setWord(null) } else play(idx)
+  }
+
+  useEffect(() => {
+    stop(); setPlaying(false); setIdx(0); setFrac(0); setWord(null); setNote(null)
+    if (autoPlay) play(0)
+    const onHide = () => { if (document.hidden) { stop(); setPlaying(false); setWord(null) } }
+    document.addEventListener('visibilitychange', onHide)
+    return () => { document.removeEventListener('visibilitychange', onHide); stop() }
+  }, [text]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const pct = playing || idx > 0 ? ((idx + frac) / parts.length) * 100 : 0
+  const renderPart = (p: string, i: number) => {
+    const active = playing && i === idx
+    if (!active) return <span key={i} className={'transition-colors duration-200 rounded-[4px] ' + (playing ? 'opacity-55' : '')}>{p}{' '}</span>
+    return (
+      <span key={i} className="rounded-[4px] bg-[#ffd60a]/45 text-black" aria-current="true">
+        {word ? <>{p.slice(0, word.start)}<mark className="rounded-[3px] px-[1px] text-white" style={{ background: accent }}>{p.slice(word.start, word.end)}</mark>{p.slice(word.end)}</> : p}{' '}
+      </span>
+    )
+  }
   return (
     <div className="mt-3">
       <div className="bg-white rounded-[18px] p-3.5 flex items-center gap-3">
-        <button onClick={toggle} aria-label={playing ? 'Pausar narração' : 'Ouvir narração'} className="w-11 h-11 rounded-full grid place-items-center text-white shrink-0 active:scale-95 transition" style={{ background: accent }}><Icon name={playing ? 'pause' : 'play'} size={20} stroke={2.2} /></button>
+        <button onClick={toggle} aria-label={playing ? 'Pausar narração' : 'Ouvir narração'} aria-pressed={playing} className="w-11 h-11 rounded-full grid place-items-center text-white shrink-0 active:scale-95 transition" style={{ background: accent }}><Icon name={playing ? 'pause' : 'play'} size={20} stroke={2.2} /></button>
         <div className="flex-1 min-w-0">
           <div className="text-[14px] font-semibold text-black leading-tight">{title}</div>
-          <div className="text-[12px] text-black/50 truncate">{playing ? 'Narrando · o trecho destacado é o que está sendo lido' : blocked ? 'Toque no play para ouvir' : subtitle}</div>
-          <div className="mt-1.5 h-1 rounded-full bg-black/10 overflow-hidden"><div className="h-full rounded-full transition-[width] duration-300" style={{ width: pct + '%', background: accent }} /></div>
+          <div className="text-[12px] text-black/50 truncate" aria-live="polite">{note ?? (playing ? `Trecho ${idx + 1} de ${parts.length} · destaque acompanha a voz` : subtitle)}</div>
+          <div className="mt-1.5 h-1 rounded-full bg-black/10 overflow-hidden"><div className="h-full rounded-full" style={{ width: pct + '%', background: accent, transition: 'width 120ms linear' }} /></div>
         </div>
       </div>
       {playing && idx >= shown.length && <div className="mt-2 rounded-[14px] bg-black/80 text-white px-4 py-2.5 text-[15px] leading-snug" aria-live="polite"><span className="block text-[10.5px] font-semibold uppercase tracking-[0.08em] text-white/55 mb-0.5">Legenda · ficha da obra</span>{parts[idx]}</div>}
-      <p className={textClassName} aria-live="polite">
-        {shown.map((p, i) => <span key={i} className={'transition-colors duration-200 rounded-[4px] ' + (playing && i === idx ? 'bg-[#ffd60a]/45 text-black' : playing ? 'opacity-60' : '')}>{p}{' '}</span>)}
-      </p>
+      <p className={textClassName}>{shown.map(renderPart)}</p>
     </div>
   )
 }
