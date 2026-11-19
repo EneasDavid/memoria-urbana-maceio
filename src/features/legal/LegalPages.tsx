@@ -60,7 +60,7 @@ export function PrivacyPage() {
         rows={[
           ['Abrir qualquer página', 'Endereço IP, data/hora, navegador (registros técnicos da hospedagem)', 'Funcionamento e segurança do site', 'Legítimo interesse (art. 7º, IX)', 'Prazo dos registros da hospedagem (curto, definido pela Vercel)'],
           ['Ver fotos dos monumentos', 'Seu navegador busca a foto no site de origem, que recebe o seu IP', 'Exibir a foto creditada ao autor', 'Legítimo interesse (art. 7º, IX)', 'Conforme o site de origem (lista em Créditos)'],
-          ['Relatar um problema na obra', 'Tipo do problema, detalhe opcional, foto opcional (localização removida) e um código derivado do IP (hash) só para limitar abusos', 'Avisar sobre danos ao patrimônio', 'Legítimo interesse (art. 7º, IX)', 'Hoje fica só no seu aparelho; quando houver servidor, até 12 meses e depois anonimizado'],
+          ['Relatar um problema na obra', 'Tipo do problema, detalhe opcional, foto ou vídeo opcional (a foto é recodificada sem localização; vídeo até 30 s) e um código derivado do IP (hash) só para limitar abusos', 'Avisar sobre danos ao patrimônio', 'Legítimo interesse (art. 7º, IX)', 'Hoje fica só no seu aparelho; quando houver servidor, até 12 meses e depois anonimizado'],
           ['Entrar com Google (opcional)', 'Identificador da conta Google, nome, e-mail e foto; carimbos da Trilha', 'Pontuar na Trilha Cultural e guardar o passaporte', 'Consentimento (art. 7º, I), que você pode revogar', 'Até você sair ou pedir a exclusão da conta; sessão expira em 7 dias'],
         ]}
       />
@@ -101,6 +101,7 @@ export function CookiesPage() {
           ['mu_oauth', 'Cookie essencial (HttpOnly, Secure)', 'Proteger o login contra falsificação (state, nonce e PKCE)', '10 minutos'],
           ['mu_cookie_notice', 'Armazenamento local', 'Lembrar que você já viu este aviso', 'Até limpar o navegador'],
           ['mu_reports_pending', 'Armazenamento local', 'Guardar relatos de dano até o envio ao servidor', 'Até o envio ou limpar o navegador'],
+          ['mu_reports_media', 'IndexedDB (aparelho)', 'Guardar a foto (já sem localização) ou o vídeo do relato até o envio', 'Até o envio ou limpar o navegador'],
         ]}
       />
       <p>Você pode apagar tudo nas configurações do navegador. Mais detalhes na <a className="underline" href="/privacidade">Política de Privacidade</a>.</p>
