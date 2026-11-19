@@ -41,8 +41,10 @@ function Editor({ m, onSave, onClose, onPublic }: { m: Monument; onSave: (m: Mon
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           <div className="relative h-[180px] rounded-[16px] overflow-hidden"><Photo m={d} className="absolute inset-0" /></div>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Foto (URL)"><input className={input} value={d.photo?.src ?? ''} onChange={(e) => set('photo', e.target.value ? { src: e.target.value, credit: d.photo?.credit ?? '' } : undefined)} placeholder="https://…" /></Field>
-            <Field label="Crédito da foto"><input className={input} value={d.photo?.credit ?? ''} onChange={(e) => set('photo', { src: d.photo?.src ?? '', credit: e.target.value })} placeholder="Autor / órgão" /></Field>
+            <Field label="Foto (URL)"><input className={input} value={d.photo?.src ?? ''} onChange={(e) => set('photo', e.target.value ? { ...{ src: d.photo?.src ?? '', credit: d.photo?.credit ?? '', source: d.photo?.source ?? '', license: d.photo?.license ?? '' }, src: e.target.value } : undefined)} placeholder="https://…" /></Field>
+            <Field label="Crédito da foto"><input className={input} value={d.photo?.credit ?? ''} onChange={(e) => set('photo', { ...{ src: d.photo?.src ?? '', credit: d.photo?.credit ?? '', source: d.photo?.source ?? '', license: d.photo?.license ?? '' }, credit: e.target.value })} placeholder="Autor / órgão" /></Field>
+            <Field label="Fonte da foto (página)"><input className={input} value={d.photo?.source ?? ''} onChange={(e) => set('photo', { ...{ src: d.photo?.src ?? '', credit: d.photo?.credit ?? '', source: d.photo?.source ?? '', license: d.photo?.license ?? '' }, source: e.target.value })} placeholder="https://…" /></Field>
+            <Field label="Licença / autorização"><input className={input} value={d.photo?.license ?? ''} onChange={(e) => set('photo', { ...{ src: d.photo?.src ?? '', credit: d.photo?.credit ?? '', source: d.photo?.source ?? '', license: d.photo?.license ?? '' }, license: e.target.value })} placeholder="Ex.: CC BY 4.0, autorizada por e-mail em…" /></Field>
           </div>
           <Field label="Nome"><input className={input} value={d.name} onChange={(e) => set('name', e.target.value)} /></Field>
           <div className="grid grid-cols-[1fr_auto] gap-3 items-end">

@@ -107,3 +107,18 @@
 @media (prefers-color-scheme: dark) { html { background-color: #0e1418; } }
 /* palavra falada na narração */
 .mu-dark mark { color: #fff !important; }
+
+/* Acessibilidade (itens 8, 10 e 11): foco sempre visível e respeito a "reduzir movimento" */
+:focus-visible { outline: 3px solid #b8860b; outline-offset: 2px; border-radius: 6px; }
+.mu-dark :focus-visible { outline-color: #f2c14e; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+.legal a { color: #1f6b6b; }
+.mu-dark .legal a { color: #7fd6d6; }
+
+/* contraste no modo escuro das páginas públicas (axe-core) */
+.mu-dark .text-\[\#1f6b6b\] { color: #7fd6d6 !important; }
+.mu-dark .text-\[\#6b4d0d\] { color: #f2d48a !important; }
+.mu-dark .text-\[\#a3321f\] { color: #ff9c8c !important; }
+.mu-dark .bg-\[\#1f6b6b\] { background-color: #1f6b6b !important; }

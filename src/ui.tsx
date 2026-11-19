@@ -383,7 +383,7 @@ export function Narrator({ text, extra, title, subtitle, accent = '#2c8585', aut
         <button onClick={toggle} aria-label={playing ? 'Pausar narração' : 'Ouvir narração'} aria-pressed={playing} className="w-11 h-11 rounded-full grid place-items-center text-white shrink-0 active:scale-95 transition" style={{ background: accent }}><Icon name={playing ? 'pause' : 'play'} size={20} stroke={2.2} /></button>
         <div className="flex-1 min-w-0">
           <div className="text-[14px] font-semibold text-black leading-tight">{title}</div>
-          <div className="text-[12px] text-black/50 truncate" aria-live="polite">{note ?? (playing ? `Trecho ${idx + 1} de ${parts.length} · destaque acompanha a voz` : subtitle)}</div>
+          <div className="text-[12px] text-black/70 truncate" aria-live="polite">{note ?? (playing ? `Trecho ${idx + 1} de ${parts.length} · destaque acompanha a voz` : subtitle)}</div>
           <div className="mt-1.5 h-1 rounded-full bg-black/10 overflow-hidden"><div className="h-full rounded-full" style={{ width: pct + '%', background: accent, transition: 'width 120ms linear' }} /></div>
         </div>
       </div>
