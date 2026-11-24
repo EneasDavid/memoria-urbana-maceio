@@ -25,6 +25,16 @@ Commons ──┘        (extrai e normaliza)            (área de preparação)
 4. **Validar:** `tests/data.test.mjs` barra id ou placa duplicada, coordenada fora de Maceió, bio curta, falta de convite ao museu e fonte sem HTTPS. `tests/trails.test.mjs` barra ligação quebrada no grafo.
 5. **Publicar:** merge na `main` → Vercel.
 
+## Rotina noturna no Celery (00h às 4h)
+
+Em vez de preencher todo o acervo de uma vez, o backend busca os dados aos poucos, de madrugada:
+
+- **Tarefa:** `default.ingest_public_sources` (`backend/app/worker/ingest.py`), no Celery beat a cada 20 minutos **das 00h às 04h** (`crontab(minute="*/20", hour="0-3")`, fuso America/Maceio). Fora da janela, a tarefa não faz nada.
+- **Lotes:** 10 bens por execução, com cursor no Redis (`ingest:cursor`); 12 execuções por noite cobrem até 120 bens sem pressionar as APIs públicas.
+- **Idempotência:** chave = QID; impressão digital (SHA-256) do conteúdo; o que não mudou não é regravado; o que mudou atualiza o mesmo registro.
+- **Destino:** área de preparação (`ingest:candidates` no Redis; coleção `candidates` no Firestore em produção) com `status: aguardando curadoria`. Nada vai direto ao site.
+- **Testes:** `backend/tests/test_ingest.py` (janela de horário, lotes, sem duplicar, atualização).
+
 ## Idempotência e sem duplicidade
 
 - **Chave estável:** QID do Wikidata (`Q67176290`) e `tipo/id` do OSM (`node/123`). Mesmos itens, mesma chave.

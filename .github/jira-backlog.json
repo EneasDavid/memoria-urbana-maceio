@@ -39,11 +39,11 @@
       "goal": "Aviso de cookies, créditos e licença das fotos, fontes de dados citadas, aviso antes de câmera e localização, termos, privacidade e acessibilidade WCAG AA. Teste: 17 regras legais e axe-core no claro e no escuro."
     },
     {
-      "name": "Sprint 6 · Acervo, trilha e preservação",
+      "name": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "state": "closed",
       "start": "2026-11-05",
       "end": "2026-11-11",
-      "goal": "Trilha Cultural, carimbos e passaporte, relato de dano e painel da prefeitura; novos monumentos de dados abertos, trilhas temáticas e grafo de personalidades. Teste: dados, trilhas e grafo, área logada no navegador."
+      "goal": "Segunda sprint de backend: rotina noturna no Celery que busca os dados abertos dos monumentos de 00h às 4h, em lotes idempotentes; novos monumentos, trilhas temáticas, grafo de personalidades, Trilha Cultural, relato de dano e painel. Teste: pytest da janela de horário, idempotência e lotes; dados, trilhas e grafo."
     },
     {
       "name": "Sprint 7 · Qualidade e entrega contínua",
@@ -317,7 +317,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 8,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Como visitante, quero ver no mapa as placas próximas para seguir uma trilha."
     },
@@ -328,7 +328,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Como visitante logado, quero ganhar carimbos ao visitar placas e museus."
     },
@@ -339,7 +339,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Como visitante, quero entrar só se quiser pontuar ou ver em 3D; história e museu ficam livres."
     },
@@ -350,7 +350,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 5,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Como morador, quero relatar uma peça danificada, para avisar a prefeitura."
     },
@@ -361,7 +361,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 8,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Como gestor, quero ver leituras por placa e danos relatados, para priorizar manutenção. Dados ainda simulados."
     },
@@ -1003,7 +1003,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Atalho \"Entrar · pontuar\" e card \"Ganhe o carimbo da Placa XX\"; a página continua aberta sem conta. Detalhes e print no Jira."
     },
@@ -1673,7 +1673,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 3,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Foto (≤ 10 MB, recodificada sem EXIF) ou vídeo (≤ 25 MB e 30 s) com prévia, guardado no aparelho até a API existir."
     },
     {
@@ -1819,7 +1819,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 1,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "O contêiner de altura dinâmica (overflow: hidden) cortava o contorno de foco e as bordas; ganhou 6 px de folga.",
       "labels": [
         "bug"
@@ -1832,7 +1832,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 2,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Miniatura com brilho, etapa escrita e barra indeterminada durante a verificação; spinner 'Enviando foto/vídeo…' no envio."
     },
     {
@@ -1855,7 +1855,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 2,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Antes de abrir câmera ou galeria, um aviso explica que só o arquivo escolhido é enviado e permite recusar. O navegador não pede permissão para a galeria; a câmera usa capture=environment."
     },
     {
@@ -2071,7 +2071,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "/app usa as telas do protótipo do Figma em tela cheia: abas Explorar, Trilha e Passaporte, leitura da placa, carimbo animado e perfil, sem moldura de celular nem relógio 9:41."
     },
     {
@@ -2081,7 +2081,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Conta Google: data e rede reais, só QR/NFC verdadeiros, GPS só com localização real, sem amigos fictícios. Na demonstração as simulações continuam."
     },
     {
@@ -2091,7 +2091,7 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 1,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Cartão antes do pedido do navegador: a imagem fica no aparelho e só o código da placa é lido; Permitir câmera ou Agora não."
     },
     {
@@ -2171,7 +2171,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Mapa segue a pessoa com watchPosition, distâncias reais, check-in por GPS só perto da obra e selo mais perto; aviso antes do pedido, não grava nem envia."
     },
     {
@@ -2191,7 +2191,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "description": "Seção Monumentos no Explorar: progresso, filtro por área e Perto de você, foto, situação, distância e placa."
     },
     {
@@ -2222,7 +2222,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Mais 10 monumentos vindos de dados abertos (Wikidata, OpenStreetMap, Commons)."
     },
@@ -2233,7 +2233,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Trilhas temáticas (Bronze, Escritores, Fé, Porto, República, Bebedouro)."
     },
@@ -2244,7 +2244,7 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Acervo, trilha e preservação",
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Grafo de personalidades e “+ Mais sobre” com Trilha [pessoa]."
     },
@@ -2280,6 +2280,17 @@
       "sprint": "Sprint 8 · Validação e apresentação",
       "labels": [],
       "description": "Relatório de critérios e apresentação com QR de demonstração."
+    },
+    {
+      "key": "KAN-208",
+      "type": "Tarefa",
+      "summary": "Rotina noturna no Celery: buscar dados dos monumentos de 00h às 4h",
+      "status": "Concluído",
+      "epic": "KAN-50",
+      "points": 5,
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "labels": [],
+      "description": "Tarefa default.ingest_public_sources no Celery beat, a cada 20 min entre 00h e 4h (America/Maceio), lote de 10 bens do Wikidata/Commons por vez, idempotente por QID, para a área de preparação da curadoria."
     }
   ]
 }

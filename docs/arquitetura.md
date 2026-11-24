@@ -304,6 +304,8 @@ APIs internas: `/api/auth/{login,callback,me,logout,demo}` (no ar), `/api/v1/{mo
 - **Hoje (no ar):** *client-heavy*. O site é estático (HTML pré-renderizado + JS) servido pela CDN da Vercel; toda a experiência de leitura, trilhas, grafo e progresso roda no navegador. O único código de servidor são 5 **funções serverless** de login.
 - **Alvo:** **monólito modular** em FastAPI (módulos `monuments`, `reports`, `stamps`, `rbac`, `media`) + workers Celery para trabalho pesado. Não são microsserviços: um deploy, um banco, fronteiras por módulo.
 
+**Rotina noturna:** o Celery beat dispara a ingestão de dados abertos das 00h às 4h, em lotes idempotentes ([detalhes](ingestao-de-dados.md)).
+
 **Comunicação:** navegador → CDN (páginas) · navegador → `/api/auth/*` (funções) · navegador → `/api/v1/*` (rewrite da Vercel para a API) · API → Redis (cache, sessão, fila) → workers → Firestore/Storage/TTS.
 
 **Estado:** conteúdo do acervo é estático e versionado (`src/data.ts`, grafo em `src/graph.ts`); progresso do visitante é **local-first** (`localStorage` `mu_progress`) e só sobe para a nuvem se a pessoa escolher entrar; sessão em cookie assinado (fase 1) e Redis (fase 3); dados de gestão no Firestore.

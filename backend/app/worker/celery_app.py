@@ -19,5 +19,7 @@ celery.conf.update(
         "flush-visits": {"task": "default.flush_visits", "schedule": crontab(minute="*/15")},
         "check-tag-health": {"task": "default.check_tag_health", "schedule": crontab(hour=6, minute=0)},
         "purge-expired": {"task": "default.purge_expired", "schedule": crontab(hour=3, minute=0)},
+        # Ingestão noturna: a cada 20 min, da meia-noite às 4h (último lote às 03:40), um lote de 10 bens por vez.
+        "ingest-public-sources": {"task": "default.ingest_public_sources", "schedule": crontab(minute="*/20", hour="0-3")},
     },
 )
