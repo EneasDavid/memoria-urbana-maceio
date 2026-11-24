@@ -16,7 +16,7 @@ export interface Monument {
   address: string
   museum: { name: string; address: string; hours?: string; why: string } // "Como chegar": museu ou centro histórico para aprofundar
   kind: 'Estátua' | 'Busto' | 'Praça' | 'Patrimônio'
-  group: 'orla' | 'centro' | 'bebedouro' | 'alto'
+  group: 'orla' | 'centro' | 'igrejas' | 'jaragua' | 'bebedouro' | 'alto'
   visit: 'Aberto' | 'Restrito' | 'Fechado'
   visitNote?: string
   rarity: Rarity
@@ -33,6 +33,9 @@ export interface Monument {
   facts: [string, string][]
   photo?: { src: string; credit: string; source: string; license: string }
   sources: Source[]
+  material?: 'Bronze' | 'Pedra' | 'Alvenaria' // para trilhas temáticas (ex.: Trilha de Bronze)
+  person?: string // id da personalidade em src/graph.ts (grafo de conhecimento)
+  origin?: { dataset: 'wikidata' | 'osm' | 'curadoria'; id: string; importedAt: string } // linhagem do dado (ETL)
   works?: string[]
   quote?: string
   tag: { type: 'NTAG216' | 'NTAG215' | 'NTAG213'; status: 'Ativa' | 'Placa danificada' | 'Sem leitura há 7 dias'; lastRead: string; pendingOffline: number }
@@ -43,6 +46,7 @@ export interface Monument {
 export const monuments: Monument[] = [
   {
     id: 'graciliano', plate: '01', name: 'Graciliano Ramos', role: 'Escritor', years: '1892 — 1953',
+    person: 'graciliano-ramos', material: 'Bronze',
     area: 'Pajuçara', address: 'Calçadão da orla de Pajuçara', kind: 'Estátua', group: 'orla', visit: 'Aberto', rarity: 'Lendário', xp: 250,
     lat: -9.6668, lng: -35.7122, x: 168, y: 392, hue: '#2c8585', views: 1842, change: 18, flow: 96,
     summary: 'Graciliano Ramos nasceu em Quebrangulo (AL), em 27 de outubro de 1892. Foi prefeito de Palmeira dos Índios e, em Maceió, dirigiu a Imprensa Oficial e a Instrução Pública do estado, que hoje seria a Secretaria de Educação. Sua maior contribuição está nos livros: em Vidas Secas e São Bernardo, ele contou a vida dura do sertão de forma direta, sem enfeites. Morreu no Rio de Janeiro, em 20 de março de 1953. A estátua chegou à orla em 2015, nos 200 anos de Maceió.', museum: { name: 'Biblioteca Pública Estadual Graciliano Ramos', address: 'Praça Dom Pedro II, 57 · Centro', why: 'A biblioteca leva o nome dele e é o maior espaço de leitura de Alagoas. Bom lugar para ler Vidas Secas e São Bernardo.' },
@@ -59,6 +63,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'paulo', plate: '02', name: 'Paulo Gracindo', role: 'Ator', years: '1911 — 1995',
+    person: 'paulo-gracindo', material: 'Bronze',
     area: 'Pajuçara', address: 'Av. Dr. Antônio Gouveia, início da orla de Pajuçara', kind: 'Estátua', group: 'orla', visit: 'Aberto', rarity: 'Raro', xp: 150,
     lat: -9.6672, lng: -35.7148, x: 128, y: 438, hue: '#c4683a', views: 1108, change: 11, flow: 72,
     summary: 'Paulo Gracindo nasceu no Rio de Janeiro, em 16 de julho de 1911, mas viveu os primeiros 20 anos em Maceió, em Pajuçara. Por isso a estátua está aqui. Começou no teatro amador da cidade, ficou famoso na Rádio Nacional e depois na TV, onde viveu Odorico Paraguaçu, de O Bem-Amado, o papel que ele considerava o melhor da carreira. Morreu no Rio de Janeiro, em 4 de setembro de 1995. A estátua foi inaugurada em 14 de julho de 2017.', museum: { name: 'Museu da Imagem e do Som de Alagoas (Misa)', address: 'Rua Sá e Albuquerque, 275 · Jaraguá', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'O museu guarda a memória do rádio, da imagem e do som de Alagoas, as linguagens em que Paulo Gracindo fez carreira.' },
@@ -73,6 +78,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'aurelio', plate: '03', name: 'Aurélio Buarque de Holanda', role: 'Lexicógrafo', years: '1910 — 1989',
+    person: 'aurelio-buarque',
     area: 'Ponta Verde', address: 'Av. Álvaro Otacílio, orla da Ponta Verde', kind: 'Estátua', group: 'orla', visit: 'Aberto', rarity: 'Raro', xp: 150,
     lat: -9.6632, lng: -35.6977, x: 232, y: 302, hue: '#4d6fb3', views: 1526, change: 14, flow: 82,
     summary: 'Aurélio Buarque de Holanda nasceu em Passo de Camaragibe (AL), em 3 de maio de 1910, e se mudou com a família para Maceió aos 13 anos. Formou-se em Direito no Recife, em 1936, mas virou professor: deu aulas de Português, Literatura e Francês no Colégio Estadual de Alagoas e dirigiu a Biblioteca Municipal de Maceió. Sua maior contribuição é o dicionário lançado em 1975, tão usado que “Aurélio” virou sinônimo de dicionário. Morreu no Rio de Janeiro, em 28 de fevereiro de 1989.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'O instituto guarda documentos, fotos e objetos da história de Alagoas. Ajuda a entender a Maceió onde Aurélio cresceu, estudou e deu aulas.' },
@@ -85,6 +91,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'nise', plate: '04', name: 'Nise da Silveira', role: 'Psiquiatra', years: '1905 — 1999',
+    person: 'nise-da-silveira',
     area: 'Jatiúca', address: 'Corredor Vera Arruda', kind: 'Estátua', group: 'orla', visit: 'Aberto', rarity: 'Lendário', xp: 250,
     lat: -9.6487, lng: -35.7033, x: 285, y: 222, hue: '#9b5aa6', views: 984, change: 9, flow: 64,
     summary: 'Nise da Silveira nasceu em Maceió, em 15 de fevereiro de 1905. Estudou Medicina na Bahia e se formou em 1926, a única mulher numa turma de mais de 60 alunos. No Rio, trocou tratamentos violentos, como o eletrochoque, por pintura, modelagem e convivência com animais. Em 1952 criou o Museu de Imagens do Inconsciente, com obras feitas pelos pacientes. Morreu no Rio de Janeiro, em 30 de outubro de 1999. A estátua, com um gato no colo, foi inaugurada em 30 de julho de 2019.', museum: { name: 'Museu Palácio Floriano Peixoto (Mupa)', address: 'Praça dos Martírios, 517 · Centro', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'O antigo Palácio do Governo virou museu e expõe pinturas de artistas alagoanos. Um bom começo para ver como a arte conta a história de quem a faz.' },
@@ -99,6 +106,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'ledo', plate: '05', name: 'Lêdo Ivo', role: 'Poeta e escritor', years: '1924 — 2012',
+    person: 'ledo-ivo',
     area: 'Jatiúca', address: 'Calçadão do Posto 7, Jatiúca', kind: 'Estátua', group: 'orla', visit: 'Aberto', rarity: 'Raro', xp: 150,
     lat: -9.6478, lng: -35.699, x: 318, y: 172, hue: '#3f8f5f', views: 702, change: 6, flow: 48,
     summary: 'Lêdo Ivo nasceu em Maceió, em 18 de fevereiro de 1924. Estudou no Recife e, aos 19 anos, foi para o Rio, onde se formou em Direito e trabalhou como jornalista. Escreveu poemas, romances e ensaios, muitos sobre Maceió e o mar de Alagoas, como o romance Ninho de Cobras (1973). Entrou para a Academia Brasileira de Letras em 1986. Morreu em Sevilha, na Espanha, em 23 de dezembro de 2012. A estátua foi inaugurada no Posto 7 em 3 de setembro de 2019.', museum: { name: 'Biblioteca Pública Estadual Graciliano Ramos', address: 'Praça Dom Pedro II, 57 · Centro', why: 'O maior espaço de leitura de Alagoas. Peça os livros de Lêdo Ivo e leia a Maceió que ele descreveu.' },
@@ -112,6 +120,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'emilio', plate: '06', name: 'Praça Emílio de Maya', role: 'Busto do escritor', years: 'Revitalizada em 2025',
+    person: 'emilio-de-maya', material: 'Bronze',
     area: 'Ponta Verde', address: 'Praça Emílio de Maya, Ponta Verde', kind: 'Busto', group: 'orla', visit: 'Aberto', rarity: 'Comum', xp: 80,
     lat: -9.661, lng: -35.7005, x: 204, y: 326, hue: '#b8862b', views: 588, change: 4, flow: 41,
     summary: 'Emílio de Maya nasceu no Engenho Patrocínio, em Atalaia (AL), em 25 de junho de 1906. Formou-se em Direito no Recife, em 1929, e foi advogado, jornalista e poeta. Eleito deputado federal em 1934, escreveu O Brasil e o Drama do Petróleo. Morreu jovem, no Rio de Janeiro, em 13 de março de 1939; seus poemas foram reunidos depois no livro Pétalas Esparsas. O busto de bronze da praça é obra de Bibiano Silva e foi restaurado em 2025.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'O instituto guarda documentos e objetos da história política de Alagoas, o cenário em que Emílio atuou.' },
@@ -124,6 +133,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'martirios', plate: '07', name: 'Praça dos Martírios', role: 'Monumento a Floriano Peixoto', years: 'Inaugurada em 1908',
+    person: 'floriano-peixoto',
     area: 'Centro', address: 'Praça Marechal Floriano Peixoto, Centro', kind: 'Praça', group: 'centro', visit: 'Aberto', rarity: 'Lendário', xp: 250,
     lat: -9.6658, lng: -35.7352, x: 62, y: 522, hue: '#a14a4a', views: 1210, change: 12, flow: 70,
     summary: 'A praça foi inaugurada em 24 de dezembro de 1908 e ganhou o nome de Marechal Floriano Peixoto por causa do monumento a ele. Floriano nasceu em Ipioca, hoje parte de Maceió, em 30 de abril de 1839, e estudou primeiro em Maceió. Lutou na Guerra do Paraguai e foi o segundo presidente do Brasil, de 1891 a 1894, conhecido como “Marechal de Ferro”. Morreu em Barra Mansa (RJ), em 29 de junho de 1895.', museum: { name: 'Museu Palácio Floriano Peixoto (Mupa)', address: 'Praça dos Martírios, 517 · Centro', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Fica na própria praça. O antigo Palácio do Governo hoje é museu, com móveis, pratarias e pinturas de artistas alagoanos.' },
@@ -137,6 +147,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'sinimbu', plate: '08', name: 'Praça Sinimbu', role: 'Monumento ao Visconde de Sinimbu', years: 'Revitalizada em 2020',
+    person: 'visconde-de-sinimbu', material: 'Bronze',
     area: 'Centro', address: 'Praça Visconde de Sinimbu, Centro', kind: 'Praça', group: 'centro', visit: 'Aberto', rarity: 'Raro', xp: 150,
     lat: -9.6688, lng: -35.7326, x: 98, y: 498, hue: '#6b6b8f', views: 431, change: 3, flow: 33,
     summary: 'A praça homenageia João Lins Vieira Cansanção de Sinimbu, o Visconde de Sinimbu. Ele nasceu em São Miguel dos Campos (AL), em 20 de novembro de 1810. Formou-se em Direito em Olinda e completou os estudos na Alemanha. Governou as províncias de Alagoas, Sergipe, Rio Grande do Sul e Bahia, foi ministro e chefiou o governo do Império entre 1878 e 1880. Morreu no Rio de Janeiro, em 27 de dezembro de 1906, aos 96 anos.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'O instituto guarda a história de Alagoas no tempo do Império, quando Sinimbu governou a província.' },
@@ -150,6 +161,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'montepio', plate: '09', name: 'Praça Montepio dos Artistas', role: 'Busto de Bráulio Cavalcanti', years: 'Busto de 1917',
+    person: 'braulio-cavalcante',
     area: 'Centro', address: 'Praça Montepio dos Artistas, Centro', kind: 'Busto', group: 'centro', visit: 'Aberto', rarity: 'Comum', xp: 80,
     lat: -9.6651, lng: -35.7386, x: 42, y: 556, hue: '#8a6a3a', views: 377, change: 2, flow: 29,
     summary: 'A praça abrigou o Monte Pio dos Artistas a partir de 1890 e hoje também leva o nome de Bráulio Cavalcante. Ele nasceu em Pão de Açúcar (AL), em 14 de março de 1887, estudou em Maceió e se formou em Direito no Recife, em 1911. Poeta e jornalista, era líder da oposição ao governo de Euclides Malta. Foi morto a tiros em 10 de março de 1912, num protesto em frente ao Palácio do Governo, quatro dias antes de fazer 25 anos. O busto foi inaugurado em 16 de setembro de 1917.', museum: { name: 'Museu Palácio Floriano Peixoto (Mupa)', address: 'Praça dos Martírios, 517 · Centro', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Bráulio foi morto em frente a este prédio, que era o Palácio do Governo. Hoje é museu e ajuda a entender aquele momento da história de Alagoas.' },
@@ -163,6 +175,7 @@ export const monuments: Monument[] = [
   },
   {
     id: 'pedro2', plate: '10', name: 'Praça Dom Pedro II', role: 'Busto do Imperador', years: 'Centro histórico',
+    person: 'dom-pedro-ii',
     area: 'Centro', address: 'Praça Dom Pedro II, Centro', kind: 'Busto', group: 'centro', visit: 'Aberto', rarity: 'Comum', xp: 80,
     lat: -9.6669, lng: -35.737, x: 80, y: 560, hue: '#2f5f73', views: 410, change: 3, flow: 31,
     summary: 'No coração do Centro, a praça já se chamou Praça do Pelourinho, do Tesouro, da Catedral e da Assembleia. O busto, diante da Catedral, homenageia Dom Pedro II. Ele nasceu no Rio de Janeiro, em 2 de dezembro de 1825, e governou o Brasil como imperador de 1840 a 1889. Em 1859, passou por Alagoas numa longa viagem pelo Nordeste. Com a chegada da República, foi para o exílio e morreu em Paris, em 5 de dezembro de 1891.', museum: { name: 'Biblioteca Pública Estadual Graciliano Ramos', address: 'Praça Dom Pedro II, 57 · Centro', why: 'Fica na própria praça. A biblioteca estadual guarda obras raras e é o maior espaço de leitura de Alagoas.' },
@@ -239,6 +252,156 @@ export const monuments: Monument[] = [
     ],
     tag: { type: 'NTAG215', status: 'Ativa', lastRead: 'há 2 h', pendingOffline: 0 },
   },
+  {
+    id: 'catedral', plate: '16', name: 'Catedral Metropolitana de Maceió', role: 'Catedral de Nossa Senhora dos Prazeres', years: 'Século XIX',
+    area: 'Centro', address: 'Praça Dom Pedro II, Centro', kind: 'Patrimônio', group: 'centro', visit: 'Aberto', rarity: 'Lendário', xp: 250,
+    lat: -9.6654, lng: -35.7356, x: 70, y: 540, hue: '#7a5c3a', views: 0, change: 0, flow: 0,
+    summary: 'A Catedral Metropolitana de Nossa Senhora dos Prazeres é a igreja mais importante de Maceió e fica de frente para a Praça Dom Pedro II. Foi construída no século XIX, quando Maceió deixou de ser vila e virou a capital da província de Alagoas, em 1839. Nossa Senhora dos Prazeres é a padroeira da cidade. Ao redor da catedral nasceu o centro político de Alagoas, com a Assembleia Legislativa e a Biblioteca Pública na mesma praça.', museum: { name: 'Biblioteca Pública Estadual Graciliano Ramos', address: 'Praça Dom Pedro II, 57 · Centro', why: 'Fica na mesma praça. Lá estão jornais e livros antigos que contam como o Centro cresceu em volta da catedral.' },
+    facts: [['Padroeira', 'Nossa Senhora dos Prazeres, padroeira de Maceió'], ['Local', 'Praça Dom Pedro II, Centro'], ['Vizinhos', 'Assembleia Legislativa e Biblioteca Pública'], ['Dado aberto', 'Wikidata Q67176290']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Catedral_metropolitana_maceio.JPG/1280px-Catedral_metropolitana_maceio.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Aleposta', source: 'https://commons.wikimedia.org/wiki/File:Catedral_metropolitana_maceio.JPG', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176290', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176290' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Catedral_metropolitana_maceio.JPG' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66538&mlon=-35.73561#map=19/-9.66538/-35.73561' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'tavaresbastos', plate: '17', name: 'Palácio Tavares Bastos', role: 'Sede da Assembleia Legislativa', years: 'Século XIX',
+    area: 'Centro', address: 'Praça Dom Pedro II, Centro', kind: 'Patrimônio', group: 'centro', visit: 'Aberto', rarity: 'Raro', xp: 150,
+    lat: -9.6659, lng: -35.7358, x: 84, y: 528, hue: '#5d6f8a', views: 0, change: 0, flow: 0,
+    summary: 'O Palácio Tavares Bastos é a sede da Assembleia Legislativa de Alagoas, na Praça Dom Pedro II. O nome homenageia Aureliano Cândido Tavares Bastos, nascido em Alagoas em 1839. Deputado no Império, ele defendeu a abertura do rio Amazonas à navegação, a descentralização do poder e o fim da escravidão. Morreu jovem, em 1875. O prédio é um dos marcos da arquitetura do Centro e da vida política do estado.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'Guarda documentos da política alagoana no Império, o tempo de Tavares Bastos.' },
+    facts: [['Uso atual', 'Assembleia Legislativa de Alagoas'], ['Homenageado', 'Tavares Bastos (1839–1875)'], ['Local', 'Praça Dom Pedro II'], ['Dado aberto', 'Wikidata Q59360376']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG/1280px-ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Aleposta', source: 'https://commons.wikimedia.org/wiki/File:ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q59360376', importedAt: '2026-11-24' }, person: 'tavares-bastos',
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q59360376' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66593&mlon=-35.73583#map=19/-9.66593/-35.73583' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'bomjesus', plate: '18', name: 'Igreja Bom Jesus dos Martírios', role: 'Igreja de fachada de azulejos', years: 'Século XIX',
+    area: 'Centro', address: 'Praça dos Martírios, Centro', kind: 'Patrimônio', group: 'igrejas', visit: 'Aberto', rarity: 'Lendário', xp: 250,
+    lat: -9.6600, lng: -35.7387, x: 84, y: 506, hue: '#3f6fa0', views: 0, change: 0, flow: 0,
+    summary: 'A Igreja do Senhor Bom Jesus dos Martírios fica na Praça dos Martírios, ao lado do antigo Palácio do Governo. Chama atenção pela fachada coberta de azulejos e pelas torres, que fazem dela um dos cartões-postais do Centro. É patrimônio histórico de Alagoas e dá nome à praça onde está o monumento a Floriano Peixoto. Por dentro, guarda imagens e altares da devoção popular do século XIX.', museum: { name: 'Museu Palácio Floriano Peixoto (Mupa)', address: 'Praça dos Martírios, 517 · Centro', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Fica do outro lado da praça. O museu mostra a Maceió do tempo em que a igreja foi erguida.' },
+    facts: [['Destaque', 'Fachada de azulejos'], ['Local', 'Praça dos Martírios'], ['Proteção', 'Patrimônio histórico'], ['Dado aberto', 'Wikidata Q67176292']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg/1280px-Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Grupo de Pesquisa Representações do Lugar (RELU)', source: 'https://commons.wikimedia.org/wiki/File:Igreja_dos_Mart%C3%ADrios,_RELU.jpg', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176292', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176292' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Igreja_dos_Mart%C3%ADrios,_RELU.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.65995&mlon=-35.73866#map=19/-9.65995/-35.73866' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'rosario', plate: '19', name: 'Igreja de Nossa Senhora do Rosário dos Pretos', role: 'Igreja da irmandade negra', years: 'Século XIX',
+    area: 'Centro', address: 'Centro de Maceió', kind: 'Patrimônio', group: 'igrejas', visit: 'Aberto', rarity: 'Raro', xp: 150,
+    lat: -9.6632, lng: -35.7370, x: 56, y: 494, hue: '#6a4a7a', views: 0, change: 0, flow: 0,
+    summary: 'A Igreja de Nossa Senhora do Rosário dos Pretos foi erguida pela irmandade dos homens negros de Maceió. No tempo da escravidão, as irmandades do Rosário eram um dos poucos espaços em que pessoas negras, escravizadas ou livres, podiam se organizar, juntar dinheiro, ajudar umas às outras e garantir um enterro digno. A igreja é um registro dessa história de resistência no Centro da cidade e é patrimônio histórico.', museum: { name: 'Museu Théo Brandão de Antropologia e Folclore', address: 'Av. da Paz, 1490 · Centro', hours: 'Ter. a sex., 9h às 17h', why: 'O museu da Ufal guarda a cultura popular e afro-alagoana, que nasceu em espaços como as irmandades.' },
+    facts: [['Quem construiu', 'Irmandade do Rosário dos Homens Pretos'], ['Local', 'Centro'], ['Tema', 'Memória negra de Maceió'], ['Dado aberto', 'Wikidata Q67176294']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg/1280px-Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Grupo de Pesquisa Representações do Lugar (RELU)', source: 'https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos,_RELU_(02).jpg', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176294', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176294' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos,_RELU_(02).jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66317&mlon=-35.73701#map=19/-9.66317/-35.73701' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'livramento', plate: '20', name: 'Igreja de Nossa Senhora do Livramento', role: 'Igreja do Centro antigo', years: 'Século XIX',
+    area: 'Centro', address: 'Rua do Livramento, Centro', kind: 'Patrimônio', group: 'igrejas', visit: 'Aberto', rarity: 'Comum', xp: 80,
+    lat: -9.6648, lng: -35.7383, x: 70, y: 530, hue: '#8a7a4a', views: 0, change: 0, flow: 0,
+    summary: 'A Igreja de Nossa Senhora do Livramento é uma das igrejas antigas do Centro de Maceió e deu nome à rua onde está. Faz parte do conjunto de igrejas que marcaram o crescimento da cidade no século XIX, quando Maceió virou capital e o comércio do porto de Jaraguá trouxe gente e riqueza. É patrimônio histórico e segue aberta à comunidade.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'Mapas e fotos antigas mostram as ruas do Centro em volta das igrejas.' },
+    facts: [['Local', 'Rua do Livramento, Centro'], ['Época', 'Século XIX'], ['Proteção', 'Patrimônio histórico'], ['Dado aberto', 'Wikidata Q67176293']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg/1280px-Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Grupo de Pesquisa Representações do Lugar (RELU)', source: 'https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Livramento,_RELU.jpg', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176293', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176293' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Livramento,_RELU.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66479&mlon=-35.73830#map=19/-9.66479/-35.73830' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'saogoncalo', plate: '21', name: 'Capela de São Gonçalo do Amarante', role: 'Capela histórica', years: 'Antiga',
+    area: 'Centro', address: 'Centro de Maceió', kind: 'Patrimônio', group: 'igrejas', visit: 'Aberto', rarity: 'Comum', xp: 80,
+    lat: -9.6632, lng: -35.7333, x: 84, y: 518, hue: '#9a6a5a', views: 0, change: 0, flow: 0,
+    summary: 'A Capela de São Gonçalo do Amarante é uma das pequenas igrejas históricas do Centro de Maceió. São Gonçalo é um santo português muito popular no Nordeste, ligado às festas e à dança de São Gonçalo, tradição da cultura popular alagoana. A capela é patrimônio histórico e ajuda a contar como a fé e as festas populares moldaram as ruas do Centro.', museum: { name: 'Museu Théo Brandão de Antropologia e Folclore', address: 'Av. da Paz, 1490 · Centro', hours: 'Ter. a sex., 9h às 17h', why: 'O museu tem acervo das danças e festas populares de Alagoas, como as ligadas a São Gonçalo.' },
+    facts: [['Santo', 'São Gonçalo do Amarante'], ['Tradição', 'Dança de São Gonçalo'], ['Proteção', 'Patrimônio histórico'], ['Dado aberto', 'Wikidata Q67176288']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg/1280px-Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Blogilberto', source: 'https://commons.wikimedia.org/wiki/File:Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176288', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176288' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66319&mlon=-35.73328#map=19/-9.66319/-35.73328' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'associacao', plate: '22', name: 'Associação Comercial de Maceió', role: 'Palácio do comércio de Jaraguá', years: 'Início do século XX',
+    area: 'Jaraguá', address: 'Rua Sá e Albuquerque, Jaraguá', kind: 'Patrimônio', group: 'jaragua', visit: 'Aberto', rarity: 'Raro', xp: 150,
+    lat: -9.6720, lng: -35.7259, x: 110, y: 446, hue: '#4a7a6a', views: 0, change: 0, flow: 0,
+    summary: 'O prédio da Associação Comercial fica em Jaraguá, o bairro do porto, onde Maceió começou a crescer. Por ali saíam açúcar e algodão de Alagoas e chegavam as novidades de fora. O edifício, um dos mais bonitos do bairro, mostra a riqueza do comércio do porto no começo do século XX. É patrimônio histórico e símbolo da revitalização de Jaraguá.', museum: { name: 'Museu da Imagem e do Som de Alagoas (Misa)', address: 'Rua Sá e Albuquerque, 275 · Jaraguá', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Fica na mesma rua. Guarda fotos e filmes antigos do porto e de Jaraguá.' },
+    facts: [['Bairro', 'Jaraguá, antigo porto'], ['Época', 'Início do século XX'], ['Proteção', 'Patrimônio histórico'], ['Dado aberto', 'Wikidata Q67176285']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3a/Pr%C3%A9dio_do_Centro_comercial_de_Macei%C3%B3_-_panoramio.jpg/1280px-Pr%C3%A9dio_do_Centro_comercial_de_Macei%C3%B3_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Duds Nilds', source: 'https://commons.wikimedia.org/wiki/File:Pr%C3%A9dio_do_Centro_comercial_de_Macei%C3%B3_-_panoramio.jpg', license: 'CC BY 3.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q67176285', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q67176285' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Pr%C3%A9dio_do_Centro_comercial_de_Macei%C3%B3_-_panoramio.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.67202&mlon=-35.72595#map=19/-9.67202/-35.72595' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'doisleoes', plate: '23', name: 'Praça Dois Leões', role: 'Praça dos leões de Jaraguá', years: 'Jaraguá',
+    area: 'Jaraguá', address: 'Praça Dois Leões, Jaraguá', kind: 'Praça', group: 'jaragua', visit: 'Aberto', rarity: 'Comum', xp: 80,
+    lat: -9.6724, lng: -35.7240, x: 124, y: 434, hue: '#b07a3a', views: 0, change: 0, flow: 0,
+    summary: 'A Praça Dois Leões, em Jaraguá, ganhou esse nome por causa das duas esculturas de leão que guardam o espaço. Fica perto do Museu da Imagem e do Som e dos casarões do antigo porto. É um dos pontos de encontro do bairro histórico, revitalizado para receber turistas, eventos e a vida noturna de Maceió.', museum: { name: 'Museu da Imagem e do Som de Alagoas (Misa)', address: 'Rua Sá e Albuquerque, 275 · Jaraguá', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Fica a poucos passos. Mostra a memória do rádio, do cinema e da fotografia de Alagoas.' },
+    facts: [['Esculturas', 'Dois leões'], ['Bairro', 'Jaraguá'], ['Vizinho', 'Museu da Imagem e do Som'], ['Dado aberto', 'Wikidata Q101084268']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg/1280px-Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Duds Nilds', source: 'https://commons.wikimedia.org/wiki/File:Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg', license: 'CC BY 3.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q101084268', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q101084268' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.67241&mlon=-35.72398#map=19/-9.67241/-35.72398' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'republica', plate: '24', name: 'Memorial à República', role: 'Monumento aos presidentes alagoanos', years: 'Monumento comemorativo',
+    area: 'Jaraguá', address: 'Jaraguá, perto da orla', kind: 'Estátua', group: 'jaragua', visit: 'Aberto', rarity: 'Lendário', xp: 250,
+    lat: -9.6698, lng: -35.7310, x: 138, y: 470, hue: '#2f6f5f', views: 0, change: 0, flow: 0,
+    summary: 'O Memorial à República lembra que Alagoas é a terra dos dois primeiros presidentes do Brasil. O Marechal Deodoro da Fonseca, nascido na antiga capital de Alagoas, hoje a cidade de Marechal Deodoro, proclamou a República em 15 de novembro de 1889. O Marechal Floriano Peixoto, nascido em Ipioca, hoje bairro de Maceió, foi o segundo presidente. O memorial conecta a cidade a esse capítulo da história do país.', museum: { name: 'Museu Palácio Floriano Peixoto (Mupa)', address: 'Praça dos Martírios, 517 · Centro', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'O antigo Palácio do Governo leva o nome de Floriano e guarda a história da República em Alagoas.' },
+    facts: [['Tema', 'Proclamação da República'], ['Personagens', 'Deodoro da Fonseca e Floriano Peixoto'], ['Tipo', 'Monumento comemorativo'], ['Dado aberto', 'Wikidata Q56693672']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Memorialarepublica.maceio.jpg/1280px-Memorialarepublica.maceio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Rodolfo Freire', source: 'https://commons.wikimedia.org/wiki/File:Memorialarepublica.maceio.jpg', license: 'CC BY-SA 4.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q56693672', importedAt: '2026-11-24' }, person: 'deodoro',
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q56693672' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Memorialarepublica.maceio.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66976&mlon=-35.73097#map=19/-9.66976/-35.73097' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
+  {
+    id: 'farolpv', plate: '25', name: 'Farol de Ponta Verde', role: 'Farolete sobre os recifes', years: 'Ponta Verde',
+    area: 'Ponta Verde', address: 'Recifes da Ponta Verde', kind: 'Patrimônio', group: 'orla', visit: 'Aberto', rarity: 'Raro', xp: 150,
+    lat: -9.6657, lng: -35.6923, x: 260, y: 248, hue: '#2a8aa0', views: 0, change: 0, flow: 0,
+    summary: 'O pequeno farol branco e vermelho fica sobre os recifes da Ponta Verde, a ponta de terra que divide as praias de Pajuçara e Ponta Verde. Na maré baixa, dá para chegar perto caminhando pelas piscinas naturais. Ele avisa os barcos sobre os recifes e virou um dos símbolos da orla de Maceió, presente em fotos de moradores e turistas.', museum: { name: 'Museu da Imagem e do Som de Alagoas (Misa)', address: 'Rua Sá e Albuquerque, 275 · Jaraguá', hours: 'Ter. a sex., 8h às 17h · sáb., dom. e feriados, 13h às 17h · entrada gratuita', why: 'Guarda fotos antigas da orla e do mar de Maceió, de antes dos prédios.' },
+    facts: [['Local', 'Recifes da Ponta Verde'], ['Acesso', 'Na maré baixa, pelas piscinas naturais'], ['Função', 'Sinalizar os recifes'], ['Dado aberto', 'Wikidata Q10280165']],
+    photo: { src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg/1280px-Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail', credit: 'Tissiana Sousa', source: 'https://commons.wikimedia.org/wiki/File:Macei%C3%B3,_Alagoas,_Brasil_2.jpg', license: 'CC BY-SA 2.0 · Wikimedia Commons' },
+    origin: { dataset: 'wikidata', id: 'Q10280165', importedAt: '2026-11-24' },
+    sources: [
+      { label: 'Wikidata · registro aberto do bem (CC0)', url: 'https://www.wikidata.org/wiki/Q10280165' },
+      { label: 'Wikimedia Commons · foto, autor e licença', url: 'https://commons.wikimedia.org/wiki/File:Macei%C3%B3,_Alagoas,_Brasil_2.jpg' },
+      { label: 'OpenStreetMap · localização (ODbL)', url: 'https://www.openstreetmap.org/?mlat=-9.66567&mlon=-35.69233#map=19/-9.66567/-35.69233' },
+    ],
+    tag: { type: 'NTAG213', status: 'Ativa', lastRead: 'nunca', pendingOffline: 0 },
+  },
 ]
 
 export const byId = (id: string) => monuments.find((m) => m.id === id)!
@@ -258,7 +421,7 @@ export const badges = [
   { id: 'b1', name: 'Primeiro passo', desc: 'Primeiro carimbo', need: 1 },
   { id: 'b2', name: 'Leitor da orla', desc: '4 esculturas', need: 4 },
   { id: 'b3', name: 'Guardião do Centro', desc: 'Praças e bustos', need: 7 },
-  { id: 'b4', name: 'Memória completa', desc: 'Todos os pontos', need: 13 },
+  { id: 'b4', name: 'Memória completa', desc: 'Todos os pontos', need: 25 },
 ]
 
 export const levelFor = (xp: number) => {

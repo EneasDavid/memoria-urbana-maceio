@@ -4,6 +4,7 @@ import { Photo, KindPill } from '../../MobileScreens'
 import { monumentUrl } from '../../app/router'
 import { LoginPill } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
+import { ThemeTrails } from '../trails/ThemeTrails'
 import { LogoMark, EmMaceio, Waves } from '../../ui'
 
 // Lista pública. Cada card é um link comum (<a href>), então dá para abrir cada monumento
@@ -13,6 +14,8 @@ import { LogoMark, EmMaceio, Waves } from '../../ui'
 const GROUPS: { id: Monument['group']; title: string; hint: string }[] = [
   { id: 'orla', title: 'Orla', hint: 'Pajuçara, Ponta Verde e Jatiúca' },
   { id: 'centro', title: 'Centro histórico', hint: 'Praças e bustos do Centro' },
+  { id: 'igrejas', title: 'Igrejas do Centro', hint: 'Fé, irmandades e azulejos' },
+  { id: 'jaragua', title: 'Jaraguá', hint: 'O porto onde a cidade começou' },
   { id: 'bebedouro', title: 'Bebedouro', hint: 'Memória do bairro' },
   { id: 'alto', title: 'Parte alta', hint: 'Farol e Ufal' },
 ]
@@ -64,6 +67,8 @@ export function MonumentIndex() {
             </section>
           )
         })}
+
+        <ThemeTrails />
 
         <LegalFooter />
       </div>

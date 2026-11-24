@@ -295,6 +295,8 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
 const AREAS = [
   { id: 'orla', title: 'Orla', hint: 'Pajuçara, Ponta Verde e Jatiúca' },
   { id: 'centro', title: 'Centro histórico', hint: 'Praças e bustos do Centro' },
+  { id: 'igrejas', title: 'Igrejas do Centro', hint: 'Fé, irmandades e azulejos' },
+  { id: 'jaragua', title: 'Jaraguá', hint: 'O porto onde a cidade começou' },
   { id: 'bebedouro', title: 'Bebedouro', hint: 'Memória do bairro' },
   { id: 'alto', title: 'Parte alta', hint: 'Farol e Ufal' },
 ] as const

@@ -1,6 +1,6 @@
 """Carimbos da Trilha. Os pontos são calculados no servidor: o cliente só diz qual placa leu.
 
-Barra os equivalentes a "mudar o preço", "comprar -1", "cupom 100 vezes" e "premium sem pagar":
+Barra as fraudes de valor descritas em docs/seguranca-14-ataques.md (ataques 4 a 8):
 - o corpo não aceita xp, pontos, papel nem uid (extra="forbid" → 422);
 - o valor vem do cadastro do monumento, nunca do navegador;
 - o mesmo carimbo só conta uma vez por dia (SET NX no Redis);

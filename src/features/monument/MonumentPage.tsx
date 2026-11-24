@@ -11,6 +11,8 @@ import { fmtDistance, nearby } from '../../shared/geo'
 import { monumentUrl } from '../../app/router'
 import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
+import { PersonTrail } from '../trails/PersonTrail'
+import { markVisited } from '../../shared/progress'
 
 // Página pública do monumento: é o que abre quando alguém lê o QR ou encosta no NFC da placa.
 // Regras: abre sem login (a conta é só um convite opcional), sem menu, sem botão "voltar" desenhado (o navegador já tem), uma URL por
@@ -43,6 +45,7 @@ export function MonumentPage({ id }: { id: string }) {
   useEffect(() => {
     if (!m) return
     document.title = `${m.name} · Memória Urbana Maceió`
+    markVisited(m.id) // local-first: progresso no aparelho, sem conta
     // …e corrige a URL para a forma canônica, sem recarregar
     const canonical = `/monumento/${m.id}`
     if (window.location.pathname !== canonical) window.history.replaceState(null, '', canonical + window.location.search + window.location.hash)
@@ -124,6 +127,8 @@ export function MonumentPage({ id }: { id: string }) {
             <Icon name="route" size={16} stroke={2.3} />Como chegar<Icon name="chevR" size={14} stroke={2.6} className="mu-windup-icon" />
           </a>
         </section>
+
+        <PersonTrail personId={m.person} returnTo={`/monumento/${m.id}`} />
 
         <TrailInvite plate={m.plate} returnTo={`/monumento/${m.id}`} />
 
