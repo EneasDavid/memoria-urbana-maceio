@@ -7,11 +7,11 @@ import { ReportSheet } from '../../ReportSheet'
 import { NotFound } from './NotFound'
 import { queueReport } from './reports'
 import { monuments } from '../../data'
-import { fmtDistance, nearby } from '../../shared/geo'
 import { monumentUrl } from '../../app/router'
 import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
 import { PersonTrail } from '../trails/PersonTrail'
+import { NearYou } from './NearYou'
 import { markVisited } from '../../shared/progress'
 
 // Página pública do monumento: é o que abre quando alguém lê o QR ou encosta no NFC da placa.
@@ -159,21 +159,8 @@ export function MonumentPage({ id }: { id: string }) {
           <Icon name="chevR" size={15} className="text-black/30" />
         </button>
 
-        {/* Links internos: os três monumentos mais perto (bom para a caminhada e para o Google) */}
-        <section aria-labelledby="perto" className="mt-10">
-          <h2 id="perto" className="text-[22px] font-bold tracking-[-0.02em]">Perto daqui</h2>
-          <ul className="mt-3 grid gap-2">
-            {nearby(m, monuments).map(({ m: n, meters }) => (
-              <li key={n.id}>
-                <a href={monumentUrl(n.id)} className="mu-press flex items-center gap-3 rounded-[16px] bg-white px-4 py-3 min-h-[56px] mu-edge mu-raise-1">
-                  <span className="flex-1 min-w-0"><span className="block text-[15.5px] font-semibold leading-tight">{n.name}</span><span className="block text-[13px] text-black/70">{n.kind} · {n.area}</span></span>
-                  <span className="text-[13px] font-semibold text-[#1f6b6b] tabular">{fmtDistance(meters)}</span>
-                  <Icon name="chevR" size={15} stroke={2.2} className="text-black/40" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* Perto daqui: pela localização real do visitante (com consentimento); senão, pela obra */}
+        <NearYou m={m} />
 
         <h2 className="mt-10 text-[22px] font-bold tracking-[-0.02em]">Fontes</h2>
         <ul className="mt-3 bg-white rounded-[20px] divide-y divide-black/[0.06] mu-edge mu-raise-1">

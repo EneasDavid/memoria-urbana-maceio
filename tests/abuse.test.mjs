@@ -8,7 +8,6 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { chromium } from 'playwright'
 import { sign, verify, randomToken } from '../api/_lib/session.ts'
-import { POST as demoLogin } from '../server/build/api/auth/demo.js'
 import { GET as me } from '../server/build/api/auth/me.js'
 
 const PORT = process.env.ABUSE_PORT || '4191'
@@ -93,18 +92,13 @@ test('6 Pix falso = sessão forjada: cookie adulterado, expirado ou com outra ch
   assert.equal(await verify(t, S, Date.now() + 120_000), null)
 })
 
-test('9 admin no cadastro: pedir papel "admin" no acesso de demonstração é recusado', async () => {
-  for (const role of ['admin', 'curador', 'Gestor', ['gestor'], { role: 'admin' }]) {
-    const r = await demoLogin(new Request('http://127.0.0.1/api/auth/demo', { method: 'POST', headers: { origin: 'http://127.0.0.1', host: '127.0.0.1', 'content-type': 'application/json' }, body: JSON.stringify({ role }) }))
-    assert.equal(r.status, 400, JSON.stringify(role))
-  }
-  const cross = await demoLogin(new Request('http://127.0.0.1/api/auth/demo', { method: 'POST', headers: { origin: 'https://evil.com', host: '127.0.0.1' }, body: '{"role":"gestor"}' }))
-  assert.equal(cross.status, 403)
-  // Cookie de demonstração forjado com papel admin não é aceito por /api/auth/me.
+test('9 admin no cadastro: não há cadastro com papel; demonstração removida; cookie forjado ignorado', async () => {
+  assert.ok(!existsSync('api/auth/demo.ts'), 'acesso de demonstração não deve existir')
   const fake = await sign({ sub: 'x', role: 'admin', demo: true, exp: Math.floor(Date.now() / 1000) + 60 }, 'memoria-urbana-demo-sem-privilegio-real-000000')
   const res = await me(new Request('http://127.0.0.1/api/auth/me', { headers: { cookie: `mu_demo=${fake}` } }))
   assert.equal((await res.json()).user, null)
   assert.doesNotMatch(read('api/auth/callback.ts'), /searchParams\.get\(['"]role/)
+  assert.match(read('api/auth/callback.ts'), /role: roleFor\(claims\.email, cfg\.gestorEmails\)/)
 })
 
 test('10 adivinhar o código: state, nonce e verificador com 256 bits e nunca repetidos', () => {

@@ -21,7 +21,7 @@
 |---|---|---|
 | `/` | todos, sem login | Lista de monumentos (cada card abre em nova aba) |
 | `/monumento/:id` | todos, sem login | Página do monumento, aberta pelo QR/NFC da placa: bio, narração, audiodescrição, convite ao museu e relato de dano. Sem menus nem botão voltar |
-| `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) |
+| `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) ou continuar sem conta, salvando no aparelho |
 | `/app` | conta (participante) | Trilha Cultural: Explorar, Trilha, Passaporte e leitura da placa (telas do protótipo do Figma) |
 | `/painel` | papel gestor | Painel da prefeitura |
 | `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
@@ -107,15 +107,14 @@ cd backend && pytest                                          # RBAC, cache, rel
 - `tests/smoke.test.mjs` sobe o build com `vite preview` e confere a página inicial, todos os JS/CSS, a logo e o favicon. Também garante que não há sourcemap inline nem segredos no bundle.
 - Camada OWASP: `pnpm audit` (A06, componentes vulneráveis) e cabeçalhos de segurança em `vercel.json` (nosniff, frame-options, referrer, permissions e HSTS).
 
-## Acesso de demonstração (sem Google)
+## Entrar: Google ou só neste aparelho
 
-Em `/entrar`, os botões **Como visitante** e **Como gestor** abrem a Trilha e o painel sem conta Google.
+Em `/entrar` há duas opções reais, sem usuários fictícios:
 
-- Não há senha e o usuário é fictício.
-- A sessão (`mu_demo`) dura 2 horas e nada é salvo.
-- O backend não aceita esse cookie para dados reais.
-- Para desligar, defina `DEMO_LOGIN=off`.
-- Na demonstração, a Trilha mantém as simulações do protótipo (caminhada, leitura da placa, amigos por perto) para testar sem ir à rua. Na conta Google nada é simulado: só QR e NFC reais e check-in por GPS com a localização verdadeira.
+- **Continuar com Google** (OAuth 2.0 + PKCE): sincroniza o progresso na nuvem. Precisa das variáveis `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `SESSION_SECRET` na Vercel.
+- **Continuar sem conta, salvando neste aparelho**: o progresso (monumentos vistos e trilhas) fica no `localStorage` do celular; nada vai para o servidor.
+
+O antigo acesso de demonstração (visitante/gestor fictícios) foi removido. O painel só abre para e-mails listados em `GESTOR_EMAILS`.
 
 ## Segurança e auditoria
 

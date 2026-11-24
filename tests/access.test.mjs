@@ -1,4 +1,4 @@
-// Acesso de demonstração (sem Google) e aviso de permissão de câmera/galeria, no navegador.
+// Login (Google ou só neste aparelho), localização real e aviso de permissão de câmera/galeria, no navegador.
 // A API é simulada aqui (vite preview não roda /api); o comportamento do servidor é testado em oracle.test.mjs.
 import { test, before, after } from 'node:test'
 import assert from 'node:assert/strict'
@@ -31,23 +31,32 @@ async function withFakeApi(start = null, colorScheme = 'light', extra = {}) {
   return { ctx, page: await ctx.newPage() }
 }
 
-test('login sem Google: "Como visitante" abre a Trilha com aviso de demonstração', async () => {
+test('login: Google ou "continuar sem conta, salvando neste aparelho"; sem acesso de demonstração', async () => {
   const { ctx, page } = await withFakeApi()
-  await page.goto(BASE + '/entrar?returnTo=/app')
-  await page.getByRole('heading', { name: 'Acesso de demonstração' }).waitFor()
-  await page.getByRole('button', { name: 'Como visitante' }).click()
-  await page.waitForURL('**/app')
-  await page.getByRole('heading', { name: 'Explorar' }).waitFor()
-  assert.match(await page.getByRole('note').textContent(), /Demonstração · nada é salvo/)
+  await page.goto(BASE + '/entrar?returnTo=/monumento/nise')
+  await page.getByRole('button', { name: /Continuar sem conta, salvando neste aparelho/ }).waitFor()
+  assert.equal(await page.getByText('Acesso de demonstração').count(), 0)
+  assert.equal(await page.getByRole('button', { name: 'Como gestor' }).count(), 0)
+  await page.getByRole('button', { name: /Continuar sem conta/ }).click()
+  await page.waitForURL('**/monumento/nise')
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_progress')).mode), 'local')
   await ctx.close()
 })
 
-test('login sem Google: "Como gestor" abre o painel marcado como demonstração', async () => {
+test('perto daqui: com permissão, usa a localização real do visitante', async () => {
+  const { ctx, page } = await withFakeApi(null, 'light', { permissions: ['geolocation'], geolocation: { latitude: -9.6658, longitude: -35.7352, accuracy: 15 } })
+  await page.goto(BASE + '/monumento/graciliano')
+  await page.getByRole('heading', { name: 'Perto de você' }).waitFor()
+  const first = await page.locator('#perto ~ ul li').first().textContent()
+  assert.match(first, /Martírios|Catedral|Tavares Bastos|Bom Jesus/, 'no Centro, o mais perto é do Centro, não da orla')
+  await ctx.close()
+})
+
+test('perto daqui: sem permissão, mostra o que está perto da obra e oferece usar a localização', async () => {
   const { ctx, page } = await withFakeApi()
-  await page.goto(BASE + '/entrar')
-  await page.getByRole('button', { name: 'Como gestor' }).click()
-  await page.waitForURL('**/painel')
-  await page.getByText('Demonstração · dados simulados').waitFor()
+  await page.goto(BASE + '/monumento/graciliano')
+  await page.getByRole('heading', { name: 'Perto desta obra' }).waitFor()
+  await page.getByRole('button', { name: 'Usar minha localização' }).waitFor()
   await ctx.close()
 })
 
@@ -112,16 +121,6 @@ test('área logada com conta real: nada simulado (sem caminhada, sem leitura fal
   await ctx.close()
 })
 
-test('área logada na demonstração: simulações ligadas para testar sem ir à rua', async () => {
-  const { ctx, page } = await withFakeApi({ ...REAL, sub: 'demo-visitante', name: 'Visitante Demonstração', demo: true })
-  await page.goto(BASE + '/app')
-  await page.getByRole('navigation', { name: 'Abas' }).getByRole('button', { name: 'Trilha', exact: true }).click()
-  await page.getByRole('button', { name: 'Simular caminhada' }).first().waitFor()
-  await page.getByLabel('Ler placa').click()
-  await page.getByText('QR Code reconhecido').waitFor({ timeout: 6000 })
-  await ctx.close()
-})
-
 for (const scheme of ['light', 'dark']) {
   test(`área logada sem violações de acessibilidade nas 3 abas (${scheme === 'light' ? 'claro' : 'escuro'})`, async () => {
     const { ctx, page } = await withFakeApi(REAL, scheme)
@@ -169,7 +168,7 @@ test('localização: com permissão, mostra onde a pessoa está, libera o GPS e 
 })
 
 test('painel do gestor com a identidade da logo e sem estrela', async () => {
-  const { ctx, page } = await withFakeApi({ sub: 'demo-gestor', name: 'Gestora Demonstração', email: 'g@demo.invalid', role: 'gestor', demo: true })
+  const { ctx, page } = await withFakeApi({ sub: 'g1', name: 'Gestora', email: 'g@prefeitura.example', role: 'gestor' })
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto(BASE + '/painel')
   await page.getByText('Painel da Prefeitura').waitFor()

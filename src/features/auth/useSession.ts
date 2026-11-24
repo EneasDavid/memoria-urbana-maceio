@@ -28,7 +28,7 @@ export function useSession(): SessionState {
         const body = (await r.json()) as { user?: SessionUser; configured?: boolean; demoAvailable?: boolean }
         if (!alive) return
         if (r.ok && body.user) setState({ status: 'authenticated', user: body.user })
-        else if (body.configured === false) setState({ status: 'unavailable', reason: 'Login com Google ainda não configurado neste ambiente.', demoAvailable: body.demoAvailable })
+        else if (body.configured === false) setState({ status: 'unavailable', reason: 'O login com Google está indisponível no momento. Você pode continuar sem conta, salvando neste aparelho.', demoAvailable: body.demoAvailable })
         else setState({ status: 'anonymous', demoAvailable: body.demoAvailable })
       })
       .catch((e: Error) => alive && setState({ status: 'unavailable', reason: e.message }))
@@ -46,10 +46,3 @@ export async function logout(): Promise<void> {
   window.location.assign('/')
 }
 
-/** Entra com uma conta de demonstração (sem Google). Volta o usuário ou lança o erro do servidor. */
-export async function demoLogin(role: 'visitante' | 'gestor'): Promise<SessionUser> {
-  const r = await fetch('/api/auth/demo', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ role }) })
-  const body = (await r.json().catch(() => ({}))) as { user?: SessionUser; error?: string }
-  if (!r.ok || !body.user) throw new Error(body.error || 'Não foi possível entrar na demonstração.')
-  return body.user
-}
