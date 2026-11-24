@@ -270,7 +270,7 @@ export function Skyline({ className = '' }: { className?: string }) {
 export const AL = { red: '#c8102e', white: '#ffffff', blue: '#1f4fa3', gold: '#e3b23c' } as const
 
 // Faixa decorativa com as cores de Alagoas: liga o site, o painel e os slides num só ecossistema visual
-export function AlagoasStripe({ className = '' }: { className?: string }) {
+export function FaixaAlagoas({ className = '' }: { className?: string }) {
   return (
     <div aria-hidden="true" className={`flex h-[5px] w-[132px] overflow-hidden rounded-full mu-raise-1 ${className}`}>
       <span className="flex-1" style={{ background: AL.red }} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { findMonument } from './find'
-import { Icon, Segmented, Narrator, Waves, AlagoasStripe } from '../../ui'
+import { Icon, Segmented, Narrator, Waves, FaixaAlagoas } from '../../ui'
 import { type Monument, type Report } from '../../data'
 import { Photo, KindPill, VisitBanner } from '../../MobileScreens'
 import { ReportSheet } from '../../ReportSheet'
@@ -69,7 +69,7 @@ export function MonumentPage({ id }: { id: string }) {
               <span className="text-[12px] font-semibold tracking-[0.12em] text-white/75">PLACA {m.plate} · {m.area.toUpperCase()}</span>
             </div>
             <h1 className="text-[36px] sm:text-[48px] font-bold tracking-[-0.03em] leading-[1.02]">{m.name}</h1>
-            <AlagoasStripe className="mt-3" />
+            <FaixaAlagoas className="mt-3" />
             <p className="mt-2 text-[17px] sm:text-[19px] text-white/80">{m.role} · {m.years}</p>
             {m.photo && <p className="mt-2 text-[11px] text-white/80">Foto: {m.photo.credit}</p>}
           </div>
