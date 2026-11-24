@@ -1,3 +1,4 @@
+import { skylineShapes } from './skylineSvg'
 import { useEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 import { splitSpeech, estimateMs, wordAt, pickVoice } from './shared/speech'
 
@@ -235,33 +236,15 @@ export function EmMaceio({ className = '' }: { className?: string }) {
   )
 }
 
-// Silhueta da cidade da base da placa: farol, igreja, coqueiro e prédios da orla, sobre a onda
+// Silhueta da cidade no estilo do logo (mar, coqueiros, farol, igreja barroca, casario), com curvas
 export function Skyline({ className = '' }: { className?: string }) {
+  const camel = (k: string) => k.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
   return (
-    <svg viewBox="0 0 320 44" preserveAspectRatio="xMidYMax meet" className={className} aria-hidden="true">
-      <g fill="#0b2f49" className="mu-skyline">
-        <path d="M30 40V14l2-4h4l2 4v26zM32 10l2-5 2 5z" />
-        <path d="M70 40V22l14-10 14 10v18zM80 40v-8h8v8zM84 12V5M81.5 7.5h5" stroke="#0b2f49" strokeWidth="1.6" />
-        <path d="M58 40V27h8v13z" />
-        <path d="M124 40c1-10 2-17 2-24h2c0 7 1 14 2 24z" />
-        <path d="M127 16c-6-5-13-4-17 0 6-2 11-1 15 2-5 0-10 3-12 8 5-4 10-6 14-6 1 4 1 8-1 12 4-3 5-8 4-12 4 1 9 4 12 8-2-6-8-9-13-9 3-3 8-4 14-2-5-4-12-4-16 1z" />
-        <path d="M166 40V18h14v22zM184 40V8h12v32zM200 40V24h10v16z" />
-        <path d="M232 40V20l12-7 12 7v20zM240 40v-9h8v9z" />
-        <path d="M262 40V16h4v-4h4v4h4v24z" />
-      </g>
-      {/* Detalhes nas cores da bandeira de Alagoas: vermelho, branco, azul e o dourado do brasão */}
-      <g className="mu-alagoas">
-        <circle cx="300" cy="10" r="5" fill={AL.gold} />
-        <path d="M30 22h8v4h-8zM30 32h8v4h-8z" fill={AL.red} />
-        <path d="M32 10l2-5 2 5z" fill={AL.gold} />
-        <path d="M84 12V5M81.5 7.5h5" stroke={AL.gold} strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M70 22l14-10 14 10z" fill={AL.blue} />
-        <path d="M169 22h3v3h-3zM174 22h3v3h-3zM169 29h3v3h-3zM187 12h3v3h-3zM191 12h3v3h-3zM187 19h3v3h-3zM191 26h3v3h-3z" fill={AL.white} opacity="0.9" />
-        <path d="M262 16h12v3h-12z" fill={AL.red} />
-        <path d="M232 20l12-7 12 7z" fill={AL.red} />
-      </g>
-      <path d="M0 42c20 0 20-4 40-4s20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4" fill="none" stroke="#2c8585" strokeWidth="2.4" strokeLinecap="round" />
-      <path d="M0 44c20 0 20-3 40-3s20 3 40 3 20-3 40-3 20 3 40 3 20-3 40-3 20 3 40 3 20-3 40-3 20 3 40 3" fill="none" stroke={AL.blue} strokeOpacity="0.55" strokeWidth="1.4" strokeLinecap="round" />
+    <svg viewBox="0 0 420 72" preserveAspectRatio="xMidYMax meet" className={`mu-skyline ${className}`} aria-hidden="true">
+      {skylineShapes().map((s, i) => {
+        const props = Object.fromEntries(Object.entries(s.attrs).map(([k, v]) => [camel(k), v]))
+        return s.tag === 'circle' ? <circle key={i} {...props} /> : <path key={i} {...props} />
+      })}
     </svg>
   )
 }

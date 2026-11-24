@@ -776,10 +776,10 @@
       "key": "KAN-59",
       "type": "Tarefa",
       "summary": "Configurar cliente OAuth no Google Cloud e variáveis na Vercel",
-      "status": "Em andamento",
+      "status": "Concluído",
       "epic": "KAN-51",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 1 · Backend e dados",
       "labels": [
         "urgente"
       ],
@@ -1806,10 +1806,10 @@
       "key": "KAN-158",
       "type": "Tarefa",
       "summary": "Adicionar autenticação OAuth (login com Google) funcionando no site",
-      "status": "A fazer",
+      "status": "Concluído",
       "epic": "KAN-51",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 1 · Backend e dados",
       "description": "Ligar de verdade o login com Google (OAuth 2.0 + OIDC). Hoje /api/auth/me responde configured:false. Depende de KAN-59 (cliente OAuth no Google Cloud) e KAN-107 (servidor Node). Cadastrar GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET e GESTOR_EMAILS na Vercel e na VM; testar Entrar → consentimento → callback → sessão → Sair; conferir PKCE, state, nonce, cookies e open redirect em produção; mostrar nome/foto no botão e liberar Trilha, 3D e painel por papel. Aceite: visitante entra com Google no celular, ganha o carimbo e sai; gestor abre o /painel; sem login tudo da placa continua aberto."
     },
     {
