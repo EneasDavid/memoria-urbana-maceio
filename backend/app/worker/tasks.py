@@ -58,3 +58,18 @@ def delete_user_data(uid: str) -> None:
 def merge_device_progress(uid: str, payload: dict) -> None:
     """Valida os tokens de carimbo do aparelho e grava na conta (depende do estudo de gamificação sem login)."""
     raise NotImplementedError("Sprint 9: mescla do progresso do aparelho")
+
+
+@celery.task(name="default.ingest_public_sources", **RETRY)
+def ingest_public_sources() -> dict:
+    """Busca automaticamente, de 00h às 4h, os dados abertos dos monumentos (Wikidata/Commons) em lotes idempotentes."""
+    import httpx
+    from redis import Redis
+
+    from app.core.config import settings
+    from app.worker.ingest import RedisStore, fetch_wikidata, in_window, run_batch
+
+    if not in_window():
+        return {"skipped": "fora da janela 00h–04h"}
+    r = Redis.from_url(settings().redis_url, decode_responses=True)
+    return run_batch(RedisStore(r), fetch_wikidata(httpx.get), r)

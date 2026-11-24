@@ -1,0 +1,36 @@
+name: Ingestão de dados abertos
+
+# Toda segunda às 6h (Maceió): baixa Wikidata, OpenStreetMap e Commons. Se algo mudou, abre um PR para a curadoria revisar.
+# Nada entra no site sem revisão humana: o PR só atualiza data/public-sources.json (candidatos, fotos e licenças).
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Baixar fontes abertas (idempotente)
+        run: node scripts/import-public-data.mjs
+      - name: Abrir PR se houve mudança
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: dados/atualizacao-semanal
+          title: 'dados: atualização semanal das fontes abertas'
+          commit-message: 'chore(dados): atualização semanal de Wikidata, OSM e Commons'
+          body: 'Gerado pelo workflow de ingestão. Revise fotos e licenças antes de levar algum item para `src/data.ts`.'
+          add-paths: data/public-sources.json

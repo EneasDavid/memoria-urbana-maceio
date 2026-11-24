@@ -92,7 +92,7 @@ export function Website({ id, setId, user, setUser, dark, setDark, onTrack, onRe
 
       {/* hero */}
       <section className="max-w-[1160px] mx-auto px-6 pt-6">
-        <div className="text-[13px] text-black/45 mb-3">{m.group === 'orla' ? 'Orla de Maceió' : 'Centro histórico'} › Placa {m.plate}</div>
+        <div className="text-[13px] text-black/45 mb-3">{m.group === 'orla' ? 'Orla de Maceió' : m.group === 'jaragua' ? 'Jaraguá' : 'Centro histórico'} › Placa {m.plate}</div>
         <div className="relative h-[460px] rounded-[28px] overflow-hidden">
           <Photo m={m} className="absolute inset-0" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(5,20,32,0.88) 100%)' }} />

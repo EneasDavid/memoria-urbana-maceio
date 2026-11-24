@@ -101,13 +101,13 @@ function Editor({ m, onSave, onClose, onPublic }: { m: Monument; onSave: (m: Mon
 
 function Monumentos({ reports, onEdit, onNew }: { reports: Report[]; onEdit: (id: string) => void; onNew: () => void }) {
   const [q, setQ] = useState('')
-  const [filter, setFilter] = useState<'todos' | 'orla' | 'centro' | 'bebedouro' | 'alto'>('todos')
+  const [filter, setFilter] = useState<'todos' | 'orla' | 'centro' | 'igrejas' | 'jaragua' | 'bebedouro' | 'alto'>('todos')
   const list = monuments.filter((m) => (filter === 'todos' || m.group === filter) && (m.name + m.area + m.role).toLowerCase().includes(q.toLowerCase()))
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
         <div className="h-10 flex-1 max-w-[300px] rounded-[11px] bg-black/[0.05] flex items-center gap-2 px-3"><Icon name="search" size={16} className="text-black/40" /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar monumento" className="flex-1 bg-transparent outline-none text-[14.5px]" /></div>
-        <Segmented size="sm" value={filter} onChange={setFilter} options={[{ value: 'todos', label: 'Todos' }, { value: 'orla', label: 'Orla' }, { value: 'centro', label: 'Centro' }, { value: 'bebedouro', label: 'Bebedouro' }, { value: 'alto', label: 'Farol/UFAL' }]} />
+        <Segmented size="sm" value={filter} onChange={setFilter} options={[{ value: 'todos', label: 'Todos' }, { value: 'orla', label: 'Orla' }, { value: 'centro', label: 'Centro' }, { value: 'igrejas', label: 'Igrejas' }, { value: 'jaragua', label: 'Jaraguá' }, { value: 'bebedouro', label: 'Bebedouro' }, { value: 'alto', label: 'Farol/UFAL' }]} />
         <button onClick={onNew} className="ml-auto h-10 px-4 rounded-[11px] bg-[#2c8585] text-white text-[14px] font-semibold flex items-center gap-2"><Icon name="plus" size={16} stroke={2.4} />Novo monumento</button>
       </div>
       <div className="bg-white rounded-[18px] border border-black/[0.06] divide-y divide-black/[0.06]">

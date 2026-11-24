@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
 import { findMonument } from './find'
-import { Icon, Segmented, Narrator, Waves } from '../../ui'
+import { Icon, Segmented, Narrator, Waves, FaixaAlagoas } from '../../ui'
 import { type Monument, type Report } from '../../data'
 import { Photo, KindPill, VisitBanner } from '../../MobileScreens'
 import { ReportSheet } from '../../ReportSheet'
 import { NotFound } from './NotFound'
 import { queueReport } from './reports'
 import { monuments } from '../../data'
-import { fmtDistance, nearby } from '../../shared/geo'
 import { monumentUrl } from '../../app/router'
 import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
+import { PersonTrail } from '../trails/PersonTrail'
+import { NearYou } from './NearYou'
+import { markVisited } from '../../shared/progress'
 
 // Página pública do monumento: é o que abre quando alguém lê o QR ou encosta no NFC da placa.
 // Regras: abre sem login (a conta é só um convite opcional), sem menu, sem botão "voltar" desenhado (o navegador já tem), uma URL por
@@ -43,6 +45,7 @@ export function MonumentPage({ id }: { id: string }) {
   useEffect(() => {
     if (!m) return
     document.title = `${m.name} · Memória Urbana Maceió`
+    markVisited(m.id) // local-first: progresso no aparelho, sem conta
     // …e corrige a URL para a forma canônica, sem recarregar
     const canonical = `/monumento/${m.id}`
     if (window.location.pathname !== canonical) window.history.replaceState(null, '', canonical + window.location.search + window.location.hash)
@@ -66,6 +69,7 @@ export function MonumentPage({ id }: { id: string }) {
               <span className="text-[12px] font-semibold tracking-[0.12em] text-white/75">PLACA {m.plate} · {m.area.toUpperCase()}</span>
             </div>
             <h1 className="text-[36px] sm:text-[48px] font-bold tracking-[-0.03em] leading-[1.02]">{m.name}</h1>
+            <FaixaAlagoas className="mt-3" />
             <p className="mt-2 text-[17px] sm:text-[19px] text-white/80">{m.role} · {m.years}</p>
             {m.photo && <p className="mt-2 text-[11px] text-white/80">Foto: {m.photo.credit}</p>}
           </div>
@@ -125,6 +129,8 @@ export function MonumentPage({ id }: { id: string }) {
           </a>
         </section>
 
+        <PersonTrail personId={m.person} returnTo={`/monumento/${m.id}`} />
+
         <TrailInvite plate={m.plate} returnTo={`/monumento/${m.id}`} />
 
         <h2 className="mt-10 text-[22px] font-bold tracking-[-0.02em]">Ficha</h2>
@@ -153,21 +159,8 @@ export function MonumentPage({ id }: { id: string }) {
           <Icon name="chevR" size={15} className="text-black/30" />
         </button>
 
-        {/* Links internos: os três monumentos mais perto (bom para a caminhada e para o Google) */}
-        <section aria-labelledby="perto" className="mt-10">
-          <h2 id="perto" className="text-[22px] font-bold tracking-[-0.02em]">Perto daqui</h2>
-          <ul className="mt-3 grid gap-2">
-            {nearby(m, monuments).map(({ m: n, meters }) => (
-              <li key={n.id}>
-                <a href={monumentUrl(n.id)} className="mu-press flex items-center gap-3 rounded-[16px] bg-white px-4 py-3 min-h-[56px] mu-edge mu-raise-1">
-                  <span className="flex-1 min-w-0"><span className="block text-[15.5px] font-semibold leading-tight">{n.name}</span><span className="block text-[13px] text-black/70">{n.kind} · {n.area}</span></span>
-                  <span className="text-[13px] font-semibold text-[#1f6b6b] tabular">{fmtDistance(meters)}</span>
-                  <Icon name="chevR" size={15} stroke={2.2} className="text-black/40" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* Perto daqui: pela localização real do visitante (com consentimento); senão, pela obra */}
+        <NearYou m={m} />
 
         <h2 className="mt-10 text-[22px] font-bold tracking-[-0.02em]">Fontes</h2>
         <ul className="mt-3 bg-white rounded-[20px] divide-y divide-black/[0.06] mu-edge mu-raise-1">

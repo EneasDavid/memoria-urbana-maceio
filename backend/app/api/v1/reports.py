@@ -1,7 +1,7 @@
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.media import IMAGE_MAX_BYTES, VIDEO_MAX_BYTES, MediaRejected, validate
 from app.core.ratelimit import hit, ip_hash
@@ -13,6 +13,7 @@ Kind = Literal["Danificado", "Sujo ou pichado", "Placa / QR / NFC não funciona"
 
 
 class ReportIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")  # campo inesperado (ex.: status, role, ipHash) = 422
     monumentId: str = Field(pattern=r"^[a-z0-9-]{2,40}$")
     kind: Kind
     note: str | None = Field(default=None, max_length=500)
@@ -25,11 +26,11 @@ def create_report(body: ReportIn, request: Request, _=Depends(require(Perm.REPOR
     who = ip_hash(request.client.host if request.client else "0.0.0.0", s.ip_salt)
     if not hit(s.redis, "rl:report", who, s.report_rate_per_hour):
         raise HTTPException(429, "Muitos relatos seguidos. Tente de novo em uma hora.")
-    report_id = s.reports.add(body.model_dump() | {"ipHash": who, "status": "Novo"})
+    report_id, upload_token = s.reports.add(body.model_dump() | {"ipHash": who, "status": "Novo"})
     s.enqueue("notify.new_report", report_id)
     if body.hasPhoto:
         s.enqueue("media.process_report_photo", report_id)
-    return {"id": report_id, "status": "Novo"}
+    return {"id": report_id, "status": "Novo", "uploadToken": upload_token}
 
 
 @router.put("/{report_id}/media", status_code=202)
@@ -39,7 +40,8 @@ async def upload_media(report_id: str, request: Request, _=Depends(require(Perm.
     Corta a leitura assim que passa do limite, então um arquivo gigante (ou um Content-Length falso) não ocupa memória.
     """
     s = request.app.state
-    if not s.reports.get(report_id):
+    # Anexo só com o token entregue a quem criou o relato: trocar o id na URL não basta (IDOR).
+    if not s.reports.can_upload(report_id, request.headers.get("x-upload-token")):
         raise HTTPException(404, "Relato não encontrado.")
     declared = request.headers.get("content-type", "").split(";")[0].strip().lower()
     cap = VIDEO_MAX_BYTES if declared.startswith("video/") else IMAGE_MAX_BYTES

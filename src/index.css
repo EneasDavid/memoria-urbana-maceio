@@ -252,4 +252,6 @@ input, textarea, select { font-size: max(16px, 1em); } /* iOS não dá zoom ao f
 
 /* Identidade: silhueta da cidade da logo legível no modo escuro */
 .mu-dark .mu-skyline { fill: #6f97a6; }
+.mu-dark .mu-skyline [fill="#0b2f49"] { fill: #7fa6b5; }
+.mu-dark .mu-skyline [stroke="#0b2f49"] { stroke: #7fa6b5; }
 .mu-dark .mu-ink { color: #eef3f4; }

@@ -1,3 +1,4 @@
+import { skylineShapes } from './skylineSvg'
 import { useEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 import { splitSpeech, estimateMs, wordAt, pickVoice } from './shared/speech'
 
@@ -235,22 +236,31 @@ export function EmMaceio({ className = '' }: { className?: string }) {
   )
 }
 
-// Silhueta da cidade da base da placa: farol, igreja, coqueiro e prédios da orla, sobre a onda
+// Silhueta da cidade no estilo do logo (mar, coqueiros, farol, igreja barroca, casario), com curvas
 export function Skyline({ className = '' }: { className?: string }) {
+  const camel = (k: string) => k.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
   return (
-    <svg viewBox="0 0 320 44" preserveAspectRatio="xMidYMax meet" className={className} aria-hidden="true">
-      <g fill="#0b2f49" className="mu-skyline">
-        <path d="M30 40V14l2-4h4l2 4v26zM32 10l2-5 2 5z" />
-        <path d="M70 40V22l14-10 14 10v18zM80 40v-8h8v8zM84 12V5M81.5 7.5h5" stroke="#0b2f49" strokeWidth="1.6" />
-        <path d="M58 40V27h8v13z" />
-        <path d="M124 40c1-10 2-17 2-24h2c0 7 1 14 2 24z" />
-        <path d="M127 16c-6-5-13-4-17 0 6-2 11-1 15 2-5 0-10 3-12 8 5-4 10-6 14-6 1 4 1 8-1 12 4-3 5-8 4-12 4 1 9 4 12 8-2-6-8-9-13-9 3-3 8-4 14-2-5-4-12-4-16 1z" />
-        <path d="M166 40V18h14v22zM184 40V8h12v32zM200 40V24h10v16z" />
-        <path d="M232 40V20l12-7 12 7v20zM240 40v-9h8v9z" />
-        <path d="M262 40V16h4v-4h4v4h4v24z" />
-      </g>
-      <path d="M0 42c20 0 20-4 40-4s20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4" fill="none" stroke="#2c8585" strokeWidth="2.4" strokeLinecap="round" />
+    <svg viewBox="0 0 420 72" preserveAspectRatio="xMidYMax meet" className={`mu-skyline ${className}`} aria-hidden="true">
+      {skylineShapes().map((s, i) => {
+        const props = Object.fromEntries(Object.entries(s.attrs).map(([k, v]) => [camel(k), v]))
+        return s.tag === 'circle' ? <circle key={i} {...props} /> : <path key={i} {...props} />
+      })}
     </svg>
+  )
+}
+
+// Cores da bandeira de Alagoas (faixas vermelha, branca e azul) e o dourado do brasão
+export const AL = { red: '#c8102e', white: '#ffffff', blue: '#1f4fa3', gold: '#e3b23c' } as const
+
+// Faixa decorativa com as cores de Alagoas: liga o site, o painel e os slides num só ecossistema visual
+export function FaixaAlagoas({ className = '' }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={`flex h-[5px] w-[132px] overflow-hidden rounded-full mu-raise-1 ${className}`}>
+      <span className="flex-1" style={{ background: AL.red }} />
+      <span className="flex-1 bg-white border-y border-black/10" />
+      <span className="flex-1" style={{ background: AL.blue }} />
+      <span className="w-4" style={{ background: AL.gold }} />
+    </div>
   )
 }
 

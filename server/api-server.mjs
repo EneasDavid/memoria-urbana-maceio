@@ -14,7 +14,6 @@ const ROUTES = {
   'GET /api/auth/callback': ['auth/callback.js', 'GET'],
   'GET /api/auth/me': ['auth/me.js', 'GET'],
   'POST /api/auth/logout': ['auth/logout.js', 'POST'],
-  'POST /api/auth/demo': ['auth/demo.js', 'POST'],
 }
 const cache = new Map()
 async function handler(file, method) {

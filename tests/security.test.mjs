@@ -55,12 +55,10 @@ test('1 e 5 autenticação: OAuth com PKCE S256, state e nonce; nenhuma senha gu
   for (const p of textFiles.filter((f) => /^(src|api|backend\/app)/.test(f))) assert.doesNotMatch(read(p), /password\s*[:=]\s*['"][^'"]+['"]/i, `senha fixa em ${p}`)
 })
 
-test('2 e 38 controle de acesso: papéis fechados; acesso de demonstração nunca vira admin', () => {
-  const demo = read('api/auth/demo.ts')
-  assert.match(demo, /role !== 'visitante' && role !== 'gestor'/)
-  assert.doesNotMatch(demo, /'admin'/)
-  const me = read('api/auth/me.ts')
-  assert.match(me, /demo\.demo === true && \(demo\.role === 'visitante' \|\| demo\.role === 'gestor'\)/)
+test('2 e 38 controle de acesso: papéis fechados; sem acesso de demonstração; papel só pelo servidor', () => {
+  assert.ok(!existsSync('api/auth/demo.ts'))
+  assert.doesNotMatch(read('api/auth/me.ts'), /mu_demo|DEMO_COOKIE/)
+  assert.match(read('api/auth/callback.ts'), /roleFor\(claims\.email, cfg\.gestorEmails\)/)
   assert.match(read('backend/app/core/rbac.py'), /def require\(/)
 })
 

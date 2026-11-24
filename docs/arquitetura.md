@@ -280,3 +280,41 @@ infra/                  docker-compose.yml para desenvolvimento
 docs/                   esta arquitetura
 tests/                  testes do front e da fase 1 do login
 ```
+
+## 11. Stack tecnológica e topologia
+
+### Linguagens, frameworks e bibliotecas
+
+| Camada | Tecnologia | Uso |
+|---|---|---|
+| Linguagens | TypeScript 5/7, Python 3.12, SQL nenhum (NoSQL), Bash | Front e funções; backend; scripts de infra |
+| Front | React 19, Vite 8, Tailwind CSS 4 | SPA com páginas pré-renderizadas por monumento (`scripts/prerender.mjs`) |
+| APIs do navegador | Web Speech API (narração), Web NFC + câmera (QR), Geolocation, IndexedDB/localStorage | Recursos nativos, sem app instalado |
+| Login | OAuth 2.0 + OpenID Connect (Google) com PKCE; Vercel Functions (`api/auth/*`) | Sessão em cookie HMAC |
+| Backend (fase 2+) | FastAPI, Pydantic, Uvicorn, Celery 5, Redis 7 | API REST `/api/v1`, filas, cache, rate limit |
+| Banco e arquivos | Firebase Firestore e Cloud Storage | Documento por monumento, fotos e áudios |
+| Dados abertos | Wikidata SPARQL, OpenStreetMap Overpass, Wikimedia Commons API | Ingestão do acervo (`docs/ingestao-de-dados.md`) |
+| Testes | node:test, Playwright, axe-core, pytest, fakeredis | 17 suítes Node + pytest |
+| Entrega | GitHub Actions, Vercel, Docker Compose, Caddy (Oracle Cloud) | CI/CD e ambiente próprio |
+
+APIs internas: `/api/auth/{login,callback,me,logout,demo}` (no ar), `/api/v1/{monuments,reports,me/stamps}` (backend). APIs externas: Google OAuth/OIDC, Wikidata, Overpass, Commons, Google Maps (só link "Como chegar").
+
+### Classificação: client-heavy + serverless na borda, com backend em monólito modular
+
+- **Hoje (no ar):** *client-heavy*. O site é estático (HTML pré-renderizado + JS) servido pela CDN da Vercel; toda a experiência de leitura, trilhas, grafo e progresso roda no navegador. O único código de servidor são 5 **funções serverless** de login.
+- **Alvo:** **monólito modular** em FastAPI (módulos `monuments`, `reports`, `stamps`, `rbac`, `media`) + workers Celery para trabalho pesado. Não são microsserviços: um deploy, um banco, fronteiras por módulo.
+
+**Rotina noturna:** o Celery beat dispara a ingestão de dados abertos das 00h às 4h, em lotes idempotentes ([detalhes](ingestao-de-dados.md)).
+
+**Comunicação:** navegador → CDN (páginas) · navegador → `/api/auth/*` (funções) · navegador → `/api/v1/*` (rewrite da Vercel para a API) · API → Redis (cache, sessão, fila) → workers → Firestore/Storage/TTS.
+
+**Estado:** conteúdo do acervo é estático e versionado (`src/data.ts`, grafo em `src/graph.ts`); progresso do visitante é **local-first** (`localStorage` `mu_progress`) e só sobe para a nuvem se a pessoa escolher entrar; sessão em cookie assinado (fase 1) e Redis (fase 3); dados de gestão no Firestore.
+
+**Trade-offs:**
+
+| Escolha | Ganha | Perde | Mitigação |
+|---|---|---|---|
+| Client-heavy estático | Abre rápido na rua (LCP < 2,5 s no 4G), custo ~zero, escala pela CDN, funciona offline depois da 1ª visita | Atualizar conteúdo exige build | Build em 1 min a cada merge; ingestão semanal |
+| Serverless no login | Sem servidor ligado, sem custo ocioso | Sem sessão revogável | Fase 3: sessão no Redis |
+| Monólito modular (alvo) | Simples de operar por 1 pessoa, transações locais, um deploy | Escala vertical antes de horizontal | Workers Celery escalam à parte; cache Redis |
+| Local-first | Zero atrito, privacidade, funciona sem rede | Progresso preso ao aparelho | Sincronizar na nuvem é opcional |

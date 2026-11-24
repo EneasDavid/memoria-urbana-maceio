@@ -61,6 +61,11 @@ def current_role(request: Request) -> Role:
     return getattr(request.state, "role", Role.ANONIMO)
 
 
+def current_uid(request: Request) -> str | None:
+    """Id da conta, sempre tirado da sessão (nunca da URL nem do corpo da requisição)."""
+    return getattr(request.state, "uid", None)
+
+
 def require(perm: Perm):
     """Dependência FastAPI: 401 se precisa de conta, 403 se a conta não tem o papel."""
 

@@ -22,8 +22,8 @@ def test_monumento_vem_do_cache_na_segunda_leitura(make_client):
 def test_relato_anonimo_enfileira_tasks_e_tem_rate_limit(make_client):
     c = make_client()
     body = {"monumentId": "graciliano", "kind": "Danificado", "hasPhoto": True}
-    assert c.post("/api/v1/reports", json=body).status_code == 202
-    assert ("notify.new_report", "r1") in c.queued and ("media.process_report_photo", "r1") in c.queued
+    rid = c.post("/api/v1/reports", json=body).json()["id"]
+    assert ("notify.new_report", rid) in c.queued and ("media.process_report_photo", rid) in c.queued
     for _ in range(4):
         c.post("/api/v1/reports", json=body)
     assert c.post("/api/v1/reports", json=body).status_code == 429
