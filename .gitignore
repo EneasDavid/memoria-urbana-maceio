@@ -22,3 +22,4 @@ logs/
 server/build/
 shots/
 *.egg-info/
+!.env.example
