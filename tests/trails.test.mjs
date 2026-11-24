@@ -38,7 +38,7 @@ test('Trilha de Bronze: só obras de bronze georreferenciadas, em ordem de camin
 test('progresso local tolera dado corrompido ou adulterado', () => {
   const fake = (v) => ({ getItem: () => v })
   assert.deepEqual(loadProgress(fake('{lixo')).visited, [])
-  assert.deepEqual(loadProgress(fake(JSON.stringify({ v: 1, visited: ['a', 7, { x: 1 }], trails: {}, mode: 'admin' }))), { v: 1, visited: ['a'], trails: {}, mode: null })
+  assert.deepEqual(loadProgress(fake(JSON.stringify({ v: 1, visited: ['a', 7, { x: 1 }], trails: {}, mode: 'admin' }))), { v: 1, visited: ['a'], trails: {}, mode: null, stamps: [] })
 })
 
 const PORT = process.env.TRAILS_PORT || '4193'
@@ -80,4 +80,52 @@ test('QR da placa → página abre sem login; "+ Mais sobre" gera a Trilha e per
   await page.getByRole('button', { name: /Trilha de Bronze/ }).click()
   await page.getByRole('link', { name: '✓ Graciliano Ramos' }).waitFor()
   await ctx.close()
+})
+
+test('home fala do projeto e leva à galeria; a galeria não dá carimbo', async () => {
+  const { ctx, page } = await guest()
+  await page.goto(BASE + '/')
+  await page.getByRole('heading', { name: /O monumento como convite/ }).waitFor()
+  await page.getByRole('heading', { name: 'Como funciona' }).waitFor()
+  await page.getByRole('link', { name: 'Ver a galeria' }).click()
+  await page.waitForURL('**/galeria')
+  await page.getByRole('link', { name: /Graciliano Ramos/ }).first().click()
+  await page.waitForURL('**/monumento/graciliano')
+  assert.equal(await page.evaluate(() => (JSON.parse(localStorage.getItem('mu_progress') || '{}').stamps || []).length), 0, 'galeria não carimba')
+  await ctx.close()
+})
+
+test('QR da placa (câmera do celular): carimba uma vez, sem ler de novo, e limpa o ?via da URL', async () => {
+  const { ctx, page } = await guest()
+  await page.goto(BASE + '/monumento/nise?via=qr')
+  await page.getByText('Carimbo da placa guardado!').waitFor()
+  assert.equal(new URL(page.url()).search, '')
+  await page.goto(BASE + '/monumento/nise?via=qr')
+  await page.getByText('Você já tem este carimbo.').waitFor()
+  const stamps = await page.evaluate(() => JSON.parse(localStorage.getItem('mu_progress')).stamps)
+  assert.deepEqual(stamps.map((s) => [s.id, s.via]), [['nise', 'qr']])
+  await ctx.close()
+})
+
+test('QR da placa com conta: abre o app com a barra de abas já na obra', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+  await ctx.addInitScript(() => localStorage.setItem('mu_cookie_notice', '1'))
+  await ctx.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort())
+  await ctx.route('**/api/auth/me', (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ configured: true, user: { sub: '1', name: 'Ana Souza', email: 'ana@x.com', role: 'visitante' } }) }))
+  const page = await ctx.newPage()
+  await page.goto(BASE + '/monumento/graciliano?via=qr')
+  await page.waitForURL('**/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  await ctx.close()
+})
+
+test('microfone nunca: toda câmera passa por openCamera (audio: false)', async () => {
+  const { readFileSync, readdirSync, statSync } = await import('node:fs')
+  const walk = (d) => readdirSync(d).flatMap((f) => (statSync(`${d}/${f}`).isDirectory() ? walk(`${d}/${f}`) : [`${d}/${f}`]))
+  for (const f of walk('src').filter((f) => /\.tsx?$/.test(f))) {
+    const s = readFileSync(f, 'utf8')
+    if (f.endsWith('shared/permissions.ts')) { assert.match(s, /audio: false/); continue }
+    assert.doesNotMatch(s, /getUserMedia\(|audio:\s*true|SpeechRecognition/, f)
+  }
+  assert.match(readFileSync('vercel.json', 'utf8'), /microphone=\(\)/)
 })

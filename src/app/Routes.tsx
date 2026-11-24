@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { matchRoute } from './router'
 import { MonumentIndex } from '../features/monument/MonumentIndex'
+import { HomePage } from '../features/home/HomePage'
 import { MonumentPage } from '../features/monument/MonumentPage'
 import { NotFound } from '../features/monument/NotFound'
 import { LoginPage } from '../features/auth/LoginPage'
@@ -8,6 +9,7 @@ import { AuthGate } from '../features/auth/AuthGate'
 import { useSystemTheme } from './theme'
 import { SkipLink } from '../features/legal/SkipLink'
 import { CookieNotice } from '../features/legal/CookieNotice'
+import { SessionBar } from '../features/auth/SessionBar'
 import { PrivacyPage, TermsPage, CookiesPage, AccessibilityPage, CreditsPage, AboutPage } from '../features/legal/LegalPages'
 
 // Área logada e protótipo ficam em chunks separados: quem lê a placa baixa só a página pública.
@@ -35,6 +37,7 @@ export function Routes() {
     <>
       <SkipLink />
       <Page route={route} />
+      {!['app', 'panel', 'login'].includes(route.name) && <SessionBar />}
       <CookieNotice />
     </>
   )
@@ -47,6 +50,8 @@ function Page({ route }: { route: Exclude<ReturnType<typeof matchRoute>, { name:
 
   switch (route.name) {
     case 'index':
+      return <HomePage />
+    case 'gallery':
       return <MonumentIndex />
     case 'monument':
       return <MonumentPage id={route.id} />

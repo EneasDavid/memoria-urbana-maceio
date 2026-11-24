@@ -4,6 +4,7 @@ import { monuments, byId, walkPath, quests, badges, levelFor, type Monument, typ
 import type { ScanMode } from './Scanner'
 import type { LiveLocation } from './shared/useLocation'
 import { createPortal } from 'react-dom'
+import { loadPerms, savePerms } from './shared/permissions'
 
 export interface MobileCtx {
   user: User | null
@@ -229,7 +230,6 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
           <>
             <ul className="mt-3 space-y-1.5 text-[13.5px] text-white/85">
               <li className="flex items-center gap-2"><Icon name="placa" size={15} className="text-[#dda93f]" />Pontos e carimbos em cada placa</li>
-              <li className="flex items-center gap-2"><Icon name="cube" size={15} className="text-[#dda93f]" />Monumentos em 3D e realidade aumentada</li>
               <li className="flex items-center gap-2"><Icon name="book" size={15} className="text-[#dda93f]" />Passaporte cultural de Maceió</li>
             </ul>
             <button onClick={() => ctx.openLogin()} className="mt-4 w-full h-[46px] rounded-[13px] bg-white text-black text-[15px] font-semibold flex items-center justify-center gap-2.5"><GoogleG size={18} />Entrar com Google para participar</button>
@@ -287,6 +287,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
       {head}
       {side}
       {ctx.links && <MonumentList ctx={ctx} />}
+      <Skyline className="block w-full h-auto mt-10 mb-28" />
     </div>
   )
 }
@@ -431,10 +432,6 @@ export function MonumentScreen({ id, ctx, onBack }: { id: string; ctx: MobileCtx
     if (progress >= 1) setProgress(0)
     setPlaying(!playing)
   }
-  const immersive = (mode: 'ar' | '3d') => {
-    if (!ctx.user) return ctx.openLogin(mode === 'ar' ? 'Entre para ver em realidade aumentada' : 'Entre para ver em 3D')
-    ctx.openImmersive(m.id, mode)
-  }
   const total = 168
   const secs = Math.round(progress * total)
   const t = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -468,7 +465,7 @@ export function MonumentScreen({ id, ctx, onBack }: { id: string; ctx: MobileCtx
           {!ctx.user ? (
             <div className="mt-4 bg-white rounded-[18px] p-4">
               <div className="flex items-center gap-2 text-[13px] font-semibold text-[#1f7a38]"><Icon name="check" size={16} stroke={2.6} />Página aberta — sem app e sem cadastro</div>
-              <p className="mt-1 text-[13.5px] text-black/60 leading-snug">Quer mais? Entrando com Google você {pend ? 'guarda o carimbo reservado desta placa' : 'ganha o carimbo desta placa'} (+{m.xp} XP) e libera 3D e realidade aumentada.</p>
+              <p className="mt-1 text-[13.5px] text-black/60 leading-snug">Quer mais? Entrando com Google você {pend ? 'guarda o carimbo reservado desta placa' : 'ganha o carimbo desta placa'} (+{m.xp} XP) e leva seu passaporte para qualquer celular.</p>
               <button onClick={() => ctx.openLogin()} className="mt-3 w-full h-[44px] rounded-[12px] bg-[#f6f3ec] text-black text-[15px] font-semibold flex items-center justify-center gap-2"><GoogleG size={17} />Entrar com Google (opcional)</button>
             </div>
           ) : (
@@ -489,19 +486,6 @@ export function MonumentScreen({ id, ctx, onBack }: { id: string; ctx: MobileCtx
             ? <Narrator key={'desc-' + m.id} text={m.id === 'graciliano' ? 'Estátua de bronze em tamanho real. O escritor está de pé, de terno, com o corpo levemente inclinado, como quem caminha pelo calçadão. Fica no nível do pedestre, sem pedestal alto, com o mar de Pajuçara ao fundo.' : m.id === 'nise' ? 'Escultura de bronze em tamanho real. Nise está sentada, com um gato no colo, num banco ao nível do chão, cercada por palmeiras do Corredor Vera Arruda.' : '[AUDIODESCRIÇÃO escrita pela curadoria: posição, material, tamanho, gestos e entorno da obra.]'} title="Audiodescrição" subtitle="Áudio que descreve a obra · com legenda" autoPlay onStart={() => ctx.track('audiodesc', 'Audiodescrição ouvida', m.id)} onEnd={() => ctx.markHeard(m.id)} />
             : <Narrator key={'ler-' + m.id} text={m.summary} extra={m.facts.map(([k, v]) => k + ': ' + v.replace(/ · /g, ', ') + '.').join(' ')} title="Ouvir a história" subtitle={'Leia ou toque para ouvir · ' + (ctx.offlinePack ? 'disponível offline' : 'streaming')} onStart={() => ctx.track('audio_play', 'Narração iniciada', m.id)} onEnd={() => ctx.markHeard(m.id)} />}
 
-          {/* imersivo (recomendado com login) */}
-          <SectionTitle action={!ctx.user ? <span className="text-[12px] font-semibold text-black/45 flex items-center gap-1"><Icon name="lock" size={12} />com login</span> : undefined}>Experiência imersiva</SectionTitle>
-          <div className="grid grid-cols-2 gap-3">
-            {([['ar', 'scan', 'Realidade aumentada', 'Informações sobre a obra na câmera'], ['3d', 'cube', 'Ver em 3D', 'Gire e aproxime']] as const).map(([k, ic, t, d]) => (
-              <button key={k} onClick={() => immersive(k)} className="relative rounded-[20px] overflow-hidden text-left text-white h-[150px] active:scale-[0.98] transition">
-                <Photo m={m} className="absolute inset-0" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b2f49]/95 via-[#0b2f49]/50 to-[#0b2f49]/10" />
-                <span className="absolute top-3 left-3 w-9 h-9 rounded-[10px] bg-white/20 backdrop-blur-xl grid place-items-center"><Icon name={ic} size={19} /></span>
-                {!ctx.user && <span className="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/40 backdrop-blur grid place-items-center"><Icon name="lock" size={14} /></span>}
-                <span className="absolute left-3 right-3 bottom-3"><span className="block text-[15px] font-semibold leading-tight">{t}</span><span className="block text-[12px] text-white/70">{d}</span></span>
-              </button>
-            ))}
-          </div>
           {ctx.user && m.visit !== 'Fechado' && (
             ctx.photos.includes(m.id)
               ? <SentPhoto m={m} ctx={ctx} />
@@ -615,7 +599,9 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
   const live = ctx.location
   const [geoLocal, setGeo] = useState<'idle' | 'loading' | 'ok' | 'denied'>('idle')
   const geo = live ? ({ ok: 'ok', asking: 'loading', denied: 'denied', unavailable: live.here ? 'ok' : 'loading', idle: 'idle' } as const)[live.status] : geoLocal
-  const [askGeo, setAskGeo] = useState(true)
+  // Pergunta uma vez só: a resposta fica no aparelho (mu_perms) e não volta a aparecer
+  const [askGeo, setAskGeo] = useState(() => loadPerms().loc === null)
+  useEffect(() => { if (live && loadPerms().loc === true && live.status === 'idle') live.start() }, [live])
   // Segue a localização real enquanto não está simulando a caminhada; centraliza na primeira leitura
   const followed = useRef(false)
   const following = useRef(true)
@@ -779,8 +765,8 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
           <span className="w-11 h-11 rounded-[12px] bg-[#2c8585] text-white grid place-items-center"><Icon name="pin" size={22} /></span>
           <h2 id="aviso-localizacao-titulo" className="mt-3 text-[18px] font-bold leading-tight text-black">Usar sua localização na Trilha</h2>
           <p className="mt-1.5 text-[14px] leading-snug text-black/70">Para mostrar onde você está, a distância até cada obra e liberar o check-in por GPS. Fica só no seu aparelho: não é gravada nem enviada, e para quando você sai da Trilha.</p>
-          <button onClick={() => { setAskGeo(false); locate() }} className="mt-4 w-full h-[48px] rounded-[14px] bg-[#2c8585] text-white text-[16px] font-semibold">Permitir localização</button>
-          <button onClick={() => setAskGeo(false)} className="mt-1 w-full h-[42px] text-[15px] font-semibold text-[#2c8585]">Agora não</button>
+          <button onClick={() => { setAskGeo(false); savePerms({ ...loadPerms(), loc: true }); locate() }} className="mt-4 w-full h-[48px] rounded-[14px] bg-[#2c8585] text-white text-[16px] font-semibold">Permitir localização</button>
+          <button onClick={() => { setAskGeo(false); savePerms({ ...loadPerms(), loc: false }) }} className="mt-1 w-full h-[42px] text-[15px] font-semibold text-[#2c8585]">Agora não</button>
         </div>
       )}
       {!sim && !selected && geo !== 'ok' && !(live && geo === 'idle' && askGeo) && (
@@ -922,6 +908,7 @@ export function PassportScreen({ ctx }: { ctx: MobileCtx }) {
         </div>
       )}
       {open && createPortal(<StampRecord id={open} ctx={ctx} onClose={() => setOpen(null)} />, (document.querySelector('.mu-mobile') as HTMLElement | null) ?? document.body)}
+      <Skyline className="block w-full h-auto mt-10 mb-28" />
     </div>
   )
 }
@@ -1087,7 +1074,7 @@ export function ProfileScreen({ ctx }: { ctx: MobileCtx }) {
         <Row icon="shield" iconBg="#8e8e93" title="Meus dados (LGPD)" subtitle={ctx.links ? 'Como pedir cópia ou exclusão' : 'Baixar ou excluir'} onClick={() => { if (ctx.links) window.location.href = ctx.links.privacy }} last={!ctx.user} />
         {ctx.user && <Row icon="person" iconBg="#ff3b30" title={<span className="text-[#ff3b30]">Sair da conta</span>} onClick={ctx.logout} last />}
       </Group></div>
-      {ctx.links && <Skyline className="block w-full h-10 mt-8 opacity-80" />}
+      <Skyline className="block w-[calc(100%+40px)] -mx-5 h-auto mt-8" />
       {isSim(ctx) && <button onClick={() => ctx.setOnline(!ctx.online)} className="mt-6 mx-auto block text-[11.5px] text-black/35">{ctx.online ? 'Teste do protótipo: simular sem internet' : 'Teste do protótipo: sem internet · tocar para voltar'}</button>}
     </div>
   )

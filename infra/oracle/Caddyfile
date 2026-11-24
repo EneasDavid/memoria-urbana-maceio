@@ -32,7 +32,7 @@
 		Permissions-Policy "camera=(self), geolocation=(self), microphone=()"
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		Cross-Origin-Opener-Policy "same-origin"
-		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://082noticias.com https://img.dhost.cloud https://prefeitura.maceio.cloud https://www.tnh1.com.br https://lh3.googleusercontent.com https://server.arcgisonline.com; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'self'; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://082noticias.com https://img.dhost.cloud https://prefeitura.maceio.cloud https://www.tnh1.com.br https://lh3.googleusercontent.com https://upload.wikimedia.org https://server.arcgisonline.com; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'self'; upgrade-insecure-requests"
 		-Server
 	}
 

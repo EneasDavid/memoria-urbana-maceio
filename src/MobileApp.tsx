@@ -1,3 +1,4 @@
+import { openCamera } from './shared/permissions'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Icon, Stamp, RarityPill, Avatar, Brand, type IconName } from './ui'
 import { byId, levelFor, type Monument, type TrackEvent, type User } from './data'
@@ -11,6 +12,17 @@ import { ExploreScreen, MapScreen, MonumentList, MonumentScreen, OfflineSheet, P
 
 // Memória da sessão: o progresso continua quando o visitante sai do app (botão de início) e volta
 const sessionStore: Record<string, unknown> = {}
+// Progresso real persiste no aparelho (localStorage), por conta. Fotos e dados pesados ficam só na memória.
+const PERSIST = new Set(['collected', 'pending', 'xp', 'stampLog2', 'heard', 'arUsed', 'myReports'])
+const LS = 'mu_app:'
+function readPersisted(k: string): unknown {
+  if (!PERSIST.has(k.split(':').pop() || '')) return undefined
+  try { const r = localStorage.getItem(LS + k); return r ? JSON.parse(r) : undefined } catch { return undefined }
+}
+function writePersisted(k: string, v: unknown) {
+  if (!PERSIST.has(k.split(':').pop() || '')) return
+  try { localStorage.setItem(LS + k, JSON.stringify(v)) } catch { /* cota cheia ou modo privado */ }
+}
 function useSessionState<T>(key: string, init: T) {
   const [v, setV] = useState<T>(() => (key in sessionStore ? (sessionStore[key] as T) : init))
   useEffect(() => { sessionStore[key] = v }, [key, v])
@@ -21,7 +33,11 @@ export type PhotoEntry = { at: number; src?: string; front?: string }
 // Progresso por conta: cada pessoa de teste tem seus selos. O que foi feito sem conta passa para quem entrar.
 function useUserState<T>(uid: string, key: string, init: T) {
   const k = uid + ':' + key
-  const load = (kk: string, fallback: T): T => (kk in sessionStore ? (sessionStore[kk] as T) : fallback)
+  const load = (kk: string, fallback: T): T => {
+    if (kk in sessionStore) return sessionStore[kk] as T
+    const saved = readPersisted(kk)
+    return saved === undefined ? fallback : (saved as T)
+  }
   const [st, setSt] = useState<{ k: string; v: T }>(() => ({ k, v: load(k, init) }))
   let cur = st
   if (st.k !== k) {
@@ -32,6 +48,7 @@ function useUserState<T>(uid: string, key: string, init: T) {
   const set = useCallback((u: T | ((p: T) => T)) => setSt((s0) => {
     const nv = typeof u === 'function' ? (u as (p: T) => T)(s0.v) : u
     sessionStore[s0.k] = nv
+    writePersisted(s0.k, nv)
     return { k: s0.k, v: nv }
   }), [])
   return [cur.v, set] as const
@@ -124,7 +141,7 @@ function PhotoCapture({ m, user, onClose, onSend }: { m: Monument; user: User | 
   const start = async (facing: 'environment' | 'user') => {
     stop(); setLive(false)
     try {
-      const st = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: facing }, width: { ideal: 1280 } }, audio: false })
+      const st = await openCamera({ facingMode: { ideal: facing }, width: { ideal: 1280 } })
       stream.current = st
       if (video.current) { video.current.srcObject = st; await video.current.play(); setLive(true) }
     } catch { setLive(false) }
@@ -171,7 +188,7 @@ function PhotoCapture({ m, user, onClose, onSend }: { m: Monument; user: User | 
           <div className="absolute left-4 right-4 top-[60px] bottom-[170px] rounded-[22px] overflow-hidden">
             {rear ? <img src={rear} alt="" className="absolute inset-0 w-full h-full object-cover" /> : <Photo m={m} className="absolute inset-0" />}
             <div className="absolute left-3 top-3 w-[96px] h-[128px] rounded-[14px] overflow-hidden border-2 border-white shadow-lg bg-[#22323a] grid place-items-center">
-              {front ? <img src={front} alt="" className="w-full h-full object-cover -scale-x-100" /> : user ? <Avatar name={user.name} size={56} /> : null}
+              {front ? <img src={front} alt="" className="w-full h-full object-cover -scale-x-100" /> : user ? <Avatar name={user.name} size={56} picture={user.picture} /> : null}
             </div>
             <div className="absolute left-3 bottom-3 h-7 px-3 rounded-full bg-black/50 backdrop-blur-xl text-[12px] font-semibold flex items-center">{m.name}</div>
           </div>
@@ -216,6 +233,8 @@ export interface Standalone {
   links: { privacy: string; panel?: string }
   /** Tela de computador: topo como o site do protótipo e painéis centralizados */
   desktop?: boolean
+  /** Carimbos lidos pela câmera do celular antes de abrir o app (guardados no aparelho) */
+  preStamps?: { id: string; via: 'qr' | 'nfc' }[]
 }
 
 // Topo da área logada no computador, no desenho do site do protótipo do Figma Make
@@ -237,7 +256,7 @@ function DesktopHeader({ tab, onTab, user, selos, xp, dark, setDark, onScan }: {
           <button onClick={() => setDark(!dark)} aria-label={dark ? 'Usar modo claro' : 'Usar modo noturno'} aria-pressed={dark} className="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/[0.08] grid place-items-center text-black/70"><Icon name="moon" size={18} /></button>
           <button onClick={onScan} aria-label="Ler placa" className="h-10 pl-3 pr-4 rounded-full bg-[#0b2f49] text-white text-[14px] font-semibold flex items-center gap-2 whitespace-nowrap hover:bg-[#113d5e]"><Icon name="scan" size={18} />Ler placa</button>
           <button onClick={() => onTab('perfil')} aria-label="Abrir perfil" className={`h-10 pl-1 pr-3 rounded-full flex items-center gap-2 text-[14px] font-semibold whitespace-nowrap ${tab === 'perfil' ? 'bg-[#2c8585]/12 text-[#1f6b6b]' : 'hover:bg-black/[0.05] text-black/80'}`}>
-            {user ? <Avatar name={user.name} color={user.color} size={32} /> : <Icon name="person" size={20} />}{user ? user.name.split(' ')[0] : 'Perfil'}
+            {user ? <Avatar name={user.name} color={user.color} size={32} picture={user.picture} /> : <Icon name="person" size={20} />}{user ? user.name.split(' ')[0] : 'Perfil'}
           </button>
         </div>
       </div>
@@ -250,7 +269,9 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
   const desktop = !!standalone?.desktop
   // Localização real do aparelho só na área logada (o protótipo continua no ponto fixo da apresentação)
   const location = useLiveLocation(!!standalone)
-  const [tab, setTab] = useState<Tab>('explorar')
+  // Abre na aba pedida pela barra das páginas públicas (/app#trilha, #passaporte, #ler)
+  const hash = typeof window !== 'undefined' ? window.location.hash.slice(1) : ''
+  const [tab, setTab] = useState<Tab>(() => (standalone && (hash === 'trilha' || hash === 'passaporte' || hash === 'perfil') ? hash : 'explorar'))
   const [xp, setXp] = useUserState(user?.email ?? 'anon', 'xp', 0)
   const [collected, setCollected] = useUserState<string[]>(user?.email ?? 'anon', 'collected', [])
   const [pending, setPending] = useUserState<string[]>(user?.email ?? 'anon', 'pending', [])
@@ -293,6 +314,18 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     return () => window.clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // Leituras feitas pela câmera do celular (QR/NFC da placa) antes de abrir o app: viram carimbo, sem ler de novo
+  useEffect(() => {
+    const pre = standalone?.preStamps
+    if (!user || !pre?.length) return
+    const novos = pre.filter((p) => !collected.includes(p.id) && byId(p.id))
+    if (!novos.length) return
+    lastMethod.current = novos[novos.length - 1].via
+    setCollected((c) => [...c, ...novos.map((p) => p.id).filter((id) => !c.includes(id))])
+    setXp((x) => x + novos.reduce((a, p) => a + byId(p.id).xp, 0))
+    novos.forEach((p) => onTrack({ type: 'stamp', label: 'Carimbo pela câmera do celular', monument: p.id, offline: false, identified: true, synced: true }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email])
   const [heard, setHeard] = useUserState<string[]>(user?.email ?? 'anon', 'heard', [])
   const [online, setOnlineState] = useState(() => (standalone && typeof navigator !== 'undefined' ? navigator.onLine : true))
   // Fora do protótipo, "sem internet" é o estado real do aparelho
@@ -306,7 +339,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
   const [queue, setQueue] = useState(0)
   const [shareRoute, setShareRoute] = useState(true)
   const [monument, setMonument] = useState<string | null>(welcome ?? (standalone ? null : 'graciliano')) // o app abre na página do monumento da placa lida
-  const [scanner, setScanner] = useState<{ mode: ScanMode; target: string } | null>(null)
+  const [scanner, setScanner] = useState<{ mode: ScanMode; target: string } | null>(() => (standalone && hash === 'ler' ? { mode: 'qr', target: 'graciliano' } : null))
   const [login, setLogin] = useState(false)
   const [offlineSheet, setOfflineSheet] = useState(false)
   const [reward, setReward] = useState<{ m: Monument; xp: number; levelUp: boolean; pending?: boolean } | null>(null)
@@ -526,7 +559,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
             <div className="mt-2 flex items-center justify-center gap-2"><RarityPill rarity={reward.m.rarity} /><span className="text-[15px] font-bold text-[#1f6b6b]">{reward.pending ? `+${reward.xp} XP ao entrar` : `+${reward.xp} XP`}</span></div>
             {reward.levelUp && <div className="mt-3 h-8 px-3 mx-auto w-fit rounded-full bg-[#0b2f49] text-white text-[13px] font-semibold flex items-center gap-1.5"><Icon name="placa" size={14} />Subiu para o nível {levelFor(xp).level}!</div>}
             {simulate && user && !reward.pending && <GroupPicker options={nearbyFriends(user, reward.m)} value={stampLog[reward.m.id]?.group || []} onChange={(g) => setGroup(reward.m, g)} />}
-            {!user && <p className="mt-3 text-[12.5px] text-black/50 leading-snug">A página continua aberta para você. Entrando com Google, o carimbo é guardado e libera 3D e realidade aumentada.</p>}
+            {!user && <p className="mt-3 text-[12.5px] text-black/50 leading-snug">A página continua aberta para você. Entrando com Google, o carimbo vai para a nuvem e acompanha você em qualquer celular.</p>}
             {!user ? (
               <>
                 <button onClick={() => { setReward(null); setLoginReason('Guarde seu carimbo e pontue'); setLogin(true) }} className="mt-5 w-full h-[50px] rounded-[14px] bg-[#2c8585] text-white text-[16px] font-semibold">Entrar com Google</button>

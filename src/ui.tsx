@@ -1,4 +1,4 @@
-import { skylineShapes } from './skylineSvg'
+import { skylineShapes, ornamentShapes, SKY_W, SKY_H, type Shape } from './skylineSvg'
 import { useEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 import { splitSpeech, estimateMs, wordAt, pickVoice } from './shared/speech'
 
@@ -191,8 +191,13 @@ export function Stamp({ label, sub, hue, got, rotate = 0, size = 96, method, cou
   )
 }
 
-export function Avatar({ name, color = '#2c8585', size = 36 }: { name: string; color?: string; size?: number }) {
+export function Avatar({ name, color = '#2c8585', size = 36, picture }: { name: string; color?: string; size?: number; picture?: string }) {
   const initials = name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()
+  const [broken, setBroken] = useState(false)
+  // Foto da conta Google (lh3.googleusercontent.com); se não carregar, volta para as iniciais
+  if (picture && !broken && /^https:\/\/lh3\.googleusercontent\.com\//.test(picture)) {
+    return <img src={picture} alt="" referrerPolicy="no-referrer" onError={() => setBroken(true)} width={size} height={size} className="rounded-full object-cover shrink-0" style={{ width: size, height: size }} />
+  }
   return (
     <span className="grid place-items-center rounded-full text-white font-semibold shrink-0" style={{ width: size, height: size, background: color, fontSize: size * 0.38 }}>
       {initials}
@@ -236,15 +241,32 @@ export function EmMaceio({ className = '' }: { className?: string }) {
   )
 }
 
-// Silhueta da cidade no estilo do logo (mar, coqueiros, farol, igreja barroca, casario), com curvas
-export function Skyline({ className = '' }: { className?: string }) {
+function Shapes({ shapes }: { shapes: Shape[] }) {
   const camel = (k: string) => k.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
   return (
-    <svg viewBox="0 0 420 72" preserveAspectRatio="xMidYMax meet" className={`mu-skyline ${className}`} aria-hidden="true">
-      {skylineShapes().map((s, i) => {
+    <>
+      {shapes.map((s, i) => {
         const props = Object.fromEntries(Object.entries(s.attrs).map(([k, v]) => [camel(k), v]))
         return s.tag === 'circle' ? <circle key={i} {...props} /> : <path key={i} {...props} />
       })}
+    </>
+  )
+}
+
+// Silhueta da cidade no estilo do logo (mar, coqueiros, farol, igrejas barrocas, casario), na largura toda
+export function Skyline({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox={`0 0 ${SKY_W} ${SKY_H}`} preserveAspectRatio="xMidYMax meet" className={`mu-skyline ${className}`} aria-hidden="true">
+      <Shapes shapes={skylineShapes()} />
+    </svg>
+  )
+}
+
+// Ornamento pequeno (coqueiro, capela, igreja e onda) para separar seções, como detalhes do logo
+export function Ornament({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 104 108" className={`mu-skyline ${className}`} aria-hidden="true">
+      <Shapes shapes={ornamentShapes()} />
     </svg>
   )
 }

@@ -2291,6 +2291,105 @@
       "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
       "labels": [],
       "description": "Tarefa default.ingest_public_sources no Celery beat, a cada 20 min entre 00h e 4h (America/Maceio), lote de 10 bens do Wikidata/Commons por vez, idempotente por QID, para a área de preparação da curadoria."
+    },
+    {
+      "key": "KAN-209",
+      "type": "Tarefa",
+      "summary": "Home sobre o projeto e Galeria separada (galeria não dá selo)",
+      "status": "Concluído",
+      "epic": "KAN-4",
+      "points": 3,
+      "sprint": "Sprint 2 · Front e acesso na placa",
+      "labels": [],
+      "description": "Home sobre o projeto e Galeria separada (galeria não dá selo)."
+    },
+    {
+      "key": "KAN-210",
+      "type": "Tarefa",
+      "summary": "Leitor de QR no site também no iPhone (jsQR) e links /monumento/<id>?via=qr",
+      "status": "Concluído",
+      "epic": "KAN-4",
+      "points": 5,
+      "sprint": "Sprint 2 · Front e acesso na placa",
+      "labels": [],
+      "description": "Leitor de QR no site também no iPhone (jsQR) e links /monumento/<id>?via=qr."
+    },
+    {
+      "key": "KAN-211",
+      "type": "Tarefa",
+      "summary": "Sessão igual em todas as páginas: chip com foto do Google e barra de abas com conta",
+      "status": "Concluído",
+      "epic": "KAN-51",
+      "points": 3,
+      "sprint": "Sprint 2 · Front e acesso na placa",
+      "labels": [],
+      "description": "Sessão igual em todas as páginas: chip com foto do Google e barra de abas com conta."
+    },
+    {
+      "key": "KAN-212",
+      "type": "Tarefa",
+      "summary": "Selo automático ao abrir pelo QR da câmera do celular (sem ler duas vezes)",
+      "status": "Concluído",
+      "epic": "KAN-7",
+      "points": 3,
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "labels": [],
+      "description": "Selo automático ao abrir pelo QR da câmera do celular (sem ler duas vezes)."
+    },
+    {
+      "key": "KAN-213",
+      "type": "Tarefa",
+      "summary": "Primeiro acesso pede localização e câmera; galeria só ao anexar; microfone nunca",
+      "status": "Concluído",
+      "epic": "KAN-81",
+      "points": 3,
+      "sprint": "Sprint 5 · LGPD e conformidade",
+      "labels": [],
+      "description": "Primeiro acesso pede localização e câmera; galeria só ao anexar; microfone nunca."
+    },
+    {
+      "key": "KAN-214",
+      "type": "Tarefa",
+      "summary": "Localização pedida uma vez e resposta guardada no aparelho",
+      "status": "Concluído",
+      "epic": "KAN-81",
+      "points": 1,
+      "sprint": "Sprint 5 · LGPD e conformidade",
+      "labels": [],
+      "description": "Localização pedida uma vez e resposta guardada no aparelho."
+    },
+    {
+      "key": "KAN-215",
+      "type": "Tarefa",
+      "summary": "Testes de usabilidade e carga cognitiva (passos para ler a placa e ganhar o selo)",
+      "status": "Concluído",
+      "epic": "KAN-113",
+      "points": 3,
+      "sprint": "Sprint 4 · Usabilidade",
+      "labels": [],
+      "description": "Testes de usabilidade e carga cognitiva (passos para ler a placa e ganhar o selo)."
+    },
+    {
+      "key": "KAN-216",
+      "type": "Tarefa",
+      "summary": "Progresso da Trilha persistente no aparelho (sem dados simulados)",
+      "status": "Concluído",
+      "epic": "KAN-7",
+      "points": 2,
+      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "labels": [],
+      "description": "Progresso da Trilha persistente no aparelho (sem dados simulados)."
+    },
+    {
+      "key": "KAN-217",
+      "type": "Tarefa",
+      "summary": "Visualização 3D e realidade aumentada (funcionalidade futura)",
+      "status": "A fazer",
+      "epic": "KAN-7",
+      "points": 8,
+      "sprint": "Backlog pós-disciplina",
+      "labels": [],
+      "description": "Visualização 3D e realidade aumentada (funcionalidade futura)."
     }
   ]
 }

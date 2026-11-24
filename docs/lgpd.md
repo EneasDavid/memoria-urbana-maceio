@@ -35,6 +35,15 @@ O acervo é feito de **dados públicos sobre patrimônio e figuras públicas**, 
 - **Sem analytics de terceiros:** a CSP barra rastreadores; contagem de leituras do painel é agregada e anônima.
 - **Padrões seguros:** EXIF/GPS removidos de fotos, IP só como hash com sal rotativo, nenhum campo de nome, telefone ou CPF.
 
+## Permissões do aparelho
+
+| Recurso | Quando é pedido | Guardado | Observação |
+|---|---|---|---|
+| Localização | Primeiro acesso (opcional) ou ao tocar "Usar minha localização"; pergunta uma vez | Só a resposta (`mu_perms`); a posição fica na memória da aba | Nunca enviada ao servidor |
+| Câmera | Primeiro acesso (opcional) ou ao abrir o leitor de placa | Só a resposta; nenhuma imagem é gravada | Vídeo sem áudio |
+| Galeria de fotos | Só ao anexar foto num relato, com aviso antes | Arquivo escolhido, sem EXIF/GPS | — |
+| Microfone | **Nunca** | — | Bloqueado no código e no cabeçalho `Permissions-Policy: microphone=()` |
+
 ## Direitos do titular (art. 18)
 
 - **Canal:** o do encarregado, publicado em `/privacidade` e definido em `src/legal/org.ts`.

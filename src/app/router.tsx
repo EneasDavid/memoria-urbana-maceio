@@ -7,6 +7,7 @@ export type LegalPage = (typeof LEGAL_PAGES)[number]
 
 export type Route =
   | { name: 'index' }
+  | { name: 'gallery' }
   | { name: 'monument'; id: string }
   | { name: 'login'; returnTo: string }
   | { name: 'app' }
@@ -29,6 +30,7 @@ export function matchRoute(pathname: string, search = ''): Route {
   if (m) return { name: 'monument', id: m[1] }
   const lower = path.toLowerCase()
   if (lower !== path && !lower.startsWith('/monumento/')) return matchRoute(lower, search)
+  if (path === '/galeria') return { name: 'gallery' }
   if (path === '/entrar') return { name: 'login', returnTo: safeReturnTo(new URLSearchParams(search).get('returnTo')) }
   if (path === '/app') return { name: 'app' }
   if (path === '/painel') return { name: 'panel' }
@@ -39,3 +41,5 @@ export function matchRoute(pathname: string, search = ''): Route {
 }
 
 export const monumentUrl = (id: string) => `/monumento/${id}`
+/** Link impresso no QR/NFC da placa: abre a obra e dá o carimbo (a galeria usa monumentUrl, sem carimbo). */
+export const plateUrl = (id: string, via: 'qr' | 'nfc' = 'qr') => `/monumento/${id}?via=${via}`

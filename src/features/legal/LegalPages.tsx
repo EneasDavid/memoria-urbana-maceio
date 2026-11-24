@@ -103,6 +103,8 @@ export function CookiesPage() {
           ['mu_cookie_notice', 'Armazenamento local', 'Lembrar que você já viu este aviso', 'Até limpar o navegador'],
           ['mu_media_ok', 'Armazenamento local', 'Lembrar que você já leu o aviso de câmera e galeria', 'Até limpar o navegador'],
           ['mu_demo', 'Cookie essencial (HttpOnly)', 'Sessão do acesso de demonstração, sem dado pessoal', '2 horas'],
+          ['mu_perms', 'Armazenamento local', 'Lembrar se você permitiu localização e câmera no primeiro acesso (o microfone nunca é usado)', 'Até limpar o navegador'],
+          ['mu_app:*', 'Armazenamento local', 'Carimbos, pontos e passaporte da Trilha neste aparelho', 'Até limpar o navegador'],
           ['mu_progress', 'Armazenamento local', 'Lembrar monumentos vistos, passos das trilhas e a escolha "salvar neste aparelho" (nada é enviado sem login)', 'Até limpar o navegador'],
           ['mu_reports_pending', 'Armazenamento local', 'Guardar relatos de dano até o envio ao servidor', 'Até o envio ou limpar o navegador'],
           ['mu_reports_media', 'IndexedDB (aparelho)', 'Guardar a foto (já sem localização) ou o vídeo do relato até o envio', 'Até o envio ou limpar o navegador'],

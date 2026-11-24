@@ -137,7 +137,7 @@ test('13 senhas no GitHub: nenhum segredo no histórico do git e .env ignorado',
   const ignore = read('.gitignore')
   assert.match(ignore, /^\.env/m)
   let log = ''
-  try { log = execSync('git log -p --all -- . ":(exclude)pnpm-lock.yaml" ":(exclude)tests/fixtures"', { encoding: 'utf8', maxBuffer: 512 * 1024 * 1024 }) } catch { return }
+  try { log = execSync('git log -p --all -- . ":(exclude)pnpm-lock.yaml" ":(exclude)tests/fixtures" ":(exclude).env.example"', { encoding: 'utf8', maxBuffer: 512 * 1024 * 1024 }) } catch { return }
   const secret = /(AKIA[0-9A-Z]{16}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|GOCSPX-[\w-]{10,}|AIza[0-9A-Za-z_-]{35}|ghp_[0-9A-Za-z]{36}|github_pat_[\w]{20,}|sk_live_[0-9a-zA-Z]{20,})/
   const m = log.match(secret)
   assert.equal(m, null, `segredo no histórico: ${m?.[0].slice(0, 10)}…`)

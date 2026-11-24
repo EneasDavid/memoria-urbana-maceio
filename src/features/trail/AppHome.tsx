@@ -3,6 +3,8 @@ import { MobileApp, type Standalone } from '../../MobileApp'
 import type { User } from '../../data'
 import { queueReport } from '../monument/reports'
 import { logout, type SessionUser } from '../auth/useSession'
+import { loadProgress } from '../../shared/progress'
+import { byId } from '../../data'
 
 // Área com conta: o mesmo app do protótipo do Figma (Explorar, Trilha, Passaporte e leitura da placa),
 // em tela cheia e sem as simulações da apresentação. Na conta de demonstração as simulações continuam
@@ -15,7 +17,7 @@ const hoje = () => {
 }
 
 export function AppHome({ user }: { user: SessionUser }) {
-  const appUser = useMemo<User>(() => ({ name: user.name, email: user.email, color: '#c4683a' }), [user.name, user.email])
+  const appUser = useMemo<User>(() => ({ name: user.name, email: user.email, color: '#c4683a', picture: user.picture }), [user.name, user.email, user.picture])
   const [dark, setDarkState] = useState(() => typeof window !== 'undefined' && (document.documentElement.classList.contains('mu-dark') || !!window.matchMedia?.('(prefers-color-scheme: dark)').matches))
   const setDark = useCallback((v: boolean) => {
     document.documentElement.classList.toggle('mu-dark', v)
@@ -42,13 +44,22 @@ export function AppHome({ user }: { user: SessionUser }) {
     return () => { document.title = prev; document.body.style.overflow = overflow }
   }, [])
 
+  // Veio da placa (QR/NFC) já com conta: abre na obra e credita o carimbo, junto com os lidos antes sem conta
+  const [entry] = useState(() => {
+    const q = new URLSearchParams(window.location.search)
+    const w = q.get('welcome'), v = q.get('via')
+    if (q.has('welcome')) window.history.replaceState(null, '', '/app')
+    return { welcome: w && byId(w) ? w : undefined, via: v === 'qr' || v === 'nfc' ? (v as 'qr' | 'nfc') : undefined }
+  })
+  const preStamps = useMemo(() => (loadProgress().stamps || []).map(({ id, via }) => ({ id, via })), [])
   const standalone = useMemo<Standalone>(() => ({
+    preStamps,
     simulate: !!user.demo,
     onLogout: () => { void logout() },
     today: hoje(),
     links: { privacy: '/privacidade', panel: user.role === 'gestor' ? '/painel' : undefined },
     desktop,
-  }), [user.demo, user.role, desktop])
+  }), [user.demo, user.role, desktop, preStamps])
 
   return (
     <main id="conteudo" className="fixed inset-0 bg-[#f6f3ec] mu-app-shell">
@@ -61,6 +72,8 @@ export function AppHome({ user }: { user: SessionUser }) {
           setDark={setDark}
           session={user.demo ? 'demonstração' : 'conta'}
           onTrack={() => undefined}
+          welcome={entry.welcome}
+          welcomeVia={entry.via}
           onReport={(r, media) => (user.demo ? undefined : queueReport(r, media))}
         />
       </div>

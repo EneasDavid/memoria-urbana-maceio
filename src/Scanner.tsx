@@ -1,3 +1,5 @@
+import { openCamera } from './shared/permissions'
+import { findMonument } from './features/monument/find'
 import { useEffect, useRef, useState } from 'react'
 import { Icon, Segmented, RarityPill } from './ui'
 import { byId, monuments, type Monument } from './data'
@@ -52,8 +54,8 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
   const streamRef = useRef<MediaStream | null>(null)
   const m = byId(target)
   const hasWebNfc = typeof window !== 'undefined' && 'NDEFReader' in window
-  // sem BarcodeDetector (iPhone, desktop) a câmera abre, mas a leitura continua simulada para não travar a demo
-  const hasDetector = typeof window !== 'undefined' && 'BarcodeDetector' in window
+  // Leitura real em todo navegador: BarcodeDetector (Chrome/Android) ou jsQR em JavaScript (iPhone/Safari, desktop)
+  const hasDetector = true
 
   const finish = (id: string, method: ScanMode) => {
     setPhase('reading')
@@ -84,7 +86,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
   // Câmera real + BarcodeDetector (Chrome/Android). No iPhone a leitura real fica no app nativo / câmera do sistema.
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      const stream = await openCamera()
       streamRef.current = stream
       setCamera('on')
       requestAnimationFrame(() => {
@@ -93,23 +95,38 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
           videoRef.current.play().catch(() => undefined)
         }
       })
-      const BD = (window as unknown as { BarcodeDetector?: new (o: { formats: string[] }) => { detect: (v: HTMLVideoElement) => Promise<{ rawValue: string }[]> } }).BarcodeDetector
-      if (BD) {
-        const det = new BD({ formats: ['qr_code'] })
-        const loop = async () => {
-          if (!streamRef.current || !videoRef.current) return
-          try {
-            const codes = await det.detect(videoRef.current)
-            if (codes[0]) {
-              const plate = codes[0].rawValue.match(/p\/(\d{2})/)?.[1]
-              const found = monuments.find((x) => x.plate === plate)
-              if (found || simulate) { finish(found ? found.id : target, 'qr'); return }
-            }
-          } catch { /* continua */ }
-          window.setTimeout(loop, 400)
-        }
-        loop()
+      // Aceita o link do QR da placa (/monumento/<id>, /p/<placa>) ou só o número da placa.
+      const resolve = (raw: string) => {
+        let key = raw
+        try { const u = new URL(raw); key = u.pathname.split('/').filter(Boolean).pop() || raw } catch { /* texto solto */ }
+        const plate = raw.match(/p\/(\d{1,3})/)?.[1]
+        return findMonument(plate ?? key)
       }
+      const BD = (window as unknown as { BarcodeDetector?: new (o: { formats: string[] }) => { detect: (v: HTMLVideoElement) => Promise<{ rawValue: string }[]> } }).BarcodeDetector
+      const det = BD ? new BD({ formats: ['qr_code'] }) : null
+      const jsQR = det ? null : (await import('jsqr')).default
+      const canvas = document.createElement('canvas')
+      const ctx2d = canvas.getContext('2d', { willReadFrequently: true })
+      const loop = async () => {
+        const v = videoRef.current
+        if (!streamRef.current || !v) return
+        try {
+          let raw: string | undefined
+          if (det) raw = (await det.detect(v))[0]?.rawValue
+          else if (jsQR && ctx2d && v.videoWidth) {
+            const w = Math.min(640, v.videoWidth), h = Math.round((v.videoHeight / v.videoWidth) * w)
+            canvas.width = w; canvas.height = h
+            ctx2d.drawImage(v, 0, 0, w, h)
+            raw = jsQR(ctx2d.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' })?.data
+          }
+          if (raw) {
+            const found = resolve(raw)
+            if (found || simulate) { finish(found ? found.id : target, 'qr'); return }
+          }
+        } catch { /* continua */ }
+        window.setTimeout(loop, 250)
+      }
+      loop()
     } catch {
       setCamera('denied')
     }
@@ -196,7 +213,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
               {simulate && camera === 'off' && <button onClick={startCamera} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold flex items-center gap-1.5"><Icon name="scan" size={15} />Usar câmera real</button>}
               {simulate && camera === 'on' && <button onClick={() => finish(target, 'qr')} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold">Simular leitura</button>}
               {simulate && camera === 'denied' && <span className="text-[12px] text-white/70">Câmera indisponível na pré-visualização · leitura simulada</span>}
-              {!simulate && camera === 'on' && !hasDetector && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Este navegador não lê QR dentro do site. Feche e aponte a câmera do próprio celular para a placa.</span>}
+              {!simulate && camera === 'on' && !hasDetector && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Segure o celular parado, com o QR inteiro dentro do quadro.</span>}
               {!simulate && camera === 'denied' && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Câmera bloqueada. Libere o acesso nas configurações do navegador e tente de novo.</span>}
             </div>
           )}

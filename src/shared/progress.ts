@@ -7,6 +7,7 @@ export interface Progress {
   visited: string[] // ids de monumentos abertos
   trails: Record<string, string[]> // trilha → passos concluídos
   mode: SaveMode // escolha feita no aviso de persistência
+  stamps?: { id: string; via: 'qr' | 'nfc'; at: number }[] // leituras reais da placa (QR/NFC), nunca pela galeria
 }
 
 const KEY = 'mu_progress'
@@ -18,7 +19,7 @@ export function loadProgress(storage: Pick<Storage, 'getItem'> | undefined = glo
     if (!raw) return empty()
     const p = JSON.parse(raw)
     if (p?.v !== 1 || !Array.isArray(p.visited) || typeof p.trails !== 'object') return empty()
-    return { v: 1, visited: p.visited.filter((x: unknown) => typeof x === 'string').slice(0, 500), trails: p.trails, mode: p.mode === 'local' || p.mode === 'nuvem' ? p.mode : null }
+    return { v: 1, visited: p.visited.filter((x: unknown) => typeof x === 'string').slice(0, 500), trails: p.trails, mode: p.mode === 'local' || p.mode === 'nuvem' ? p.mode : null, stamps: Array.isArray(p.stamps) ? p.stamps.filter((x: { id?: unknown; via?: unknown }) => typeof x?.id === 'string' && (x.via === 'qr' || x.via === 'nfc')).slice(0, 500) : [] }
   } catch {
     return empty()
   }
@@ -52,4 +53,13 @@ export function setMode(mode: SaveMode, p = loadProgress()): Progress {
 
 export function clearProgress(storage: Pick<Storage, 'removeItem'> | undefined = globalThis.localStorage) {
   try { storage?.removeItem(KEY) } catch { /* nada */ }
+}
+
+/** Carimbo pela placa: só quando a página foi aberta pelo QR/NFC (?via=qr|nfc). Idempotente por monumento. */
+export function addStamp(id: string, via: 'qr' | 'nfc', p = loadProgress()): { p: Progress; first: boolean } {
+  const stamps = p.stamps || []
+  if (stamps.some((s) => s.id === id)) return { p, first: false }
+  const next = { ...p, stamps: [...stamps, { id, via, at: Date.now() }] }
+  saveProgress(next)
+  return { p: next, first: true }
 }

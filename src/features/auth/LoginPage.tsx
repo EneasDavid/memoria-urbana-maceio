@@ -4,7 +4,7 @@ import { loginUrl, useSession } from './useSession'
 import { setMode } from '../../shared/progress'
 
 // Entrada da área com conta. A conta é opcional: serve para pontuar na Trilha, salvar carimbos
-// entre aparelhos e ver em 3D. O botão leva ao fluxo OAuth 2.0 + PKCE no servidor.
+// entre aparelhos. O botão leva ao fluxo OAuth 2.0 + PKCE no servidor.
 export function LoginPage({ returnTo }: { returnTo: string }) {
   const s = useSession()
 
