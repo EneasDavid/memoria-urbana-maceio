@@ -38,6 +38,8 @@ test('login: Google ou "continuar sem conta, salvando neste aparelho"; sem acess
   assert.equal(await page.getByText('Acesso de demonstração').count(), 0)
   assert.equal(await page.getByRole('button', { name: 'Como gestor' }).count(), 0)
   await page.getByRole('button', { name: /Continuar sem conta/ }).click()
+  await page.getByLabel('Como podemos te chamar?').fill('Bia')
+  await page.getByRole('button', { name: 'Salvar neste aparelho' }).click()
   await page.waitForURL('**/monumento/nise')
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_progress')).mode), 'local')
   await ctx.close()

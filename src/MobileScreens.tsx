@@ -84,7 +84,7 @@ function LevelRing({ xp, size = 46, user }: { xp: number; size?: number; user: U
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#dda93f" strokeWidth="3.5" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - inLevel / need)} className="transition-all duration-700" />
       </svg>
       <div className="absolute inset-[5px] grid place-items-center">
-        {user ? <Avatar name={user.name} color={user.color} size={size - 10} /> : <span className="w-full h-full rounded-full bg-black/[0.06] grid place-items-center text-black/40"><Icon name="person" size={size * 0.42} /></span>}
+        {user ? <Avatar name={user.name} color={user.color} size={size - 10} picture={user.picture} /> : <span className="w-full h-full rounded-full bg-black/[0.06] grid place-items-center text-black/40"><Icon name="person" size={size * 0.42} /></span>}
       </div>
       <span className="absolute -bottom-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-[#0b2f49] text-white text-[11px] font-bold grid place-items-center border-2 border-white">{level}</span>
     </div>
@@ -179,7 +179,7 @@ export function ExploreScreen({ ctx }: { ctx: MobileCtx }) {
           <h1 className="text-[34px] font-bold tracking-[-0.025em] leading-tight text-black">Explorar</h1>
           {ctx.links && <Arcs className="mt-1.5" />}
         </div>
-      {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
+      {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} picture={ctx.user.picture} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
     </div>
   )
   const side = (
@@ -735,7 +735,7 @@ export function MapScreen({ ctx }: { ctx: MobileCtx }) {
 
       {!selected && !ctx.desktop && (
       <div className="absolute top-[56px] left-3 right-3 z-40 flex items-center gap-3 p-2.5 pr-4 rounded-[22px] bg-white/85 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)]">
-        <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={40} /> : <span className="w-10 h-10 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={20} /></span>}</button>
+        <button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={40} picture={ctx.user.picture} /> : <span className="w-10 h-10 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={20} /></span>}</button>
         <div className="flex-1 min-w-0">
           <div className="text-[15px] font-semibold text-black truncate">Trilha Cultural · Maceió</div>
           <div className="text-[12.5px] text-black/50">{ctx.collected.length} {ctx.collected.length === 1 ? 'selo' : 'selos'} · {ctx.xp} pontos</div>
@@ -874,7 +874,7 @@ export function PassportScreen({ ctx }: { ctx: MobileCtx }) {
     <div className="px-4 pb-36">
       <div className="pt-2 flex items-center justify-between">
         <div><h1 className="text-[34px] font-bold tracking-[-0.025em] text-black">Passaporte</h1>{ctx.links && <Arcs className="mt-1" />}</div>
-        {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
+        {!ctx.desktop && (<button onClick={() => ctx.setTab?.('perfil')} aria-label="Abrir perfil" className="rounded-full active:scale-95 transition">{ctx.user ? <Avatar name={ctx.user.name} color={ctx.user.color} size={44} picture={ctx.user.picture} /> : <span className="w-11 h-11 rounded-full bg-black/5 grid place-items-center text-black/60"><Icon name="person" size={22} /></span>}</button>)}
       </div>
       <div className="text-[14px] text-black/50 mt-0.5">{got.length ? 'Seus selos de Maceió · ' + got.length + (got.length === 1 ? ' selo' : ' selos') + ' · ' + total + (total === 1 ? ' visita' : ' visitas') : 'Seus selos de Maceió aparecem aqui'}</div>
       {got.length > 0 && <div className="mt-3 flex items-center gap-2 rounded-[14px] bg-white px-3 py-2 text-[12.5px] text-black/55"><Icon name="hand" size={15} className="text-[#2c8585] shrink-0" />Toque num selo para ver quando foi, a foto e seus relatos.</div>}
@@ -898,7 +898,7 @@ export function PassportScreen({ ctx }: { ctx: MobileCtx }) {
                 <div className="mt-0.5 text-[12px] text-black/45">{log ? viaShort[log.method] : 'Placa'} · {log?.count || 1}× {group.length > 0 ? '· em grupo' : ''}</div>
                 {group.length > 0 && (
                   <div className="mt-1.5 flex -space-x-1.5">
-                    <span className="ring-2 ring-white rounded-full"><Avatar name={ctx.user?.name || 'Você'} color={ctx.user?.color} size={20} /></span>
+                    <span className="ring-2 ring-white rounded-full"><Avatar name={ctx.user?.name || 'Você'} color={ctx.user?.color} size={20} picture={ctx.user?.picture} /></span>
                     {group.map((g) => <span key={g} className="ring-2 ring-white rounded-full"><Avatar name={g} color={friendColor[g]} size={20} /></span>)}
                   </div>
                 )}
@@ -984,7 +984,7 @@ function StampRecord({ id, ctx, onClose }: { id: string; ctx: MobileCtx; onClose
             <div className={sec}>Visita em grupo</div>
             <div className="mt-2 bg-white rounded-[16px] p-4 flex items-center gap-3">
               <div className="flex -space-x-2">
-                <span className="ring-2 ring-white rounded-full"><Avatar name={ctx.user?.name || 'Você'} color={ctx.user?.color} size={34} /></span>
+                <span className="ring-2 ring-white rounded-full"><Avatar name={ctx.user?.name || 'Você'} color={ctx.user?.color} size={34} picture={ctx.user?.picture} /></span>
                 {group.map((g) => <span key={g} className="ring-2 ring-white rounded-full"><Avatar name={g} color={friendColor[g]} size={34} /></span>)}
               </div>
               <div className="flex-1 text-[14px] text-black/75 leading-snug">Você{group.length === 1 ? ' e ' : ', '}{group.map((g) => g.replace(/^Jovem /, '').split(' ')[0]).join(group.length > 1 ? ', ' : '')} visitaram juntos</div>
@@ -1044,7 +1044,7 @@ export function ProfileScreen({ ctx }: { ctx: MobileCtx }) {
       {ctx.user ? (
         <div className="mt-3 bg-white rounded-[20px] p-4">
           <div className="flex items-center gap-3">
-            <Avatar name={ctx.user.name} color={ctx.user.color} size={56} />
+            <Avatar name={ctx.user.name} color={ctx.user.color} size={56} picture={ctx.user.picture} />
             <div className="flex-1 min-w-0"><div className="text-[19px] font-bold text-black truncate">{ctx.user.name}</div><div className="text-[13px] text-black/50 flex items-center gap-1.5 truncate"><GoogleG size={13} />{ctx.user.email}</div></div>
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2">

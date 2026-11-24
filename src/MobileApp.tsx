@@ -1,4 +1,4 @@
-import { openCamera } from './shared/permissions'
+import { openCamera, releaseCamera } from './shared/permissions'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Icon, Stamp, RarityPill, Avatar, Brand, type IconName } from './ui'
 import { byId, levelFor, type Monument, type TrackEvent, type User } from './data'
@@ -137,7 +137,7 @@ function PhotoCapture({ m, user, onClose, onSend }: { m: Monument; user: User | 
   const [front, setFront] = useState<string | undefined>()
   const video = useRef<HTMLVideoElement>(null)
   const stream = useRef<MediaStream | null>(null)
-  const stop = () => { stream.current?.getTracks().forEach((t) => t.stop()); stream.current = null }
+  const stop = () => { releaseCamera(stream.current); stream.current = null }
   const start = async (facing: 'environment' | 'user') => {
     stop(); setLive(false)
     try {

@@ -34,13 +34,19 @@ export function MonumentPage({ id }: { id: string }) {
   const [copied, setCopied] = useState(false)
   const session = useSession()
   // Chegou pela placa (QR da câmera do celular ou NFC)? ?via=qr|nfc. Pela galeria não há carimbo.
-  const [via] = useState(() => { const v = new URLSearchParams(window.location.search).get('via'); return v === 'qr' || v === 'nfc' ? (v as 'qr' | 'nfc') : null })
+  const [via] = useState(() => {
+    // Postel: aceita ?via=qr|nfc, os QR antigos (?origem=placa|pitch) e o atalho curto /p/NN impresso nas placas
+    const q = new URLSearchParams(window.location.search), v = q.get('via')
+    if (v === 'qr' || v === 'nfc') return v as 'qr' | 'nfc'
+    if (q.has('origem') || /^\/p\//i.test(window.location.pathname)) return 'qr' as const
+    return null
+  })
   const [stamped, setStamped] = useState<null | boolean>(null)
   useEffect(() => {
     if (!m || !via) return
     setStamped(addStamp(m.id, via).first)
     // tira o ?via da URL: recarregar ou compartilhar não gera carimbo de novo
-    const u = new URL(window.location.href); u.searchParams.delete('via'); window.history.replaceState(null, '', u.pathname + u.search + u.hash)
+    const u = new URL(window.location.href); u.searchParams.delete('via'); u.searchParams.delete('origem'); window.history.replaceState(null, '', u.pathname + u.search + u.hash)
   }, [m, via])
   // Com conta: abre o app (com a barra de abas) já na obra, com o carimbo creditado — sem ler a placa duas vezes
   useEffect(() => {

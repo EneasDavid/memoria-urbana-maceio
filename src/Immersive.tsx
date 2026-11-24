@@ -1,4 +1,4 @@
-import { openCamera } from './shared/permissions'
+import { openCamera, releaseCamera } from './shared/permissions'
 import { useEffect, useRef, useState } from 'react'
 import { Icon, Segmented } from './ui'
 import type { Monument } from './data'
@@ -52,7 +52,7 @@ export function Immersive({ m, initial, onClose, onShot }: { m: Monument; initia
       alive = false
       window.clearTimeout(t)
       window.removeEventListener('deviceorientation', onOrient)
-      stream.current?.getTracks().forEach((x) => x.stop())
+      releaseCamera(stream.current)
       stream.current = null
     }
   }, [mode])
