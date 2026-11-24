@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T19:34:42.845Z",
+  "fetchedAt": "2026-11-24T19:42:40.019Z",
   "licenses": {
     "wikidata": "CC0 1.0",
     "osm": "© OpenStreetMap contributors, ODbL 1.0",
@@ -8,132 +8,73 @@
   "wikidata": [
     {
       "source": "wikidata",
-      "id": "Q115524754",
-      "name": "Em memória pela advocacia vítima da COVID19",
-      "types": "placa, memorial da COVID-19",
-      "lat": -9.618373,
-      "lng": -35.692027,
-      "image": null
-    },
-    {
-      "source": "wikidata",
-      "id": "Q67176288",
-      "name": "Capela de São Gonçalo de Amarante",
-      "types": "igreja, património histórico",
-      "lat": -9.663188,
-      "lng": -35.733278,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Capela%20de%20S%C3%A3o%20Gon%C3%A7alo%20de%20Amarante%20a%20beleza%20do%20Farol.jpg",
+      "id": "Q101069831",
+      "name": "Casa do Patrimônio - IPHAN Alagoas",
+      "types": "museu, órgão público",
+      "lat": -9.6732225,
+      "lng": -35.7235543,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Casa%20do%20Patrimonio%20-%20IPHAN%20Alagoas%20-%2002.jpg",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg/1280px-Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg",
-        "author": "Blogilberto",
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg/1280px-Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg",
+        "author": "Ajmcbarreto",
         "license": "CC BY-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
       }
     },
     {
       "source": "wikidata",
-      "id": "Q67176294",
-      "name": "Igreja de Nossa Senhora do Rosário dos Pretos",
-      "types": "igreja, património histórico",
-      "lat": -9.663169986,
-      "lng": -35.737008849,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20Nossa%20Senhora%20do%20Ros%C3%A1rio%20dos%20Pretos%2C%20RELU%20%2802%29.jpg",
+      "id": "Q101072725",
+      "name": "Fundação Pierre Chalita (Jaraguá)",
+      "types": "museu",
+      "lat": -9.6739081,
+      "lng": -35.7213996,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Funda%C3%A7%C3%A3o%20Pierre%20Chalita%20%28Jaragu%C3%A1%29%20-%2001.jpg",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg/1280px-Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos,_RELU_(02).jpg",
-        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Funda%C3%A7%C3%A3o_Pierre_Chalita_%28Jaragu%C3%A1%29_-_01.jpg/1280px-Funda%C3%A7%C3%A3o_Pierre_Chalita_%28Jaragu%C3%A1%29_-_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Funda%C3%A7%C3%A3o_Pierre_Chalita_(Jaragu%C3%A1)_-_01.jpg",
+        "author": "Ajmcbarreto",
         "license": "CC BY-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
       }
     },
     {
       "source": "wikidata",
-      "id": "Q67176292",
-      "name": "Igreja Bom Jesus dos Martírios",
-      "types": "igreja, património histórico",
-      "lat": -9.659950888,
-      "lng": -35.73865653,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20dos%20Mart%C3%ADrios%2C%20RELU.jpg",
+      "id": "Q101084268",
+      "name": "praça Dois Leões",
+      "types": "praça",
+      "lat": -9.6724119,
+      "lng": -35.7239827,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Pra%C3%A7a%20Dois%20Le%C3%B5es%20-%20panoramio.jpg",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg/1280px-Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Igreja_dos_Mart%C3%ADrios,_RELU.jpg",
-        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg/1280px-Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg",
+        "author": "Duds Nilds",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
       }
     },
     {
       "source": "wikidata",
-      "id": "Q67176293",
-      "name": "Igreja de Nossa Senhora do Livramento",
-      "types": "igreja, património histórico",
-      "lat": -9.664792603,
-      "lng": -35.738298522,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20Nossa%20Senhora%20do%20Livramento%2C%20RELU.jpg",
+      "id": "Q10280165",
+      "name": "Farol de Ponta Verde",
+      "types": "farol",
+      "lat": -9.66566667,
+      "lng": -35.69233333,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Macei%C3%B3%2C%20Alagoas%2C%20Brasil%202.jpg",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg/1280px-Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Livramento,_RELU.jpg",
-        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg/1280px-Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Macei%C3%B3,_Alagoas,_Brasil_2.jpg",
+        "author": "Tissiana Sousa",
+        "license": "CC BY-SA 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
       }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q108399969",
-      "name": "Igreja Nossa Senhora do Ó",
-      "types": "igreja",
-      "lat": -9.528469734,
-      "lng": -35.607096934,
-      "image": null
-    },
-    {
-      "source": "wikidata",
-      "id": "Q129870920",
-      "name": "Matriz de Santo Antônio de Pádua",
-      "types": "igreja",
-      "lat": -9.62713836,
-      "lng": -35.75034457,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Antiga%20Pra%C3%A7a%20da%20Matriz%20de%20Bebedouro%2C%20atual%20Pra%C3%A7a%20Cel.%20Lucena%20Maranh%C3%A3o%20e%20Par%C3%B3quia%20de%20Santo%20Ant%C3%B4nio%20de%20P%C3%A1dua%2C%20RELU.jpg",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro%2C_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua%2C_RELU.jpg/1280px-Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro%2C_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro,_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua,_RELU.jpg",
-        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q59360376",
-      "name": "Palácio Tavares Bastos",
-      "types": "palácio",
-      "lat": -9.6659294,
-      "lng": -35.7358282,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/ASSEMBL%C3%89IA%20LEGISLATIVA%20ESTADUAL%20MACEIO.JPG",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG/1280px-ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG",
-        "author": "Aleposta",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q67176273",
-      "name": "Igreja Nossa Senhora da Guia",
-      "types": "igreja, património histórico",
-      "lat": -9.674483937,
-      "lng": -35.763381638,
-      "image": null
     },
     {
       "source": "wikidata",
       "id": "Q10302531",
       "name": "Instituto Histórico e Geográfico de Alagoas",
-      "types": "instituto de investigação, museu, património histórico",
+      "types": "museu, instituto de investigação, património histórico",
       "lat": -9.6619543,
       "lng": -35.7392838,
       "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Instituto%20Hist%C3%B3rico%20e%20Geogr%C3%A1fico%20de%20Alagoas%2C%20RELU.jpg",
@@ -144,31 +85,6 @@
         "license": "CC BY-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
       }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q1954376",
-      "name": "Museu da Imagem e Som de Alagoas",
-      "types": "museu",
-      "lat": -9.67266667,
-      "lng": -35.72222222,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Museu%20da%20Imagem%20e%20Som%20-%20panoramio.jpg",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Museu_da_Imagem_e_Som_-_panoramio.jpg/1280px-Museu_da_Imagem_e_Som_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Museu_da_Imagem_e_Som_-_panoramio.jpg",
-        "author": "Duds Nilds",
-        "license": "CC BY 3.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q10328540",
-      "name": "Memorial Pontes de Miranda",
-      "types": "museu",
-      "lat": -9.669926,
-      "lng": -35.738335,
-      "image": null
     },
     {
       "source": "wikidata",
@@ -238,6 +154,81 @@
     },
     {
       "source": "wikidata",
+      "id": "Q108399969",
+      "name": "Igreja Nossa Senhora do Ó",
+      "types": "igreja",
+      "lat": -9.528469734,
+      "lng": -35.607096934,
+      "image": null
+    },
+    {
+      "source": "wikidata",
+      "id": "Q115524754",
+      "name": "Em memória pela advocacia vítima da COVID19",
+      "types": "placa, memorial da COVID-19",
+      "lat": -9.618373,
+      "lng": -35.692027,
+      "image": null
+    },
+    {
+      "source": "wikidata",
+      "id": "Q129870920",
+      "name": "Matriz de Santo Antônio de Pádua",
+      "types": "igreja",
+      "lat": -9.62713836,
+      "lng": -35.75034457,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Antiga%20Pra%C3%A7a%20da%20Matriz%20de%20Bebedouro%2C%20atual%20Pra%C3%A7a%20Cel.%20Lucena%20Maranh%C3%A3o%20e%20Par%C3%B3quia%20de%20Santo%20Ant%C3%B4nio%20de%20P%C3%A1dua%2C%20RELU.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro%2C_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua%2C_RELU.jpg/1280px-Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro%2C_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Antiga_Pra%C3%A7a_da_Matriz_de_Bebedouro,_atual_Pra%C3%A7a_Cel._Lucena_Maranh%C3%A3o_e_Par%C3%B3quia_de_Santo_Ant%C3%B4nio_de_P%C3%A1dua,_RELU.jpg",
+        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q1954376",
+      "name": "Museu da Imagem e Som de Alagoas",
+      "types": "museu",
+      "lat": -9.67266667,
+      "lng": -35.72222222,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Museu%20da%20Imagem%20e%20Som%20-%20panoramio.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Museu_da_Imagem_e_Som_-_panoramio.jpg/1280px-Museu_da_Imagem_e_Som_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Museu_da_Imagem_e_Som_-_panoramio.jpg",
+        "author": "Duds Nilds",
+        "license": "CC BY 3.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q28375239",
+      "name": "Farol de Maceió",
+      "types": "farol",
+      "lat": -9.656666666,
+      "lng": -35.725833333,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Farol%20de%20Macei%C3%B3.jpg",
+      "photo": {
+        "src": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Farol_de_Macei%C3%B3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        "page": "https://commons.wikimedia.org/wiki/File:Farol_de_Macei%C3%B3.jpg",
+        "author": "Amanda",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q48872157",
+      "name": "Estação Jaraguá",
+      "types": "estação ferroviária",
+      "lat": -9.671902718,
+      "lng": -35.720222652,
+      "image": null
+    },
+    {
+      "source": "wikidata",
       "id": "Q56693242",
       "name": "Casa da Palavra",
       "types": "museu",
@@ -253,6 +244,22 @@
       "lat": -9.646726,
       "lng": -35.746034,
       "image": null
+    },
+    {
+      "source": "wikidata",
+      "id": "Q56693672",
+      "name": "Memorial à República",
+      "types": "monumento comemorativo",
+      "lat": -9.6697609,
+      "lng": -35.7309651,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Memorialarepublica.maceio.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Memorialarepublica.maceio.jpg/1280px-Memorialarepublica.maceio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Memorialarepublica.maceio.jpg",
+        "author": "Rodolfo Freire",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
     },
     {
       "source": "wikidata",
@@ -337,63 +344,15 @@
     },
     {
       "source": "wikidata",
-      "id": "Q101069831",
-      "name": "Casa do Patrimônio - IPHAN Alagoas",
-      "types": "museu, órgão público",
-      "lat": -9.6732225,
-      "lng": -35.7235543,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Casa%20do%20Patrimonio%20-%20IPHAN%20Alagoas%20-%2002.jpg",
+      "id": "Q59360376",
+      "name": "Palácio Tavares Bastos",
+      "types": "palácio",
+      "lat": -9.6659294,
+      "lng": -35.7358282,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/ASSEMBL%C3%89IA%20LEGISLATIVA%20ESTADUAL%20MACEIO.JPG",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg/1280px-Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Casa_do_Patrimonio_-_IPHAN_Alagoas_-_02.jpg",
-        "author": "Ajmcbarreto",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q101072725",
-      "name": "Fundação Pierre Chalita (Jaraguá)",
-      "types": "museu",
-      "lat": -9.6739081,
-      "lng": -35.7213996,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Funda%C3%A7%C3%A3o%20Pierre%20Chalita%20%28Jaragu%C3%A1%29%20-%2001.jpg",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Funda%C3%A7%C3%A3o_Pierre_Chalita_%28Jaragu%C3%A1%29_-_01.jpg/1280px-Funda%C3%A7%C3%A3o_Pierre_Chalita_%28Jaragu%C3%A1%29_-_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Funda%C3%A7%C3%A3o_Pierre_Chalita_(Jaragu%C3%A1)_-_01.jpg",
-        "author": "Ajmcbarreto",
-        "license": "CC BY-SA 4.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q101084268",
-      "name": "praça Dois Leões",
-      "types": "praça",
-      "lat": -9.6724119,
-      "lng": -35.7239827,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Pra%C3%A7a%20Dois%20Le%C3%B5es%20-%20panoramio.jpg",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg/1280px-Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Pra%C3%A7a_Dois_Le%C3%B5es_-_panoramio.jpg",
-        "author": "Duds Nilds",
-        "license": "CC BY 3.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q67176290",
-      "name": "Catedral Metropolitana de Maceió",
-      "types": "catedral católica",
-      "lat": -9.665381733,
-      "lng": -35.735611565,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Catedral%20metropolitana%20maceio.JPG",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Catedral_metropolitana_maceio.JPG/1280px-Catedral_metropolitana_maceio.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Catedral_metropolitana_maceio.JPG",
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG/1280px-ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:ASSEMBL%C3%89IA_LEGISLATIVA_ESTADUAL_MACEIO.JPG",
         "author": "Aleposta",
         "license": "CC BY-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
@@ -401,52 +360,11 @@
     },
     {
       "source": "wikidata",
-      "id": "Q10280165",
-      "name": "Farol de Ponta Verde",
-      "types": "farol",
-      "lat": -9.66566667,
-      "lng": -35.69233333,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Macei%C3%B3%2C%20Alagoas%2C%20Brasil%202.jpg",
-      "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/35/Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg/1280px-Macei%C3%B3%2C_Alagoas%2C_Brasil_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Macei%C3%B3,_Alagoas,_Brasil_2.jpg",
-        "author": "Tissiana Sousa",
-        "license": "CC BY-SA 2.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q28375239",
-      "name": "Farol de Maceió",
-      "types": "farol",
-      "lat": -9.656666666,
-      "lng": -35.725833333,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Farol%20de%20Macei%C3%B3.jpg",
-      "photo": {
-        "src": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Farol_de_Macei%C3%B3.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
-        "page": "https://commons.wikimedia.org/wiki/File:Farol_de_Macei%C3%B3.jpg",
-        "author": "Amanda",
-        "license": "CC BY 2.0",
-        "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
-      }
-    },
-    {
-      "source": "wikidata",
-      "id": "Q48872157",
-      "name": "Estação Jaraguá",
-      "types": "estação ferroviária",
-      "lat": -9.67166667,
-      "lng": -35.71972222,
-      "image": null
-    },
-    {
-      "source": "wikidata",
-      "id": "Q48872157",
-      "name": "Estação Jaraguá",
-      "types": "estação ferroviária",
-      "lat": -9.671902718,
-      "lng": -35.720222652,
+      "id": "Q67176273",
+      "name": "Igreja Nossa Senhora da Guia",
+      "types": "igreja, património histórico",
+      "lat": -9.674483937,
+      "lng": -35.763381638,
       "image": null
     },
     {
@@ -467,16 +385,80 @@
     },
     {
       "source": "wikidata",
-      "id": "Q56693672",
-      "name": "Memorial à República",
-      "types": "monumento comemorativo",
-      "lat": -9.6697609,
-      "lng": -35.7309651,
-      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Memorialarepublica.maceio.jpg",
+      "id": "Q67176288",
+      "name": "Capela de São Gonçalo de Amarante",
+      "types": "igreja, património histórico",
+      "lat": -9.663188,
+      "lng": -35.733278,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Capela%20de%20S%C3%A3o%20Gon%C3%A7alo%20de%20Amarante%20a%20beleza%20do%20Farol.jpg",
       "photo": {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Memorialarepublica.maceio.jpg/1280px-Memorialarepublica.maceio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
-        "page": "https://commons.wikimedia.org/wiki/File:Memorialarepublica.maceio.jpg",
-        "author": "Rodolfo Freire",
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg/1280px-Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Capela_de_S%C3%A3o_Gon%C3%A7alo_de_Amarante_a_beleza_do_Farol.jpg",
+        "author": "Blogilberto",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q67176290",
+      "name": "Catedral Metropolitana de Maceió",
+      "types": "catedral católica",
+      "lat": -9.665381733,
+      "lng": -35.735611565,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Catedral%20metropolitana%20maceio.JPG",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Catedral_metropolitana_maceio.JPG/1280px-Catedral_metropolitana_maceio.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Catedral_metropolitana_maceio.JPG",
+        "author": "Aleposta",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q67176292",
+      "name": "Igreja Bom Jesus dos Martírios",
+      "types": "igreja, património histórico",
+      "lat": -9.659950888,
+      "lng": -35.73865653,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20dos%20Mart%C3%ADrios%2C%20RELU.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg/1280px-Igreja_dos_Mart%C3%ADrios%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Igreja_dos_Mart%C3%ADrios,_RELU.jpg",
+        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q67176293",
+      "name": "Igreja de Nossa Senhora do Livramento",
+      "types": "igreja, património histórico",
+      "lat": -9.664792603,
+      "lng": -35.738298522,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20Nossa%20Senhora%20do%20Livramento%2C%20RELU.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg/1280px-Igreja_de_Nossa_Senhora_do_Livramento%2C_RELU.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Livramento,_RELU.jpg",
+        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+      }
+    },
+    {
+      "source": "wikidata",
+      "id": "Q67176294",
+      "name": "Igreja de Nossa Senhora do Rosário dos Pretos",
+      "types": "igreja, património histórico",
+      "lat": -9.663169986,
+      "lng": -35.737008849,
+      "image": "http://commons.wikimedia.org/wiki/Special:FilePath/Igreja%20de%20Nossa%20Senhora%20do%20Ros%C3%A1rio%20dos%20Pretos%2C%20RELU%20%2802%29.jpg",
+      "photo": {
+        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg/1280px-Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos%2C_RELU_%2802%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        "page": "https://commons.wikimedia.org/wiki/File:Igreja_de_Nossa_Senhora_do_Ros%C3%A1rio_dos_Pretos,_RELU_(02).jpg",
+        "author": "Grupo de Pesquisa Representações do Lugar (RELU)",
         "license": "CC BY-SA 4.0",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
       }
@@ -485,156 +467,13 @@
   "osm": [
     {
       "source": "osm",
-      "id": "node/643488501",
-      "name": "Museu Theo Brandão",
-      "types": "museum",
-      "lat": -9.6693784,
-      "lng": -35.7325244,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/643613805",
-      "name": "MISA - Museu da Imagem e do Som",
-      "types": "museum",
-      "lat": -9.6726722,
-      "lng": -35.722222,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/643613818",
-      "name": "Associação Comercial de Maceió",
-      "types": "monument",
-      "lat": -9.6720804,
-      "lng": -35.7238804,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/644354725",
-      "name": "Memorial Teotônio Vilela",
-      "types": "museum",
-      "lat": -9.6702258,
-      "lng": -35.7149185,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/812528777",
-      "name": "Museu Palácio Floriano Peixoto",
-      "types": "museum",
-      "lat": -9.6602926,
-      "lng": -35.7397665,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/5390046115",
-      "name": "Eu Amo Maceió",
-      "types": "monument",
-      "lat": -9.66459,
-      "lng": -35.6984102,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/5853672830",
-      "name": "Placa de Inauguração do Conjunto José Tenório de Albuquerque Lins",
-      "types": "monument",
-      "lat": -9.604828,
-      "lng": -35.72226,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6561467378",
-      "name": "Estátua Aurélio Buarque de Holanda",
-      "types": "monument",
-      "lat": -9.6627249,
-      "lng": -35.6958996,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6577087903",
-      "name": "Estátua da Liberdade",
-      "types": "monument",
-      "lat": -9.6728502,
-      "lng": -35.7223277,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6610664055",
-      "name": "Placa de Fundação Praça Santa Terezinha do Menino Jesus",
-      "types": "memorial",
-      "lat": -9.6022601,
-      "lng": -35.7190262,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6610664056",
-      "name": "Estatua Santa Terezinha do Menino Jesus",
-      "types": "artwork",
-      "lat": -9.6020975,
-      "lng": -35.7189392,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6659201141",
-      "name": "Monumento Gogó Da Ema",
-      "types": "monument",
-      "lat": -9.6643023,
-      "lng": -35.6967817,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6727778638",
-      "name": "Estátua Nise da Silveira",
-      "types": "monument",
-      "lat": -9.6473011,
-      "lng": -35.7002845,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6932752166",
-      "name": "EU AMO BIU",
-      "types": "artwork",
-      "lat": -9.5496844,
-      "lng": -35.7268059,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/6937832703",
-      "name": "Museu da Tecnologia",
-      "types": "museum",
-      "lat": -9.671855,
-      "lng": -35.7237442,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
-      "id": "node/9862318538",
-      "name": "Estátua da Havan",
-      "types": "artwork",
-      "lat": -9.6038359,
-      "lng": -35.7438099,
-      "wikidata": null
-    },
-    {
-      "source": "osm",
       "id": "node/10078256923",
       "name": "A Cadeira Gigante de Maceió",
       "types": "monument",
       "lat": -9.6636703,
       "lng": -35.7018309,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
@@ -643,7 +482,8 @@
       "types": "artwork",
       "lat": -9.664584,
       "lng": -35.6963162,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
@@ -652,61 +492,168 @@
       "types": "artwork",
       "lat": -9.6844704,
       "lng": -35.7239994,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/50618243",
-      "name": "Pavilhão do Artesanato",
-      "types": "artwork",
-      "lat": -9.6634658,
-      "lng": -35.7083332,
-      "wikidata": null
+      "id": "node/5390046115",
+      "name": "Eu Amo Maceió",
+      "types": "monument",
+      "lat": -9.66459,
+      "lng": -35.6984102,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/157096233",
-      "name": "Museu de História Natural Ufal",
+      "id": "node/5853672830",
+      "name": "Placa de Inauguração do Conjunto José Tenório de Albuquerque Lins",
+      "types": "monument",
+      "lat": -9.604828,
+      "lng": -35.72226,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/643488501",
+      "name": "Museu Theo Brandão",
       "types": "museum",
-      "lat": -9.6615184,
-      "lng": -35.7308892,
-      "wikidata": null
+      "lat": -9.6693784,
+      "lng": -35.7325244,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/410606663",
-      "name": "Museu Pierre Chalita",
+      "id": "node/643613805",
+      "name": "MISA - Museu da Imagem e do Som",
       "types": "museum",
-      "lat": -9.6737345,
-      "lng": -35.7202459,
-      "wikidata": null
+      "lat": -9.6726722,
+      "lng": -35.722222,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/681436037",
-      "name": "Museu da Segunda Guerra Mundial",
+      "id": "node/643613818",
+      "name": "Associação Comercial de Maceió",
+      "types": "monument",
+      "lat": -9.6720804,
+      "lng": -35.7238804,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/644354725",
+      "name": "Memorial Teotônio Vilela",
       "types": "museum",
-      "lat": -9.668522,
-      "lng": -35.7371985,
-      "wikidata": null
+      "lat": -9.6702258,
+      "lng": -35.7149185,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/682578058",
-      "name": "Arquivo Público de Alagoas",
-      "types": "museum",
-      "lat": -9.6730989,
-      "lng": -35.7206026,
-      "wikidata": null
+      "id": "node/6561467378",
+      "name": "Estátua Aurélio Buarque de Holanda",
+      "types": "monument",
+      "lat": -9.6627249,
+      "lng": -35.6958996,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
-      "id": "way/872035501",
-      "name": "Memorial à República",
+      "id": "node/6577087903",
+      "name": "Estátua da Liberdade",
+      "types": "monument",
+      "lat": -9.6728502,
+      "lng": -35.7223277,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6610664055",
+      "name": "Placa de Fundação Praça Santa Terezinha do Menino Jesus",
       "types": "memorial",
-      "lat": -9.670531,
-      "lng": -35.7292255,
-      "wikidata": null
+      "lat": -9.6022601,
+      "lng": -35.7190262,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6610664056",
+      "name": "Estatua Santa Terezinha do Menino Jesus",
+      "types": "artwork",
+      "lat": -9.6020975,
+      "lng": -35.7189392,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6659201141",
+      "name": "Monumento Gogó Da Ema",
+      "types": "monument",
+      "lat": -9.6643023,
+      "lng": -35.6967817,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6727778638",
+      "name": "Estátua Nise da Silveira",
+      "types": "monument",
+      "lat": -9.6473011,
+      "lng": -35.7002845,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6932752166",
+      "name": "EU AMO BIU",
+      "types": "artwork",
+      "lat": -9.5496844,
+      "lng": -35.7268059,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/6937832703",
+      "name": "Museu da Tecnologia",
+      "types": "museum",
+      "lat": -9.671855,
+      "lng": -35.7237442,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/812528777",
+      "name": "Museu Palácio Floriano Peixoto",
+      "types": "museum",
+      "lat": -9.6602926,
+      "lng": -35.7397665,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "node/9862318538",
+      "name": "Estátua da Havan",
+      "types": "artwork",
+      "lat": -9.6038359,
+      "lng": -35.7438099,
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
@@ -715,7 +662,8 @@
       "types": "museum",
       "lat": -9.6695009,
       "lng": -35.7445783,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
@@ -724,7 +672,8 @@
       "types": "museum",
       "lat": -9.669438,
       "lng": -35.7439727,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
     },
     {
       "source": "osm",
@@ -733,7 +682,68 @@
       "types": "museum",
       "lat": -9.6699699,
       "lng": -35.7441034,
-      "wikidata": null
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/157096233",
+      "name": "Museu de História Natural Ufal",
+      "types": "museum",
+      "lat": -9.6615184,
+      "lng": -35.7308892,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/410606663",
+      "name": "Museu Pierre Chalita",
+      "types": "museum",
+      "lat": -9.6737345,
+      "lng": -35.7202459,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/50618243",
+      "name": "Pavilhão do Artesanato",
+      "types": "artwork",
+      "lat": -9.6634658,
+      "lng": -35.7083332,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/681436037",
+      "name": "Museu da Segunda Guerra Mundial",
+      "types": "museum",
+      "lat": -9.668522,
+      "lng": -35.7371985,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/682578058",
+      "name": "Arquivo Público de Alagoas",
+      "types": "museum",
+      "lat": -9.6730989,
+      "lng": -35.7206026,
+      "wikidata": null,
+      "sameAs": null
+    },
+    {
+      "source": "osm",
+      "id": "way/872035501",
+      "name": "Memorial à República",
+      "types": "memorial",
+      "lat": -9.670531,
+      "lng": -35.7292255,
+      "wikidata": null,
+      "sameAs": null
     }
   ]
 }

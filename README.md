@@ -27,6 +27,13 @@
 | `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
 | `/privacidade` `/termos` `/cookies` `/acessibilidade` `/creditos` `/sobre` | todos | Páginas legais, linkadas no rodapé de toda página pública |
 
+## Trilhas, grafo e progresso sem login
+
+- **Trilhas temáticas** na página inicial (Bronze, Escritores, Fé, Porto, República, Memória do Bebedouro), calculadas a partir do material, do tema e do bairro de cada obra (`src/features/trails/trails.ts`).
+- **Grafo de personalidades** (`src/graph.ts`): cada homenageado liga o monumento a outros lugares em Maceió e em Alagoas. Na página do monumento, **“+ Mais sobre [pessoa]”** gera a **Trilha [pessoa]** na hora.
+- **Local-first:** o progresso fica no aparelho (`mu_progress`), sem conta. Um aviso não bloqueante pergunta se a pessoa quer sincronizar na nuvem (Google) ou salvar só ali.
+- **Dados abertos:** 10 dos 25 monumentos vieram do Wikidata, OpenStreetMap e Wikimedia Commons (`scripts/import-public-data.mjs`, [docs/ingestao-de-dados.md](docs/ingestao-de-dados.md)).
+
 ## Arquitetura
 
 A arquitetura completa (FastAPI, Celery + Redis, Firebase, OAuth, níveis de acesso, APIs e fases por sprint) está em [`docs/arquitetura.md`](docs/arquitetura.md). O esqueleto do backend está em [`backend/`](backend/).

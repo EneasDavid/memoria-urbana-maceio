@@ -13,6 +13,7 @@ Documento interno do Memória Urbana Maceió (Lei 13.709/2018). A versão para o
 | Acesso de demonstração | Nenhum dado pessoal: usuário fictício e papel (visitante/gestor) | Quem avalia o projeto | Conhecer Trilha e painel sem conta | Legítimo interesse | Cookie `mu_demo` (HttpOnly) | 2 horas | Vercel |
 | Câmera/galeria no relato | Só o arquivo escolhido; a foto é recodificada sem EXIF/GPS | Visitantes que anexam | Conservação do patrimônio | Legítimo interesse, com aviso antes de abrir (`mu_media_ok`) | Aparelho (IndexedDB) até o envio | Até o envio | — |
 | Localização no mapa da Trilha | Latitude, longitude e precisão, ao vivo | Visitantes com conta que permitem | Mostrar onde a pessoa está, distâncias e check-in por GPS | Consentimento (permissão do navegador), com aviso antes do pedido | Só memória da aba; lida apenas com o mapa aberto | Não é retida | — |
+| Progresso da Trilha sem conta | Ids dos monumentos abertos, passos marcados e a escolha "salvar aqui/nuvem" | Qualquer visitante | Lembrar o que a pessoa já viu, sem cadastro | Não há tratamento pelo controlador: o dado fica só no aparelho (`localStorage` `mu_progress`) e não é enviado | Aparelho | Até a pessoa limpar o navegador | — |
 | Papéis de gestor/curador/admin | E-mail e papel | Equipe | Controle de acesso | Execução de contrato/procedimentos (art. 7º, V) | Variável `GESTOR_EMAILS` (fase 1), Firestore (fase 3) | Enquanto durar a função | Vercel, Google Cloud |
 
 Teste de legítimo interesse: a finalidade (segurança, patrimônio) é legítima; o dado é mínimo (sem nome ou contato); o visitante espera que o site registre acessos e relatos; há transparência na política e o IP é guardado só como hash.
@@ -24,6 +25,16 @@ Teste de legítimo interesse: a finalidade (segurança, patrimônio) é legítim
 - **Segurança:** HTTPS/HSTS, CSP, cookies HttpOnly/Secure/SameSite, OAuth com PKCE, sem tokens do Google guardados.
 - **Prevenção:** fotos de relatos têm EXIF/GPS removidos (task do Celery) e não devem mostrar rostos.
 - **Não discriminação e livre acesso:** o conteúdo é igual com ou sem conta.
+
+## Privacidade desde a concepção (art. 46, §2º)
+
+O acervo é feito de **dados públicos sobre patrimônio e figuras públicas**, não de dados dos visitantes.
+
+- **Conteúdo do acervo fora da LGPD de visitante:** monumentos, coordenadas, fotos com licença aberta e biografias de pessoas públicas já falecidas, a partir de fontes oficiais, jornalísticas e de bases abertas (Wikidata CC0, OpenStreetMap ODbL, Wikimedia Commons). Quando cita pessoa pública, o uso é histórico, cultural e jornalístico (art. 4º, II, "a" e "b") e de dado tornado público pelo próprio titular ou de domínio público (art. 7º, §§ 3º, 4º e 7º), sempre com a finalidade de memória e educação.
+- **Sem PII por padrão:** ler a placa, ouvir, seguir trilhas e marcar progresso funcionam sem conta, sem cookie de rastreio e sem enviar nada ao servidor. O progresso vive no `localStorage` do aparelho.
+- **Conta só por escolha:** o aviso "nuvem ou aparelho" aparece uma vez e não bloqueia. Só quem escolhe "nuvem" faz login (Google, escopo mínimo `openid email profile`).
+- **Sem analytics de terceiros:** a CSP barra rastreadores; contagem de leituras do painel é agregada e anônima.
+- **Padrões seguros:** EXIF/GPS removidos de fotos, IP só como hash com sal rotativo, nenhum campo de nome, telefone ou CPF.
 
 ## Direitos do titular (art. 18)
 

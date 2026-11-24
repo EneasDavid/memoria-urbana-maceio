@@ -3,7 +3,7 @@
 // Uso: node scripts/import-public-data.mjs  → grava data/public-sources.json
 // O resultado NÃO entra direto no site: a curadoria escreve bio, audiodescrição e convite ao museu em src/data.ts,
 // a partir de fontes oficiais e jornalísticas, e copia daqui só coordenadas, foto, crédito e licença.
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, readFileSync, existsSync } from 'node:fs'
 
 const UA = { 'User-Agent': 'MemoriaUrbanaMaceio/1.0 (projeto academico; https://github.com/EneasDavid/memoria-urbana-maceio)' }
 const MACEIO = 'Q168888'
@@ -50,8 +50,23 @@ async function commons(fileUrl) {
   return { src: ii.thumburl || ii.url, page: ii.descriptionurl, author: strip(meta.Artist?.value), license: strip(meta.LicenseShortName?.value), licenseUrl: meta.LicenseUrl?.value || null }
 }
 
-const [wd, os] = await Promise.all([wikidata(), osm().catch(() => [])])
+const FILE = 'data/public-sources.json'
+const prev = existsSync(FILE) ? JSON.parse(readFileSync(FILE, 'utf8')) : null
+// Fonte fora do ar não apaga dado: mantém a última leitura boa daquela fonte.
+const [wdRaw, os] = await Promise.all([wikidata().catch(() => prev?.wikidata ?? []), osm().catch(() => { console.warn('OSM indisponível: mantendo a última leitura.'); return prev?.osm ?? [] })])
+
+// Idempotência: chave estável (QID do Wikidata, tipo/id do OSM), sem duplicados e em ordem fixa.
+// Rodar duas vezes sem mudança na fonte gera o mesmo arquivo, byte a byte; o arquivo só é regravado se o conteúdo mudar.
+const dedupe = (items) => [...new Map(items.map((i) => [i.id, i])).values()].sort((a, b) => a.id.localeCompare(b.id, 'en'))
+const wd = dedupe(wdRaw)
 for (const item of wd) if (item.image) item.photo = await commons(item.image).catch(() => null)
-const out = { generatedAt: new Date().toISOString(), licenses: { wikidata: 'CC0 1.0', osm: '© OpenStreetMap contributors, ODbL 1.0', commons: 'licença de cada arquivo (ver photo.license)' }, wikidata: wd, osm: os }
-writeFileSync('data/public-sources.json', JSON.stringify(out, null, 2) + '\n')
-console.log(`Wikidata: ${wd.length} · com foto: ${wd.filter((i) => i.photo).length} · OSM: ${os.length}`)
+// Resolução de entidades OSM ↔ Wikidata: o item do OSM com tag wikidata aponta para o mesmo QID.
+const osmItems = dedupe(os).map((o) => ({ ...o, sameAs: o.wikidata && wd.some((w) => w.id === o.wikidata) ? o.wikidata : null }))
+
+const body = { licenses: { wikidata: 'CC0 1.0', osm: '© OpenStreetMap contributors, ODbL 1.0', commons: 'licença de cada arquivo (ver photo.license)' }, wikidata: wd, osm: osmItems }
+const same = prev && JSON.stringify({ ...prev, fetchedAt: undefined }) === JSON.stringify({ ...body, fetchedAt: undefined })
+if (same) console.log('Sem mudanças nas fontes: arquivo mantido (freshness: ' + prev.fetchedAt + ').')
+else {
+  writeFileSync(FILE, JSON.stringify({ fetchedAt: new Date().toISOString(), ...body }, null, 2) + '\n')
+  console.log(`Atualizado. Wikidata: ${wd.length} · com foto: ${wd.filter((i) => i.photo).length} · OSM: ${osmItems.length}`)
+}
