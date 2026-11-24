@@ -52,22 +52,26 @@ As estátuas da orla e das praças do Centro viraram paisagem. Elas são vistas 
 
 ## Metodologia
 
-- Scrum com sprints de **4 dias úteis: 3 de desenvolvimento + 1 de review, retro e planning** da próxima sprint. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
+- Scrum com sprints **semanais por tema: 4 dias de desenvolvimento + 1 de review, retro e planning** da próxima sprint. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
 - Estimativa em story points (planning poker), burndown por sprint, dailies e retrospectiva.
 - Programação em par, baixo acoplamento e alta coesão: telas, dados (`src/data.ts`) e fluxo do celular ficam separados.
 - Testes servem para **achar falhas** (falta → erro → falha) antes que elas cheguem à placa.
 
 ### Sprints
 
-| Sprint | Período | Foco | Estado |
+Sprints semanais, cada uma com um tema (back → front → segurança → usabilidade → LGPD → acervo → entrega → validação).
+
+| Sprint | Período | O que foi entregue e como foi testado | Estado |
 |---|---|---|---|
-| 1 · Acesso na placa | 26/10 – 29/10 | NFC/QR, página sem login, protótipo no Figma Make | concluída |
-| 2 · Conteúdo e convite ao museu | 30/10 – 04/11 | Abas Bio/Audiodescrição, card Como chegar | concluída |
-| 3 · Trilha e engajamento | 05/11 – 10/11 | Mapa, rota, carimbos, login Google opcional | concluída |
-| 4 · Preservação, correções e teste com usuários | 11/11 – 16/11 | Relato de dano, painel, bugs da Trilha, teste com usuários | concluída |
-| 5 · Qualidade, conteúdo e CI/CD | 17/11 – 20/11 | Áudio real, cache, GitHub + CI + Vercel, sync Jira ↔ GitHub | em andamento |
-| 6 · Segurança e validação | 23/11 – 26/11 | OWASP, proteção da main, CMS, conversão rua → museu | planejada |
-| 7 · Piloto e entrega | 27/11 – 02/12 | Placas físicas e apresentação | planejada |
+| Sprint 1 · Backend e dados | 01/10 – 07/10 | Esqueleto da API FastAPI com níveis de acesso (RBAC), regras do Firestore fechadas, login Google com PKCE em funções serverless e documento de arquitetura. Teste: pytest de RBAC e API (fakeredis), testes de sessão, PKCE e claims. | concluída |
+| Sprint 2 · Front e acesso na placa | 08/10 – 14/10 | Página do monumento aberta por QR/NFC sem login, bio e audiodescrição, narração sincronizada e convite ao museu em toda página. Teste: integridade dos dados, smoke do build servido e testes da narração. | concluída |
+| Sprint 3 · Segurança | 15/10 – 21/10 | Cabeçalhos HTTP, CSP, CSRF, limite de relatos, anexos seguros e os 14 ataques comuns (admin, IDOR, chaves, fraudes de pontos, XSS, segredos, banco). Teste: suítes de segurança, mídia e ataques no Node e no pytest. | concluída |
+| Sprint 4 · Usabilidade | 22/10 – 28/10 | Teste de usabilidade com moradores e correções que saíram dele; leis de UX (Fitts, Hick, Miller, Jakob, Postel), animação e responsividade. Teste: Playwright com regras de UX, responsivo de 320 a 1440 px e Core Web Vitals. | concluída |
+| Sprint 5 · LGPD e conformidade | 29/10 – 04/11 | Aviso de cookies, créditos e licença das fotos, fontes de dados citadas, aviso antes de câmera e localização, termos, privacidade e acessibilidade WCAG AA. Teste: 17 regras legais e axe-core no claro e no escuro. | concluída |
+| Sprint 6 · Back 2: acervo, ingestão noturna e trilhas | 05/11 – 11/11 | Segunda sprint de backend: rotina noturna no Celery que busca os dados abertos dos monumentos de 00h às 4h, em lotes idempotentes; novos monumentos, trilhas temáticas, grafo de personalidades, Trilha Cultural, relato de dano e painel. Teste: pytest da janela de horário, idempotência e lotes; dados, trilhas e grafo. | concluída |
+| Sprint 7 · Qualidade e entrega contínua | 12/11 – 18/11 | Repositório, GitHub Actions, deploy contínuo na Vercel, SEO com páginas pré-renderizadas, servidor próprio na Oracle e espelho Jira ↔ GitHub. Teste: CI com 3 jobs a cada push; SEO e servidor Oracle. | concluída |
+| Sprint 8 · Validação e apresentação | 19/11 – 24/11 | Progresso sem login (local-first), ingestão semanal idempotente, documentação de arquitetura, relatório e apresentação com demonstração ao vivo. Teste: suíte completa no CI e roteiro de demo com QR reais. | em andamento |
+| Backlog pós-disciplina | 25/11 – 31/12 | Redis e Celery em produção, narração na nuvem, API de parceiros, exclusão de conta, teste de carga e piloto com placas físicas. | planejada |
 
 O último dia de cada sprint é de review (demo do incremento), retrospectiva e planning (planning poker em story points).
 
