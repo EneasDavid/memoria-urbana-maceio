@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { GoogleG, Icon, LogoMark, EmMaceio, Skyline } from '../../ui'
 import { loginUrl, useSession } from './useSession'
 import { setMode } from '../../shared/progress'
+import { setLocalProfile } from '../../shared/localProfile'
 
 // Entrada da área com conta. A conta é opcional: serve para pontuar na Trilha, salvar carimbos
 // entre aparelhos. O botão leva ao fluxo OAuth 2.0 + PKCE no servidor.
@@ -10,13 +11,14 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
 
   useEffect(() => {
     document.title = 'Entrar · Memória Urbana Maceió'
-    if (s.status === 'authenticated') window.location.replace(returnTo)
+    if (s.status === 'authenticated' && !s.user.local) window.location.replace(returnTo)
   }, [s.status, returnTo])
 
   const error = new URLSearchParams(window.location.search).get('erro')
   // Sem conta: tudo o que é público funciona e o progresso fica salvo só neste aparelho.
-  const publicReturn = returnTo.startsWith('/monumento/') ? returnTo : '/'
-  const useDevice = () => { setMode('local'); window.location.assign(publicReturn) }
+  const [asking, setAsking] = useState(false)
+  const [name, setName] = useState('')
+  const useDevice = (e?: React.FormEvent) => { e?.preventDefault(); setLocalProfile(name); setMode('local'); window.location.assign(returnTo) }
 
   return (
     <main id="conteudo" className="min-h-dvh grid place-items-center bg-[#f6f3ec] text-black px-5">
@@ -37,10 +39,18 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
         )}
 
         <div className="mt-4 flex items-center gap-3 text-[13px] text-black/70"><span className="h-px flex-1 bg-black/10" />ou<span className="h-px flex-1 bg-black/10" /></div>
-        <button type="button" onClick={useDevice} className="mu-press mt-4 w-full h-[52px] rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2 text-[16px] font-semibold">
-          <Icon name="lock" size={17} />Continuar sem conta, salvando neste aparelho
-        </button>
-        <p className="mt-2 text-[13px] leading-snug text-black/70">Monumentos vistos e trilhas ficam guardados só no cache deste celular. Nada vai para o servidor. Você pode entrar com Google depois para sincronizar.</p>
+        {!asking ? (
+          <button type="button" onClick={() => setAsking(true)} className="mu-press mt-4 w-full h-[52px] rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2 text-[16px] font-semibold">
+            <Icon name="lock" size={17} />Continuar sem conta, salvando neste aparelho
+          </button>
+        ) : (
+          <form onSubmit={useDevice} className="mt-4 rounded-[14px] bg-[#f6f3ec] p-4">
+            <label htmlFor="nome-local" className="block text-[15px] font-semibold">Como podemos te chamar?</label>
+            <input id="nome-local" autoFocus required maxLength={40} value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="Ex.: Ana (fica só neste celular)" className="mt-2 w-full h-12 rounded-[12px] border border-black/15 bg-white px-3 text-[16px]" />
+            <button type="submit" className="mu-press mt-3 w-full h-12 rounded-[12px] bg-[#0b2f49] text-white text-[16px] font-semibold">Salvar neste aparelho</button>
+          </form>
+        )}
+        <p className="mt-2 text-[13px] leading-snug text-black/70">Seu nome, selos e trilhas ficam só neste celular. Nada vai para o servidor. Você pode entrar com Google depois para sincronizar.</p>
 
         <ul className="mt-6 space-y-2 text-[13px] text-black/70">
           <li className="flex gap-2"><Icon name="shield" size={16} className="text-[#1f6b6b] shrink-0" />Recebemos só nome, e-mail e foto do Google. Nunca a senha.</li>

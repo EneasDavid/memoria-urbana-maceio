@@ -1,5 +1,7 @@
-import { openCamera } from './shared/permissions'
+import { openCamera, releaseCamera } from './shared/permissions'
 import { findMonument } from './features/monument/find'
+// Carrega o leitor de QR assim que o scanner existe (não espera a câmera abrir)
+const jsqrReady = typeof window !== 'undefined' && !('BarcodeDetector' in window) ? import('jsqr') : Promise.resolve({ default: null as unknown as typeof import('jsqr').default })
 import { useEffect, useRef, useState } from 'react'
 import { Icon, Segmented, RarityPill } from './ui'
 import { byId, monuments, type Monument } from './data'
@@ -64,7 +66,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
       setResult({ m: byId(id), ...r })
       setPhase('done')
       try { navigator.vibrate?.(30) } catch { /* sem vibração */ }
-    }, 650)
+    }, 200)
   }
 
   // Leitura simulada automática (quando a câmera real não está ligada)
@@ -75,7 +77,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, mode, camera, nfcReal, target])
 
-  useEffect(() => () => streamRef.current?.getTracks().forEach((t) => t.stop()), [])
+  useEffect(() => () => { releaseCamera(streamRef.current); streamRef.current = null }, [])
 
   const switchMode = (v: ScanMode) => {
     setMode(v)
@@ -86,7 +88,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
   // Câmera real + BarcodeDetector (Chrome/Android). No iPhone a leitura real fica no app nativo / câmera do sistema.
   const startCamera = async () => {
     try {
-      const stream = await openCamera()
+      const stream = await openCamera({ facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } })
       streamRef.current = stream
       setCamera('on')
       requestAnimationFrame(() => {
@@ -104,9 +106,12 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
       }
       const BD = (window as unknown as { BarcodeDetector?: new (o: { formats: string[] }) => { detect: (v: HTMLVideoElement) => Promise<{ rawValue: string }[]> } }).BarcodeDetector
       const det = BD ? new BD({ formats: ['qr_code'] }) : null
-      const jsQR = det ? null : (await import('jsqr')).default
+      const jsQR = det ? null : (await jsqrReady).default
       const canvas = document.createElement('canvas')
       const ctx2d = canvas.getContext('2d', { willReadFrequently: true })
+      let n = 0
+      // Rápido: lê só o quadrado do centro (onde fica a mira) em 420 px, ~12 vezes por segundo;
+      // a cada 5 tentativas lê o quadro inteiro, para QR fora da mira.
       const loop = async () => {
         const v = videoRef.current
         if (!streamRef.current || !v) return
@@ -114,17 +119,20 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
           let raw: string | undefined
           if (det) raw = (await det.detect(v))[0]?.rawValue
           else if (jsQR && ctx2d && v.videoWidth) {
-            const w = Math.min(640, v.videoWidth), h = Math.round((v.videoHeight / v.videoWidth) * w)
-            canvas.width = w; canvas.height = h
-            ctx2d.drawImage(v, 0, 0, w, h)
-            raw = jsQR(ctx2d.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' })?.data
+            const full = n++ % 5 === 4
+            const side = Math.min(v.videoWidth, v.videoHeight) * (full ? 1 : 0.72)
+            const sx = (v.videoWidth - side) / 2, sy = (v.videoHeight - side) / 2
+            const out = full ? 560 : 420
+            canvas.width = out; canvas.height = out
+            ctx2d.drawImage(v, sx, sy, side, side, 0, 0, out, out)
+            raw = jsQR(ctx2d.getImageData(0, 0, out, out).data, out, out, { inversionAttempts: 'dontInvert' })?.data
           }
           if (raw) {
             const found = resolve(raw)
             if (found || simulate) { finish(found ? found.id : target, 'qr'); return }
           }
         } catch { /* continua */ }
-        window.setTimeout(loop, 250)
+        window.setTimeout(loop, det ? 120 : 80)
       }
       loop()
     } catch {

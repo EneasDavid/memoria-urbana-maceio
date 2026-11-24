@@ -41,6 +41,7 @@ test('tarefa 2 · com conta, ler pela câmera abre o app na obra com a barra de 
   await page.goto(BASE + '/monumento/nise?via=qr')
   await page.waitForURL('**/app')
   await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  await page.waitForFunction(() => (JSON.parse(localStorage.getItem('mu_app:ana@x.com:collected') || '[]')).includes('nise'))
   await ctx.close()
 })
 
@@ -102,5 +103,31 @@ test('consistência · com conta, a mesma barra de abas aparece na home, na gale
     await page.getByRole('navigation', { name: 'Abas' }).waitFor()
     await page.getByRole('link', { name: /Ana · Meus carimbos/ }).first().waitFor()
   }
+  await ctx.close()
+})
+
+test('perfil só no aparelho: pede o nome, entra no app e nada é enviado ao servidor', async () => {
+  const { ctx, page } = await phone()
+  const posts = []
+  page.on('request', (r) => { if (r.method() !== 'GET') posts.push(r.url()) })
+  await page.goto(BASE + '/entrar?returnTo=/app')
+  await page.getByRole('button', { name: /Continuar sem conta/ }).click()
+  await page.getByLabel('Como podemos te chamar?').fill('Ana')
+  await page.getByRole('button', { name: 'Salvar neste aparelho' }).click()
+  await page.waitForURL('**/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  assert.deepEqual(posts, [], 'nenhum envio ao servidor')
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_local_user')).name), 'Ana')
+  await ctx.close()
+})
+
+test('perfil só no aparelho: ler o QR pela câmera abre o app e o selo entra no passaporte', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'abc', name: 'Ana', createdAt: 1 })))
+  await page.goto(BASE + '/monumento/nise?via=qr')
+  await page.waitForURL('**/app')
+  await page.waitForFunction(() => (JSON.parse(localStorage.getItem('mu_app:local-abc@aparelho:collected') || '[]')).includes('nise'))
+  await page.reload()
+  assert.ok((await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-abc@aparelho:collected')))).includes('nise'), 'selo continua depois de recarregar')
   await ctx.close()
 })

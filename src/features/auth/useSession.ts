@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { clearLocalProfile, getLocalProfile } from '../../shared/localProfile'
 
 // Sessão vinda do servidor (cookie httpOnly assinado). O navegador nunca vê o token do Google:
 // o front só pergunta "quem sou eu?" em /api/auth/me.
@@ -8,7 +9,13 @@ export interface SessionUser {
   email: string
   picture?: string
   role: 'visitante' | 'gestor'
-  demo?: boolean // acesso de demonstração: sem Google, sem dado real
+  demo?: boolean
+  local?: boolean // perfil só neste aparelho (sem Google, nada no servidor)
+}
+
+function localUser(): SessionUser | null {
+  const p = getLocalProfile()
+  return p ? { sub: 'local-' + p.id, name: p.name, email: `local-${p.id}@aparelho`, role: 'visitante', local: true } : null
 }
 
 export type SessionState =
@@ -28,10 +35,11 @@ export function useSession(): SessionState {
         const body = (await r.json()) as { user?: SessionUser; configured?: boolean; demoAvailable?: boolean }
         if (!alive) return
         if (r.ok && body.user) setState({ status: 'authenticated', user: body.user })
+        else if (localUser()) setState({ status: 'authenticated', user: localUser()! })
         else if (body.configured === false) setState({ status: 'unavailable', reason: 'O login com Google está indisponível no momento. Você pode continuar sem conta, salvando neste aparelho.', demoAvailable: body.demoAvailable })
         else setState({ status: 'anonymous', demoAvailable: body.demoAvailable })
       })
-      .catch((e: Error) => alive && setState({ status: 'unavailable', reason: e.message }))
+      .catch((e: Error) => { if (!alive) return; const lu = localUser(); setState(lu ? { status: 'authenticated', user: lu } : { status: 'unavailable', reason: e.message }) })
     return () => {
       alive = false
     }
@@ -42,6 +50,7 @@ export function useSession(): SessionState {
 export const loginUrl = (returnTo: string) => `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`
 
 export async function logout(): Promise<void> {
+  clearLocalProfile() // sair do perfil local; o progresso continua no aparelho
   await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => undefined)
   window.location.assign('/')
 }
