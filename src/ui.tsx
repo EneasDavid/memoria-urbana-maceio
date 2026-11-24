@@ -249,8 +249,35 @@ export function Skyline({ className = '' }: { className?: string }) {
         <path d="M232 40V20l12-7 12 7v20zM240 40v-9h8v9z" />
         <path d="M262 40V16h4v-4h4v4h4v24z" />
       </g>
+      {/* Detalhes nas cores da bandeira de Alagoas: vermelho, branco, azul e o dourado do brasão */}
+      <g className="mu-alagoas">
+        <circle cx="300" cy="10" r="5" fill={AL.gold} />
+        <path d="M30 22h8v4h-8zM30 32h8v4h-8z" fill={AL.red} />
+        <path d="M32 10l2-5 2 5z" fill={AL.gold} />
+        <path d="M84 12V5M81.5 7.5h5" stroke={AL.gold} strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M70 22l14-10 14 10z" fill={AL.blue} />
+        <path d="M169 22h3v3h-3zM174 22h3v3h-3zM169 29h3v3h-3zM187 12h3v3h-3zM191 12h3v3h-3zM187 19h3v3h-3zM191 26h3v3h-3z" fill={AL.white} opacity="0.9" />
+        <path d="M262 16h12v3h-12z" fill={AL.red} />
+        <path d="M232 20l12-7 12 7z" fill={AL.red} />
+      </g>
       <path d="M0 42c20 0 20-4 40-4s20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4 20-4 40-4 20 4 40 4" fill="none" stroke="#2c8585" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M0 44c20 0 20-3 40-3s20 3 40 3 20-3 40-3 20 3 40 3 20-3 40-3 20 3 40 3 20-3 40-3 20 3 40 3" fill="none" stroke={AL.blue} strokeOpacity="0.55" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
+  )
+}
+
+// Cores da bandeira de Alagoas (faixas vermelha, branca e azul) e o dourado do brasão
+export const AL = { red: '#c8102e', white: '#ffffff', blue: '#1f4fa3', gold: '#e3b23c' } as const
+
+// Faixa decorativa com as cores de Alagoas: liga o site, o painel e os slides num só ecossistema visual
+export function AlagoasStripe({ className = '' }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={`flex h-[5px] w-[132px] overflow-hidden rounded-full mu-raise-1 ${className}`}>
+      <span className="flex-1" style={{ background: AL.red }} />
+      <span className="flex-1 bg-white border-y border-black/10" />
+      <span className="flex-1" style={{ background: AL.blue }} />
+      <span className="w-4" style={{ background: AL.gold }} />
+    </div>
   )
 }
 
