@@ -2,17 +2,17 @@
 services:
   redis:
     image: redis:7-alpine
-    ports: ["6379:6379"]
+    ports: ["127.0.0.1:6379:6379"]
   firebase:
     image: andreysenov/firebase-tools:latest
     command: firebase emulators:start --project memoria-urbana-maceio --only firestore,storage
     working_dir: /home/node/firebase
     volumes: ["../firebase:/home/node/firebase"]
-    ports: ["8080:8080", "9199:9199", "4000:4000"]
+    ports: ["127.0.0.1:8080:8080", "127.0.0.1:9199:9199", "127.0.0.1:4000:4000"]
   api:
     build: ../backend
     env_file: ../backend/env.example
-    ports: ["8000:8000"]
+    ports: ["127.0.0.1:8000:8000"]
     depends_on: [redis, firebase]
   worker:
     build: ../backend

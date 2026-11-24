@@ -1,10 +1,12 @@
 """API do Memória Urbana Maceió (fase 2: esqueleto). Rodar: uvicorn app.main:create_app --factory"""
+import hashlib
 import secrets
+import uuid
 
 from fastapi import FastAPI
 from redis import Redis
 
-from app.api.v1 import monuments, reports
+from app.api.v1 import monuments, reports, stamps
 from app.core.config import settings
 from app.repositories.monuments import InMemoryMonumentRepo, MonumentRepo
 
@@ -13,10 +15,21 @@ class InMemoryReports:
     def __init__(self):
         self.items: list[dict] = []
 
-    def add(self, data: dict) -> str:
-        rid = f"r{len(self.items) + 1}"
-        self.items.append(data | {"id": rid})
-        return rid
+    def add(self, data: dict) -> tuple[str, str]:
+        """Cria o relato com id impossível de adivinhar (UUID4) e devolve um token de envio de anexo.
+
+        Só quem criou o relato recebe o token; o banco guarda apenas o hash SHA-256 dele.
+        """
+        rid = uuid.uuid4().hex
+        token = secrets.token_urlsafe(32)
+        self.items.append(data | {"id": rid, "_uploadHash": hashlib.sha256(token.encode()).hexdigest()})
+        return rid, token
+
+    def can_upload(self, rid: str, token: str | None) -> bool:
+        r = self.get(rid)
+        if not r or not token:
+            return False
+        return secrets.compare_digest(r["_uploadHash"], hashlib.sha256(token.encode()).hexdigest())
 
     def get(self, rid: str) -> dict | None:
         return next((r for r in self.items if r["id"] == rid), None)
@@ -28,7 +41,7 @@ class InMemoryReports:
             r["_blob"] = data  # em produção: Cloud Storage (pasta de quarentena até o worker processar)
 
     def list(self) -> list[dict]:
-        return [{k: v for k, v in r.items() if k not in ("ipHash", "_blob")} for r in self.items]
+        return [{k: v for k, v in r.items() if k not in ("ipHash", "_blob", "_uploadHash")} for r in self.items]
 
 
 def create_app(redis: Redis | None = None, monument_repo: MonumentRepo | None = None, enqueue=None) -> FastAPI:
@@ -59,4 +72,5 @@ def create_app(redis: Redis | None = None, monument_repo: MonumentRepo | None = 
 
     app.include_router(monuments.router, prefix="/api/v1")
     app.include_router(reports.router, prefix="/api/v1")
+    app.include_router(stamps.router, prefix="/api/v1")
     return app

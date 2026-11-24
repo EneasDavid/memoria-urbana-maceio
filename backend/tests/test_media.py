@@ -54,7 +54,9 @@ def test_pk_solto_nao_e_falso_positivo():
 
 
 def _relato(c):
-    return c.post("/api/v1/reports", json={"monumentId": "graciliano", "kind": "Danificado", "hasPhoto": True}).json()["id"]
+    j = c.post("/api/v1/reports", json={"monumentId": "graciliano", "kind": "Danificado", "hasPhoto": True}).json()
+    c.headers["x-upload-token"] = j["uploadToken"]
+    return j["id"]
 
 
 def test_upload_aceita_foto_e_enfileira_processamento(make_client):

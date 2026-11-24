@@ -111,6 +111,7 @@ Em `/entrar`, os botões **Como visitante** e **Como gestor** abrem a Trilha e o
 - `SECURITY.md`: como relatar falhas.
 - `docs/conformidade-40.md`: matriz dos 40 requisitos. O CI publica o relatório no resumo de cada execução.
 - `tests/security.test.mjs`: cabeçalhos, segredos, XSS, CSRF, injeção e controle de acesso.
+- [`docs/seguranca-14-ataques.md`](docs/seguranca-14-ataques.md): os 14 ataques mais comuns (digitar /admin, trocar o ID na URL, chave no navegador, mudar o preço, comprar −1, Pix falso, cupom 100×, premium sem pagar, admin no cadastro, adivinhar o código, mandar a IA ignorar, script no usuário, senhas no GitHub, abrir o banco), cada um com teste em `tests/abuse.test.mjs` e `backend/tests/test_ataques.py`.
 
 ## Conformidade legal, LGPD e acessibilidade
 

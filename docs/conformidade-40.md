@@ -45,7 +45,7 @@ Matriz dos 40 requisitos para um app feito com IA não ser processado. O CI roda
 | 33 | Monitoramento de ameaças | pendente | Alertas de erro, 4xx/5xx e picos planejados. `docs/arquitetura.md` | KAN-180 |
 | 34 | Resposta a incidentes | ok | Plano em 4 passos (conter, avaliar, comunicar, registrar). `docs/lgpd.md` | KAN-98 |
 | 35 | Notificação de incidente | ok | Comunicação à ANPD e aos titulares (art. 48); canal privado em `SECURITY.md`. `SECURITY.md` | KAN-167 |
-| 36 | Testes de segurança | ok | `tests/security.test.mjs`, `tests/media.test.mjs`, testes de anexo e OWASP ZAP planejado. `tests/security.test.mjs` | KAN-166, KAN-77 |
+| 36 | Testes de segurança | ok | 14 ataques comuns em `tests/abuse.test.mjs` e `backend/tests/test_ataques.py` ([mapa](seguranca-14-ataques.md)); `tests/security.test.mjs`, `tests/media.test.mjs`, testes de anexo e OWASP ZAP planejado. `tests/security.test.mjs` | KAN-166, KAN-77 |
 | 37 | Revisão de código | ok | CODEOWNERS e template de PR; proteção da `main` planejada. `.github/CODEOWNERS` | KAN-168, KAN-46 |
 | 38 | Privilégios administrativos | parcial | Admin só por e-mail listado; a demonstração nunca vira admin. Falta 2FA obrigatório e revisão periódica. `api/auth/demo.ts` | KAN-181 |
 | 39 | Gestão de vulnerabilidades | ok | `SECURITY.md` com prazos e Dependabot. `SECURITY.md` | KAN-167 |
