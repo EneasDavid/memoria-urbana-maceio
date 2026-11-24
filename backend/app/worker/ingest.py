@@ -9,8 +9,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from datetime import datetime
-from typing import Callable, Protocol
+from typing import Protocol
 from zoneinfo import ZoneInfo
 
 TZ = ZoneInfo("America/Maceio")

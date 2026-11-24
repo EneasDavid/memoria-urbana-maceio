@@ -7,7 +7,8 @@ from app.worker.ingest import TZ, RedisStore, in_window, run_batch
 
 
 def row(qid, name, lng=-35.73, lat=-9.66):
-    return {"item": {"value": f"http://www.wikidata.org/entity/{qid}"}, "itemLabel": {"value": name}, "coord": {"value": f"Point({lng} {lat})"}}
+    return {"item": {"value": f"http://www.wikidata.org/entity/{qid}"}, "itemLabel": {"value": name},
+            "coord": {"value": f"Point({lng} {lat})"}}
 
 
 NIGHT = datetime(2026, 11, 25, 1, 30, tzinfo=TZ)

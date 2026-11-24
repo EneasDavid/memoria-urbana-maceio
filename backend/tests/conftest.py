@@ -7,7 +7,8 @@ from app.main import create_app
 from app.repositories.monuments import InMemoryMonumentRepo
 
 MONUMENTS = [
-    {"id": "graciliano", "name": "Graciliano Ramos", "role": "Escritor", "plate": "01", "kind": "Estátua", "status": "published", "xp": 250},
+    {"id": "graciliano", "name": "Graciliano Ramos", "role": "Escritor", "plate": "01", "kind": "Estátua",
+     "status": "published", "xp": 250},
     {"id": "rascunho", "name": "Rascunho", "role": "-", "plate": "99", "kind": "Busto", "status": "draft"},
 ]
 
