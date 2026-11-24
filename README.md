@@ -19,7 +19,8 @@
 
 | URL | Quem acessa | O que é |
 |---|---|---|
-| `/` | todos, sem login | Lista de monumentos (cada card abre em nova aba) |
+| `/` | todos, sem login | Apresentação do projeto, como funciona, destaques e trilhas |
+| `/galeria` | todos, sem login | Todos os monumentos por região (ver pela galeria não dá selo) |
 | `/monumento/:id` | todos, sem login | Página do monumento, aberta pelo QR/NFC da placa: bio, narração, audiodescrição, convite ao museu e relato de dano. Sem menus nem botão voltar |
 | `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) ou continuar sem conta, salvando no aparelho |
 | `/app` | conta (participante) | Trilha Cultural: Explorar, Trilha, Passaporte e leitura da placa (telas do protótipo do Figma) |
@@ -33,6 +34,15 @@
 - **Grafo de personalidades** (`src/graph.ts`): cada homenageado liga o monumento a outros lugares em Maceió e em Alagoas. Na página do monumento, **“+ Mais sobre [pessoa]”** gera a **Trilha [pessoa]** na hora.
 - **Local-first:** o progresso fica no aparelho (`mu_progress`), sem conta. Um aviso não bloqueante pergunta se a pessoa quer sincronizar na nuvem (Google) ou salvar só ali.
 - **Dados abertos:** 10 dos 25 monumentos vieram do Wikidata, OpenStreetMap e Wikimedia Commons (`scripts/import-public-data.mjs`, [docs/ingestao-de-dados.md](docs/ingestao-de-dados.md)).
+
+## Selos, permissões e sessão
+
+- **Selo pela placa:** o QR/NFC grava `/monumento/<id>?via=qr`. Abrir pela câmera do celular já dá o selo (uma vez por obra) e, com conta, abre o app na obra. A galeria nunca dá selo.
+- **Scanner do site:** lê QR de verdade no Android (BarcodeDetector) e no iPhone (jsQR).
+- **Permissões:** no primeiro acesso, o aviso oferece localização e câmera (opcionais, resposta guardada em `mu_perms`); a galeria de fotos só é pedida ao anexar; o **microfone nunca** é usado.
+- **Sessão igual em todas as páginas:** com conta, toda página mostra a foto do Google e a barra de abas do app; sem conta, o botão Entrar.
+- **3D e realidade aumentada:** saíram da interface; ficam como funcionalidade futura.
+- Testes de usabilidade: [docs/usabilidade.md](docs/usabilidade.md).
 
 ## Arquitetura
 

@@ -1,3 +1,4 @@
+import { openCamera } from './shared/permissions'
 import { useEffect, useRef, useState } from 'react'
 import { Icon, Segmented } from './ui'
 import type { Monument } from './data'
@@ -36,9 +37,10 @@ export function Immersive({ m, initial, onClose, onShot }: { m: Monument; initia
     let alive = true
     setFound(false)
     const t = window.setTimeout(() => alive && setFound(true), 1600)
-    navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'environment' } })
-      .then((s) => {
-        if (!alive) return s.getTracks().forEach((x) => x.stop())
+    const cam = navigator.mediaDevices ? openCamera() : Promise.reject(new Error('sem câmera'))
+    cam
+      .then((s: MediaStream) => {
+        if (!alive) return s.getTracks().forEach((x: MediaStreamTrack) => x.stop())
         stream.current = s
         setCam('on')
         requestAnimationFrame(() => { if (video.current) { video.current.srcObject = s; video.current.play().catch(() => undefined) } })

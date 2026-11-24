@@ -83,7 +83,7 @@ test('aviso de cookies aparece uma vez e some ao confirmar', async () => {
   const { ctx, page } = await open('/')
   const aviso = page.getByRole('region', { name: 'Aviso de cookies' })
   assert.equal(await aviso.count(), 1)
-  await page.getByRole('button', { name: 'Entendi' }).click()
+  await page.getByRole('button', { name: 'Só o essencial' }).click()
   await page.reload()
   await page.waitForTimeout(300)
   assert.equal(await aviso.count(), 0)

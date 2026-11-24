@@ -203,7 +203,7 @@ export const monuments: Monument[] = [
   {
     id: 'santoantonio', plate: '12', name: 'Igreja de Santo Antônio de Pádua', role: 'Antiga matriz do Bebedouro', years: 'Século XIX',
     area: 'Bebedouro', address: 'Em frente à Praça Lucena Maranhão, Bebedouro', kind: 'Patrimônio', group: 'bebedouro', visit: 'Fechado',
-    visitNote: 'Fechada à visitação: está na área desocupada e passa por restauração. Conheça pela página, em 3D e em RA.',
+    visitNote: 'Fechada à visitação: está na área desocupada e passa por restauração. Conheça a história pela página.',
     rarity: 'Raro', xp: 150, lat: -9.6238, lng: -35.7576, x: 40, y: 334, hue: '#8a5a3a', views: 156, change: 18, flow: 0,
     summary: 'Edificação do século XIX diante da Praça Lucena Maranhão. No trabalho de restauração, especialistas em patrimônio revelaram uma arte que até então só era conhecida em igrejas como a Catedral. A recuperação de prédios históricos do Bebedouro faz parte das medidas de compensação pelo afundamento do solo.', museum: { name: 'Instituto Histórico e Geográfico de Alagoas', address: 'Rua do Sol, 382 · Centro', hours: 'Seg. a sex., 8h às 12h e 14h às 17h', why: 'O instituto reúne documentos, fotos e objetos da história de Alagoas. [Curadoria: indicar peças ligadas ao Bebedouro.]' },
     facts: [['Época', 'Século XIX'], ['Situação', 'Em restauração · área desocupada'], ['Destaque', 'Pinturas reveladas na restauração'], ['Visitação', 'Fechada']],
@@ -414,7 +414,7 @@ export const walkPath: [number, number][] = [
 export const quests = [
   { id: 'q1', title: 'Visite 2 monumentos hoje', progress: 1, total: 2, xp: 100 },
   { id: 'q2', title: 'Ouça uma história completa', progress: 0, total: 1, xp: 50 },
-  { id: 'q3', title: 'Veja um monumento em realidade aumentada', progress: 0, total: 1, xp: 80 },
+  { id: 'q3', title: 'Siga uma trilha temática', progress: 0, total: 1, xp: 80 },
 ]
 
 export const badges = [
@@ -501,7 +501,7 @@ export interface TrackEvent {
   identified: boolean
 }
 
-export interface User {
+export interface User { picture?: string;
   name: string
   email: string
   color: string

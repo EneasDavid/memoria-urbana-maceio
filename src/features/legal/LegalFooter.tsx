@@ -5,7 +5,7 @@ import { LogoMark, Skyline } from '../../ui'
 export function LegalFooter() {
   return (
     <footer className="mt-12 pb-24 text-[13px] text-black/70">
-      <Skyline className="block w-full max-w-[520px] h-11 opacity-90" />
+      <Skyline className="relative left-1/2 -translate-x-1/2 block w-screen max-w-none h-auto max-h-[170px] mb-1" />
       <div className="border-t border-black/10 pt-6">
       <div className="flex items-center gap-2.5">
         <LogoMark size={34} />

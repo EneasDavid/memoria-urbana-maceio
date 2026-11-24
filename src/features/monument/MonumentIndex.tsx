@@ -22,7 +22,7 @@ const GROUPS: { id: Monument['group']; title: string; hint: string }[] = [
 
 export function MonumentIndex() {
   useEffect(() => {
-    document.title = 'Monumentos · Memória Urbana Maceió'
+    document.title = 'Galeria · Memória Urbana Maceió'
   }, [])
 
   return (
@@ -38,7 +38,7 @@ export function MonumentIndex() {
           <EmMaceio className="mt-1.5 text-[15px] tracking-[0.02em]" />
           <Waves className="mt-4 w-[132px] h-4" />
           <FaixaAlagoas className="mt-2" />
-          <p className="mt-3 text-[17px] leading-[1.5] text-black/75 max-w-[34ch] [text-wrap:pretty]">Quem são as estátuas e praças de Maceió, e qual museu continua cada história.</p>
+          <p className="mt-3 text-[17px] leading-[1.5] text-black/75 max-w-[34ch] [text-wrap:pretty]">Galeria: todas as estátuas, praças e igrejas do acervo. Ver por aqui não gera carimbo; o carimbo vem da placa.</p>
           <p className="mt-2 text-[14.5px] leading-[1.5] text-black/70 max-w-[42ch]">Aponte a câmera para o QR da placa ou encoste o celular no NFC. Ou escolha uma obra abaixo: não precisa de cadastro.</p>
         </header>
 

@@ -12,7 +12,8 @@ import { LoginPill, TrailInvite } from '../auth/TrailInvite'
 import { LegalFooter } from '../legal/LegalFooter'
 import { PersonTrail } from '../trails/PersonTrail'
 import { NearYou } from './NearYou'
-import { markVisited } from '../../shared/progress'
+import { markVisited, addStamp } from '../../shared/progress'
+import { useSession } from '../auth/useSession'
 
 // Página pública do monumento: é o que abre quando alguém lê o QR ou encosta no NFC da placa.
 // Regras: abre sem login (a conta é só um convite opcional), sem menu, sem botão "voltar" desenhado (o navegador já tem), uma URL por
@@ -31,6 +32,20 @@ export function MonumentPage({ id }: { id: string }) {
   const [report, setReport] = useState(false)
   const [narrating, setNarrating] = useState(false)
   const [copied, setCopied] = useState(false)
+  const session = useSession()
+  // Chegou pela placa (QR da câmera do celular ou NFC)? ?via=qr|nfc. Pela galeria não há carimbo.
+  const [via] = useState(() => { const v = new URLSearchParams(window.location.search).get('via'); return v === 'qr' || v === 'nfc' ? (v as 'qr' | 'nfc') : null })
+  const [stamped, setStamped] = useState<null | boolean>(null)
+  useEffect(() => {
+    if (!m || !via) return
+    setStamped(addStamp(m.id, via).first)
+    // tira o ?via da URL: recarregar ou compartilhar não gera carimbo de novo
+    const u = new URL(window.location.href); u.searchParams.delete('via'); window.history.replaceState(null, '', u.pathname + u.search + u.hash)
+  }, [m, via])
+  // Com conta: abre o app (com a barra de abas) já na obra, com o carimbo creditado — sem ler a placa duas vezes
+  useEffect(() => {
+    if (m && via && session.status === 'authenticated') window.location.replace(`/app?welcome=${m.id}&via=${via}`)
+  }, [m, via, session.status])
   // Lei de Jakob: compartilhar usa a folha nativa do celular; sem ela, copia o link
   const share = async () => {
     if (!m) return
@@ -57,6 +72,11 @@ export function MonumentPage({ id }: { id: string }) {
 
   return (
     <main id="conteudo" className="min-h-dvh bg-[#f6f3ec] text-black" data-staged={narrating ? 'narracao' : undefined}>
+      {stamped !== null && session.status !== 'authenticated' && (
+        <div role="status" className="fixed left-1/2 top-3 z-50 -translate-x-1/2 w-[min(92vw,420px)] rounded-[18px] bg-[#0b2f49] text-white px-4 py-3 shadow-xl text-[14px] leading-snug">
+          <b className="text-[#dda93f]">{stamped ? 'Carimbo da placa guardado!' : 'Você já tem este carimbo.'}</b> Fica neste aparelho; <a className="underline" href={`/entrar?returnTo=${encodeURIComponent('/app')}`}>entre com Google</a> para levar para a nuvem.
+        </div>
+      )}
       {/* foto e nome */}
       <section className="relative h-[52vh] min-h-[320px] max-h-[520px] mu-stage">
         <Photo m={m} className="absolute inset-0" />

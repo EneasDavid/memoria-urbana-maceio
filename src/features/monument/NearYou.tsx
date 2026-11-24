@@ -4,6 +4,7 @@ import { monuments, type Monument } from '../../data'
 import { distance, fmtDistance, nearby } from '../../shared/geo'
 import { monumentUrl } from '../../app/router'
 import { useLiveLocation } from '../../shared/useLocation'
+import { loadPerms, savePerms } from '../../shared/permissions'
 
 // "Perto daqui" com a localização REAL do visitante. Só lê o GPS depois de um toque de consentimento
 // (ou se o navegador já tem a permissão). A posição fica só na memória da aba: não é gravada nem enviada.
@@ -11,7 +12,7 @@ import { useLiveLocation } from '../../shared/useLocation'
 export function NearYou({ m }: { m: Monument }) {
   const loc = useLiveLocation(true)
   const [asked, setAsked] = useState(false)
-  useEffect(() => { loc.resume(); return loc.stop }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (loadPerms().loc) loc.start(); else loc.resume(); return loc.stop }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const here = loc.status === 'ok' && loc.here ? { lat: loc.here[0], lng: loc.here[1] } : null
   const list = here
     ? monuments.filter((x) => x.id !== m.id).map((x) => ({ m: x, meters: distance(here, x) })).sort((a, b) => a.meters - b.meters).slice(0, 3)
@@ -24,7 +25,7 @@ export function NearYou({ m }: { m: Monument }) {
         <p className="mt-1 text-[13.5px] text-black/70">Distâncias a partir de onde você está agora{loc.accuracy ? ` (precisão de ${loc.accuracy} m)` : ''}. Sua localização não sai do aparelho.</p>
       ) : (
         <div className="mt-2 flex flex-wrap items-center gap-2">
-          <button type="button" onClick={() => { setAsked(true); loc.start() }} className="mu-press h-11 px-4 rounded-full bg-white mu-edge text-[14.5px] font-semibold inline-flex items-center gap-2">
+          <button type="button" onClick={() => { setAsked(true); savePerms({ ...loadPerms(), loc: true }); loc.start() }} className="mu-press h-11 px-4 rounded-full bg-white mu-edge text-[14.5px] font-semibold inline-flex items-center gap-2">
             <Icon name="pin" size={16} stroke={2.3} className="text-[#1f6b6b]" />Usar minha localização
           </button>
           <span className="text-[13px] text-black/70">

@@ -147,14 +147,14 @@ test('7: aviso de cookies sai em arco', async () => {
   await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort())
   await page.goto(BASE + '/')
   const aviso = page.getByRole('region', { name: 'Aviso de cookies' })
-  await page.getByRole('button', { name: 'Entendi' }).click()
+  await page.getByRole('button', { name: 'Só o essencial' }).click()
   assert.match(await aviso.getAttribute('class'), /mu-arc-out/)
   await aviso.waitFor({ state: 'detached' })
   await ctx.close()
 })
 
 test('15 e 16 (Hick e Miller): lista em grupos por região, nenhum com mais de 7 escolhas', async () => {
-  const { ctx, page } = await open('/')
+  const { ctx, page } = await open('/galeria')
   const sizes = await page.$$eval('ul[data-group]', (uls) => uls.map((u) => u.children.length))
   await ctx.close()
   assert.ok(sizes.length >= 3, `grupos: ${sizes}`)
@@ -171,7 +171,7 @@ test('18 Postel: placa, caixa alta, acento e nome levam ao monumento e a URL é 
 })
 
 test('11: cartões da lista têm profundidade (perspectiva e sombra em camadas)', async () => {
-  const { ctx, page } = await open('/')
+  const { ctx, page } = await open('/galeria')
   const t = await page.locator('.mu-tilt').first().evaluate((e) => [getComputedStyle(e).transform, getComputedStyle(e).boxShadow])
   await ctx.close()
   assert.notEqual(t[0], 'none')
