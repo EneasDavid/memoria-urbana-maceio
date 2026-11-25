@@ -8,12 +8,14 @@ import { Immersive, type ImmersiveMode } from './Immersive'
 import { ReportSheet } from './ReportSheet'
 import type { Report } from './data'
 import { useLiveLocation } from './shared/useLocation'
+import { PROGRESS_FIELDS, noteWrite } from './shared/deviceData'
 import { ExploreScreen, MapScreen, MonumentList, MonumentScreen, OfflineSheet, PassportScreen, ProfileScreen, Photo, PhotoViewer, stampClass, type MobileCtx } from './MobileScreens'
 
 // Memória da sessão: o progresso continua quando o visitante sai do app (botão de início) e volta
 const sessionStore: Record<string, unknown> = {}
-// Progresso real persiste no aparelho (localStorage), por conta. Fotos e dados pesados ficam só na memória.
-const PERSIST = new Set(['collected', 'pending', 'xp', 'stampLog2', 'heard', 'arUsed', 'myReports'])
+// Progresso real persiste no aparelho (localStorage), por conta, com selo de dono e cópia online (shared/deviceData).
+// Fotos e dados pesados ficam só na memória.
+const PERSIST = new Set<string>(PROGRESS_FIELDS)
 const LS = 'mu_app:'
 function readPersisted(k: string): unknown {
   if (!PERSIST.has(k.split(':').pop() || '')) return undefined
@@ -22,6 +24,7 @@ function readPersisted(k: string): unknown {
 function writePersisted(k: string, v: unknown) {
   if (!PERSIST.has(k.split(':').pop() || '')) return
   try { localStorage.setItem(LS + k, JSON.stringify(v)) } catch { /* cota cheia ou modo privado */ }
+  noteWrite(k.slice(0, k.lastIndexOf(':'))) // assina de novo e envia para a nuvem (com espera curta)
 }
 function useSessionState<T>(key: string, init: T) {
   const [v, setV] = useState<T>(() => (key in sessionStore ? (sessionStore[key] as T) : init))
@@ -229,6 +232,8 @@ function StatusBar({ dark, online }: { dark: boolean; online: boolean }) {
 export interface Standalone {
   simulate: boolean
   onLogout: () => void
+  /** Apaga os dados desta conta neste aparelho (pedido explícito; sair não apaga). */
+  onWipeDevice?: () => void
   today: string
   links: { privacy: string; panel?: string }
   /** Tela de computador: topo como o site do protótipo e painéis centralizados */
@@ -437,6 +442,7 @@ export function MobileApp({ onTrack, session, dark, setDark, user, setUser, onRe
     setOfflinePack: (v) => { setOfflinePack(v); if (v) showToast('download', 'Pacote offline baixado · 18 MB') },
     setShareRoute,
     sync: () => { onTrack({ type: 'sync', label: `Fila offline sincronizada (${queue})`, offline: false, identified: !!user, synced: true }); showToast('sync', `${queue} evento(s) sincronizado(s)`); setQueue(0) },
+    wipeDevice: standalone?.onWipeDevice,
     logout: () => { track('logout', 'Saiu da conta'); if (standalone) return standalone.onLogout(); setUser(null); showToast('person', 'Você saiu da conta') },
     simulate,
     today: standalone?.today,

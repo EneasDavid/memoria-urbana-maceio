@@ -132,19 +132,73 @@ test('perfil só no aparelho: ler o QR pela câmera abre o app e o selo entra no
   await ctx.close()
 })
 
-test('segurança dos dados no aparelho: sair apaga o cache e outra conta não vê os selos da anterior', async () => {
+test('dados no aparelho: sair NÃO apaga; outra conta não vê os selos da anterior; voltar traz tudo de volta', async () => {
   const { ctx, page } = await phone()
   await page.addInitScript(() => { if (!sessionStorage.getItem('init')) { sessionStorage.setItem('init', '1'); localStorage.setItem('mu_local_user', JSON.stringify({ id: 'a1', name: 'Ana', createdAt: 1 })) } })
   await page.goto(BASE + '/monumento/nise?via=qr')
   await page.waitForURL('**/app')
   await page.waitForFunction(() => (JSON.parse(localStorage.getItem('mu_app:local-a1@aparelho:collected') || '[]')).includes('nise'))
-  // troca de conta sem sair: outra pessoa cria perfil no mesmo aparelho
+  await page.waitForFunction(() => !localStorage.getItem('mu_app:local-a1@aparelho:dirty') && !!localStorage.getItem('mu_app:local-a1@aparelho:seal'))
+  // sai da conta
+  await page.goto('about:blank')
+  await page.goto(BASE + '/app#perfil')
+  await page.getByText('Sair da conta').click()
+  await page.waitForURL(BASE + '/')
+  assert.equal(await page.evaluate(() => localStorage.getItem('mu_local_user')), null, 'sessão encerrada')
+  assert.ok((await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-a1@aparelho:collected') || '[]'))).includes('nise'), 'sair não apaga os selos')
+  // outra pessoa cria perfil no mesmo aparelho: começa do zero
   await page.evaluate(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'b2', name: 'Bia', createdAt: 2 })))
   await page.goto(BASE + '/app')
   await page.getByRole('navigation', { name: 'Abas' }).waitFor()
-  const leftovers = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.includes('local-a1') || k === 'mu_progress'))
-  assert.deepEqual(leftovers, [], 'dados da conta anterior foram apagados')
-  assert.equal(await page.evaluate(() => localStorage.getItem('mu_owner')), 'local-b2')
+  assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-b2@aparelho:collected') || '[]')), [], 'Bia não herda os selos de Ana')
   assert.equal(await page.evaluate(() => sessionStorage.getItem('mu_session')), 'local-b2')
+  // Ana volta: selos continuam lá
+  await page.evaluate(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'a1', name: 'Ana', createdAt: 1 })))
+  await page.goto(BASE + '/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  assert.ok((await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-a1@aparelho:collected') || '[]'))).includes('nise'), 'Ana recupera os selos')
+  await ctx.close()
+})
+
+test('selo copiado de outra conta no mesmo aparelho é recusado (vai para quarentena, não aparece)', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => { if (!sessionStorage.getItem('init')) { sessionStorage.setItem('init', '1'); localStorage.setItem('mu_local_user', JSON.stringify({ id: 'c3', name: 'Caio', createdAt: 1 })) } })
+  await page.goto(BASE + '/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  await page.waitForFunction(() => !!localStorage.getItem('mu_app:local-c3@aparelho:seal'))
+  // alguém edita o armazenamento e "dá" selos a Caio, copiados de outra conta
+  await page.evaluate(() => { localStorage.setItem('mu_app:local-c3@aparelho:collected', JSON.stringify(['nise', 'graciliano'])); localStorage.removeItem('mu_app:local-c3@aparelho:dirty') })
+  await page.reload()
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-c3@aparelho:collected') || '[]')), [], 'selos sem assinatura válida não entram')
+  assert.ok(await page.evaluate(() => Object.keys(localStorage).some((k) => k.startsWith('mu_quarantine:local-c3@aparelho:'))), 'guardado em quarentena, não destruído')
+  await ctx.close()
+})
+
+test('perfil salvo no aparelho aparece em "Entrar" para voltar com um toque', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => localStorage.setItem('mu_local_profiles', JSON.stringify([{ id: 'a1', name: 'Ana', createdAt: 1 }])))
+  await page.goto(BASE + '/entrar')
+  await page.getByRole('button', { name: 'Continuar como Ana' }).click()
+  await page.waitForURL('**/app')
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_local_user')).id), 'a1')
+  await ctx.close()
+})
+
+test('conta Google: abre com os selos salvos online (outro aparelho) e envia os novos para a nuvem', async () => {
+  const { ctx, page } = await phone({ sub: 'g1', name: 'Gil Souza', email: 'gil@x.com', role: 'visitante' })
+  const puts = []
+  await ctx.route('**/api/progress', async (r) => {
+    if (r.request().method() === 'GET') return r.fulfill({ contentType: 'application/json', body: JSON.stringify({ configured: true, doc: { collected: ['graciliano'], xp: 40 } }) })
+    const doc = JSON.parse(r.request().postData()).doc
+    puts.push(doc)
+    return r.fulfill({ contentType: 'application/json', body: JSON.stringify({ configured: true, doc, rejected: [] }) })
+  })
+  await page.goto(BASE + '/monumento/nise?via=qr') // selo novo neste aparelho
+  await page.waitForURL('**/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  await page.waitForFunction(() => { const c = JSON.parse(localStorage.getItem('mu_app:gil@x.com:collected') || '[]'); return c.includes('graciliano') && c.includes('nise') })
+  for (let i = 0; i < 40 && !puts.some((d) => d.collected.includes('nise') && d.collected.includes('graciliano')); i++) await page.waitForTimeout(100)
+  assert.ok(puts.some((d) => d.collected.includes('nise') && d.collected.includes('graciliano')), 'selo novo foi para a nuvem junto com os antigos')
   await ctx.close()
 })

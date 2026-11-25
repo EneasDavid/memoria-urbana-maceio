@@ -38,6 +38,7 @@ export interface MobileCtx {
   setShareRoute: (v: boolean) => void
   sync: () => void
   logout: () => void
+  wipeDevice?: () => void
   track: (type: TrackEvent['type'], label: string, monument?: string) => void
   collectGps: (id: string) => void
   markHeard: (id: string) => void
@@ -1072,7 +1073,8 @@ export function ProfileScreen({ ctx }: { ctx: MobileCtx }) {
       <div className="mt-6"><Group>
         {ctx.links?.panel && <Row icon="chart" iconBg="#0b2f49" title="Painel da prefeitura" subtitle="Monumentos, relatos e visitas" onClick={() => { window.location.href = ctx.links!.panel! }} />}
         <Row icon="shield" iconBg="#8e8e93" title="Meus dados (LGPD)" subtitle={ctx.links ? 'Como pedir cópia ou exclusão' : 'Baixar ou excluir'} onClick={() => { if (ctx.links) window.location.href = ctx.links.privacy }} last={!ctx.user} />
-        {ctx.user && <Row icon="person" iconBg="#ff3b30" title={<span className="text-[#ff3b30]">Sair da conta</span>} onClick={ctx.logout} last />}
+        {ctx.user && ctx.wipeDevice && <Row icon="shield" iconBg="#ff3b30" title={<span className="text-[#ff3b30]">Apagar meus dados deste aparelho</span>} subtitle="Sair não apaga nada; isto apaga" onClick={ctx.wipeDevice} />}
+        {ctx.user && <Row icon="person" iconBg="#ff3b30" title={<span className="text-[#ff3b30]">Sair da conta</span>} subtitle="Seus selos ficam guardados" onClick={ctx.logout} last />}
       </Group></div>
       <Skyline className="block w-[calc(100%+40px)] -mx-5 h-auto mt-8" />
       {isSim(ctx) && <button onClick={() => ctx.setOnline(!ctx.online)} className="mt-6 mx-auto block text-[11.5px] text-black/35">{ctx.online ? 'Teste do protótipo: simular sem internet' : 'Teste do protótipo: sem internet · tocar para voltar'}</button>}

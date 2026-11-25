@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { GoogleG, Icon, LogoMark, EmMaceio, Skyline } from '../../ui'
 import { loginUrl, useSession } from './useSession'
 import { setMode } from '../../shared/progress'
-import { setLocalProfile } from '../../shared/localProfile'
+import { listLocalProfiles, resumeLocalProfile, setLocalProfile } from '../../shared/localProfile'
 
 // Entrada da área com conta. A conta é opcional: serve para pontuar na Trilha, salvar carimbos
 // entre aparelhos. O botão leva ao fluxo OAuth 2.0 + PKCE no servidor.
@@ -19,6 +19,9 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
   const [asking, setAsking] = useState(false)
   const [name, setName] = useState('')
   const useDevice = (e?: React.FormEvent) => { e?.preventDefault(); setLocalProfile(name); setMode('local'); window.location.assign(returnTo) }
+  // Perfis que já usaram este aparelho: sair não apaga, então dá para voltar com selos e pontos
+  const [saved] = useState(() => listLocalProfiles())
+  const resume = (id: string) => { if (resumeLocalProfile(id)) { setMode('local'); window.location.assign(returnTo) } }
 
   return (
     <main id="conteudo" className="min-h-dvh grid place-items-center bg-[#f6f3ec] text-black px-5">
@@ -36,6 +39,21 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
           <a href={loginUrl(returnTo)} aria-disabled={s.status === 'loading'} className="mt-6 w-full h-[52px] rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] font-semibold">
             <GoogleG size={20} />Continuar com Google
           </a>
+        )}
+
+        {saved.length > 0 && (
+          <div className="mt-4">
+            <p className="text-[13px] font-semibold text-black/70">Perfis salvos neste aparelho</p>
+            <ul className="mt-2 space-y-2">
+              {saved.map((p) => (
+                <li key={p.id}>
+                  <button type="button" onClick={() => resume(p.id)} className="mu-press w-full h-12 rounded-[14px] border border-black/10 px-4 flex items-center gap-2 text-[15px] font-semibold text-left">
+                    <Icon name="person" size={17} className="text-[#1f6b6b] shrink-0" />Continuar como {p.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mt-4 flex items-center gap-3 text-[13px] text-black/70"><span className="h-px flex-1 bg-black/10" />ou<span className="h-px flex-1 bg-black/10" /></div>

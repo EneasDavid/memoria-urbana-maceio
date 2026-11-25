@@ -14,6 +14,8 @@ const ROUTES = {
   'GET /api/auth/callback': ['auth/callback.js', 'GET'],
   'GET /api/auth/me': ['auth/me.js', 'GET'],
   'POST /api/auth/logout': ['auth/logout.js', 'POST'],
+  'GET /api/progress': ['progress.js', 'GET'],
+  'PUT /api/progress': ['progress.js', 'PUT'],
 }
 const cache = new Map()
 async function handler(file, method) {
@@ -27,7 +29,7 @@ async function toRequest(req) {
   const host = req.headers['x-forwarded-host'] || req.headers.host || `127.0.0.1:${PORT}`
   const headers = new Headers()
   for (const [k, v] of Object.entries(req.headers)) if (v != null) headers.set(k, Array.isArray(v) ? v.join(', ') : v)
-  const body = req.method === 'GET' || req.method === 'HEAD' ? undefined : await new Promise((ok) => { const c = []; let n = 0; req.on('data', (d) => { n += d.length; if (n > 16_384) req.destroy(); else c.push(d) }); req.on('end', () => ok(Buffer.concat(c))) })
+  const body = req.method === 'GET' || req.method === 'HEAD' ? undefined : await new Promise((ok) => { const c = []; let n = 0; req.on('data', (d) => { n += d.length; if (n > 65_536) req.destroy(); else c.push(d) }); req.on('end', () => ok(Buffer.concat(c))) })
   return new Request(`${proto}://${host}${req.url}`, { method: req.method, headers, body })
 }
 

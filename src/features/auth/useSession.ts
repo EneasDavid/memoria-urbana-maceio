@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getLocalProfile } from '../../shared/localProfile'
-import { wipeUserData } from '../../shared/deviceData'
+import { clearLocalProfile, getLocalProfile } from '../../shared/localProfile'
+import { endSession } from '../../shared/deviceData'
 
 // Sessão vinda do servidor (cookie httpOnly assinado). O navegador nunca vê o token do Google:
 // o front só pergunta "quem sou eu?" em /api/auth/me.
@@ -51,7 +51,10 @@ export function useSession(): SessionState {
 export const loginUrl = (returnTo: string) => `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`
 
 export async function logout(): Promise<void> {
-  wipeUserData() // sair apaga selos, pontos, trilhas e o perfil local deste aparelho
+  // Sair encerra só a sessão: selos, pontos e passaporte continuam guardados no cofre da conta
+  // (e na nuvem, com Google). Na próxima entrada da mesma conta, está tudo lá.
+  await endSession()
+  clearLocalProfile()
   await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => undefined)
   window.location.assign('/')
 }
