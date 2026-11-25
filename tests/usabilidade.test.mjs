@@ -202,3 +202,55 @@ test('conta Google: abre com os selos salvos online (outro aparelho) e envia os 
   assert.ok(puts.some((d) => d.collected.includes('nise') && d.collected.includes('graciliano')), 'selo novo foi para a nuvem junto com os antigos')
   await ctx.close()
 })
+
+// Simula o navegador: estado da permissão da câmera e contador de pedidos (getUserMedia)
+const camStub = (state) => {
+  window.__gum = 0
+  const q = navigator.permissions.query.bind(navigator.permissions)
+  navigator.permissions.query = (d) => (d.name === 'camera' ? Promise.resolve({ state: window.__camState, onchange: null }) : q(d))
+  window.__camState = state
+  navigator.mediaDevices.getUserMedia = async () => {
+    window.__gum++
+    if (window.__camState !== 'granted') throw Object.assign(new Error('negado'), { name: 'NotAllowedError' })
+    const c = document.createElement('canvas'); c.width = 8; c.height = 8; return c.captureStream()
+  }
+}
+
+test('câmera recusada no navegador: o site não pede de novo e explica como liberar', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'p1', name: 'Pia', createdAt: 1 })))
+  await page.addInitScript(camStub, 'denied')
+  for (let i = 0; i < 2; i++) {
+    await page.goto('about:blank')
+    await page.goto(BASE + '/app')
+    await page.getByRole('button', { name: /Ler QR Code/ }).first().click()
+    await page.getByText(/Câmera bloqueada para este site/).waitFor()
+  }
+  assert.equal(await page.evaluate(() => window.__gum), 0, 'nenhum pedido de câmera quando o navegador já recusou')
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_perms')).cam), false, 'recusa guardada')
+  await ctx.close()
+})
+
+test('câmera já permitida: o aviso de primeiro acesso não pergunta de novo', async () => {
+  const { ctx, page } = await phone(null, false)
+  await page.addInitScript(camStub, 'granted')
+  await page.goto(BASE + '/')
+  const aviso = page.getByRole('region', { name: 'Aviso de cookies' })
+  await aviso.waitFor()
+  await aviso.getByRole('button', { name: 'Permitir e continuar' }).click()
+  await page.waitForTimeout(300)
+  assert.equal(await page.evaluate(() => window.__gum), 0, 'não abriu a câmera só para perguntar')
+  assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('mu_perms')).cam), true)
+  await ctx.close()
+})
+
+test('câmera já permitida: abrir o leitor liga a câmera direto, sem aviso nem pedido', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'p2', name: 'Rui', createdAt: 1 })))
+  await page.addInitScript(camStub, 'granted')
+  await page.goto(BASE + '/app')
+  await page.getByRole('button', { name: /Ler QR Code/ }).first().click()
+  await page.waitForFunction(() => window.__gum === 1)
+  assert.equal(await page.getByTestId('aviso-camera-qr').count(), 0, 'sem aviso "Usar a câmera" quando já permitida')
+  await ctx.close()
+})

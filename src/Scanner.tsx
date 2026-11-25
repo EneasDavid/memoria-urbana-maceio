@@ -1,4 +1,4 @@
-import { openCamera, releaseCamera } from './shared/permissions'
+import { openCamera, permState, releaseCamera } from './shared/permissions'
 import { findMonument } from './features/monument/find'
 // Carrega o leitor de QR assim que o scanner existe (não espera a câmera abrir)
 const jsqrReady = typeof window !== 'undefined' && !('BarcodeDetector' in window) ? import('jsqr') : Promise.resolve({ default: null as unknown as typeof import('jsqr').default })
@@ -50,7 +50,7 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
   const [mode, setMode] = useState<ScanMode>(initialMode)
   const [phase, setPhase] = useState<Phase>('scanning')
   const [result, setResult] = useState<{ m: Monument; xp: number; first: boolean; pending?: boolean } | null>(null)
-  const [camera, setCamera] = useState<'off' | 'on' | 'denied'>('off')
+  const [camera, setCamera] = useState<'checking' | 'off' | 'on' | 'denied'>(simulate ? 'off' : 'checking')
   const [nfcReal, setNfcReal] = useState<'idle' | 'waiting' | 'unsupported'>('idle')
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -78,6 +78,20 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
   }, [phase, mode, camera, nfcReal, target])
 
   useEffect(() => () => { releaseCamera(streamRef.current); streamRef.current = null }, [])
+
+  // Pede uma vez só: já permitida → liga direto, sem aviso; bloqueada → mostra como liberar; nunca respondida → aviso
+  useEffect(() => {
+    if (simulate || mode !== 'qr') return
+    let alive = true
+    permState('camera').then((st) => {
+      if (!alive) return
+      if (st === 'granted') void startCamera()
+      else if (st === 'denied') setCamera('denied')
+      else setCamera((c) => (c === 'checking' ? 'off' : c))
+    })
+    return () => { alive = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const switchMode = (v: ScanMode) => {
     setMode(v)
@@ -222,7 +236,12 @@ export function Scanner({ initialMode, target, online, collected, onClose, onRes
               {simulate && camera === 'on' && <button onClick={() => finish(target, 'qr')} className="h-9 px-4 rounded-full bg-white/15 backdrop-blur-xl text-[13px] font-semibold">Simular leitura</button>}
               {simulate && camera === 'denied' && <span className="text-[12px] text-white/70">Câmera indisponível na pré-visualização · leitura simulada</span>}
               {!simulate && camera === 'on' && !hasDetector && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Segure o celular parado, com o QR inteiro dentro do quadro.</span>}
-              {!simulate && camera === 'denied' && <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">Câmera bloqueada. Libere o acesso nas configurações do navegador e tente de novo.</span>}
+              {!simulate && camera === 'denied' && (
+                <span className="max-w-[300px] text-center text-[13px] leading-snug text-white/85">
+                  Câmera bloqueada para este site. Toque no cadeado ao lado do endereço, ative a Câmera e tente de novo.
+                  <button type="button" onClick={() => void startCamera()} className="mu-press mt-2 mx-auto block min-h-11 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-[#0b2f49]">Tentar de novo</button>
+                </span>
+              )}
             </div>
           )}
         </div>
