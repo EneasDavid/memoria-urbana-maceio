@@ -35,7 +35,7 @@ Marque **Production** e **Preview** e faça **Redeploy**: variáveis só valem p
 
 `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `FIREBASE_SERVICE_ACCOUNT` não são mais usados na Vercel e podem ser apagados.
 
-> A chave web do Firebase não é segredo (ela sempre vai para o navegador), mas não entra no bundle: o site só a busca em `/api/auth/firebase-config` na hora do login. No Google Cloud (APIs e serviços → Credenciais → chave do navegador), deixe-a restrita aos sites `https://mumcz.vercel.app/*`, `https://memoria-urbana-maceio.vercel.app/*` e `https://memoria-urbana-maceio.firebaseapp.com/*`, e às APIs **Identity Toolkit** e **Token Service**.
+> A chave web do Firebase não é segredo (ela sempre vai para o navegador), mas não entra no bundle: o site só a busca em `/api/auth/firebase-config` na hora do login. No Google Cloud (APIs e serviços → Credenciais → chave do navegador), ela está restrita aos sites `https://mumcz.vercel.app/*`, `https://memoria-urbana-maceio.vercel.app/*` e `https://memoria-urbana-maceio.firebaseapp.com/*` (o frame do login usa a chave a partir desse domínio). A restrição não aceita curinga no meio do nome, então cada preview testado entra por extenso (ex.: `https://memoria-urbana-maceio-git-feat-fire-507633-eneasdavids-projects.vercel.app/*`).
 
 ## Domínios autorizados para login
 
