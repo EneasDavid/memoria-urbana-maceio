@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { clearLocalProfile, getLocalProfile } from '../../shared/localProfile'
 import { endSession } from '../../shared/deviceData'
 
-// Sessão vinda do servidor (cookie httpOnly assinado). O navegador nunca vê o token do Google:
-// o front só pergunta "quem sou eu?" em /api/auth/me.
+// Sessão vinda do servidor (cookie httpOnly assinado). O login com Google passa pelo Firebase (firebaseLogin.ts),
+// mas o token só vai uma vez ao servidor; depois o front só pergunta "quem sou eu?" em /api/auth/me.
 export interface SessionUser {
   sub: string // id pseudônimo do Google (não é e-mail)
   name: string
@@ -48,7 +48,6 @@ export function useSession(): SessionState {
   return state
 }
 
-export const loginUrl = (returnTo: string) => `/api/auth/login?returnTo=${encodeURIComponent(returnTo)}`
 
 export async function logout(): Promise<void> {
   // Sair encerra só a sessão: selos, pontos e passaporte continuam guardados no cofre da conta

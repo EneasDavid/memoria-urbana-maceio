@@ -13,7 +13,7 @@ Matriz revisada a cada sprint review. Probabilidade e impacto vão de 1 (baixo) 
 | R7 | Menores de idade usando a conta | LGPD, art. 14 | 2 | 2 | Regra de idade do Google, aviso de autorização no login, sem perfilamento | Responsável |
 | R8 | Acidente de visitante seguindo rota (responsabilidade civil) | Código Civil, art. 927 | 1 | 3 | Aviso de segurança nos termos, rota delegada ao Google Maps | Responsável |
 | R9 | Relação de consumo sem regras de cobrança e reembolso | CDC, arts. 6º e 49 | 1 | 1 | Serviço gratuito e declarado; CI barra código de pagamento | Equipe |
-| R10 | Vazamento de sessão ou credenciais | LGPD, arts. 46 e 48 | 1 | 3 | PKCE, cookies HttpOnly, CSP, segredos só em variáveis, plano de incidente | Equipe · KAN-77 |
+| R10 | Vazamento de sessão ou credenciais | LGPD, arts. 46 e 48 | 1 | 3 | Login pelo Firebase conferido no servidor, Firestore sem chave (OIDC), cookies HttpOnly, CSP, segredos só em variáveis, plano de incidente | Equipe · KAN-77 |
 | R11 | Avaliações ou depoimentos falsos (propaganda enganosa) | CDC, art. 37 | 1 | 2 | Não há avaliações; números de demonstração marcados como simulados; CI barra | Equipe |
 
 **Revisão humana:** esta matriz foi feita pela equipe. Ela não substitui o parecer de um advogado ou do orientador do projeto; há uma task para essa revisão.

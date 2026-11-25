@@ -89,9 +89,10 @@ Depois rode **Actions → Deploy Oracle → Run workflow**. A partir daí, todo 
 
 ### 7. Login com Google na VM
 
-Quando o cliente OAuth existir (KAN-59):
-- preencha `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `GESTOR_EMAILS` em `/etc/memoria-urbana/api.env`;
-- adicione `https://<dominio>/api/auth/callback` nas URIs de redirecionamento do Google;
+O login usa o Firebase Authentication (docs/firebase.md):
+- preencha `FIREBASE_WEB_API_KEY` e `GESTOR_EMAILS` em `/etc/memoria-urbana/api.env`;
+- adicione o domínio da VM em Firebase → Authentication → Configurações → Domínios autorizados (e na restrição da chave web);
+- para o progresso online, use `FIREBASE_SERVICE_ACCOUNT` (a VM não tem o OIDC da Vercel) ou deixe `PROGRESS_DIR`;
 - rode `sudo systemctl restart memoria-urbana-api`.
 
 ### 8. Virada

@@ -71,7 +71,7 @@ export function PrivacyPage() {
       <p>Usamos só itens essenciais. Detalhes na página <a className="underline" href="/cookies">Cookies</a>.</p>
 
       <H2 id="compartilhamento">Compartilhamento e transferência internacional</H2>
-      <p>Não vendemos nem alugamos dados. Usamos fornecedores que processam dados por nossa conta: {ORG.hospedagem} (hospedagem), Google (login, apenas se você escolher entrar) e, quando o servidor de dados entrar no ar, Google Cloud/Firebase. Esses serviços podem guardar dados fora do Brasil; a transferência segue o art. 33 da LGPD, com fornecedores que adotam cláusulas de proteção de dados. Os sites que publicam as fotos recebem o seu IP quando a foto é carregada.</p>
+      <p>Não vendemos nem alugamos dados. Usamos fornecedores que processam dados por nossa conta: {ORG.hospedagem} (hospedagem), Google (login pelo Firebase Authentication, apenas se você escolher entrar) e Google Cloud/Firebase (banco Firestore em São Paulo, só para quem entra com Google). Esses serviços podem guardar dados fora do Brasil; a transferência segue o art. 33 da LGPD, com fornecedores que adotam cláusulas de proteção de dados. Os sites que publicam as fotos recebem o seu IP quando a foto é carregada.</p>
 
       <H2 id="direitos">Direitos do titular</H2>
       <p>Pelo art. 18 da LGPD você pode pedir: confirmação de que tratamos seus dados, acesso, correção, anonimização ou eliminação de dados desnecessários, portabilidade, eliminação dos dados tratados com consentimento, informação sobre com quem compartilhamos e revogação do consentimento. Para isso, fale com o encarregado pelo canal abaixo; respondemos em até 15 dias. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).</p>
@@ -80,7 +80,7 @@ export function PrivacyPage() {
       <p>{ORG.encarregado}. Contato: <Contato />. Não envie dados pessoais em chamados públicos; peça um canal privado.</p>
 
       <H2 id="seguranca">Segurança</H2>
-      <p>Conexão sempre criptografada (HTTPS com HSTS), cabeçalhos de segurança, cookies de sessão inacessíveis ao JavaScript, login com OAuth 2.0 e PKCE sem guardar senhas nem tokens do Google, e testes automáticos de segurança a cada mudança no código.</p>
+      <p>Conexão sempre criptografada (HTTPS com HSTS), cabeçalhos de segurança, cookies de sessão inacessíveis ao JavaScript, login com Google pelo Firebase Authentication conferido no servidor, sem guardar senhas nem tokens no navegador, e testes automáticos de segurança a cada mudança no código.</p>
 
       <H2 id="criancas">Crianças e adolescentes</H2>
       <p>As páginas dos monumentos podem ser lidas por qualquer pessoa, sem coleta de dados. A conta é opcional e segue a regra do Google (a partir de 13 anos); menores de 18 anos devem usá-la com autorização de um responsável, como pede o art. 14 da LGPD.</p>
@@ -99,7 +99,6 @@ export function CookiesPage() {
         head={['Nome', 'Tipo', 'Para quê', 'Duração']}
         rows={[
           ['mu_session', 'Cookie essencial (HttpOnly, Secure)', 'Manter você conectado depois de entrar com Google', '7 dias ou até sair'],
-          ['mu_oauth', 'Cookie essencial (HttpOnly, Secure)', 'Proteger o login contra falsificação (state, nonce e PKCE)', '10 minutos'],
           ['mu_cookie_notice', 'Armazenamento local', 'Lembrar que você já viu este aviso', 'Até limpar o navegador'],
           ['mu_media_ok', 'Armazenamento local', 'Lembrar que você já leu o aviso de câmera e galeria', 'Até limpar o navegador'],
           ['mu_demo', 'Cookie essencial (HttpOnly)', 'Sessão do acesso de demonstração, sem dado pessoal', '2 horas'],

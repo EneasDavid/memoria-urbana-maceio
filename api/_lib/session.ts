@@ -1,4 +1,4 @@
-// Núcleo do login: assinatura de sessão, PKCE, cookies e validação do ID token.
+// Núcleo da sessão: assinatura HMAC, cookies e papéis. A verificação do login do Firebase fica em firebaseToken.ts.
 // Sem dependências: usa Web Crypto (Node 18+ e Vercel Functions).
 // Este arquivo não importa nada, para poder ser testado direto com `node --test`.
 
@@ -21,12 +21,6 @@ export function fromB64url(s: string): Uint8Array<ArrayBuffer> {
 
 export function randomToken(bytes = 32): string {
   return b64url(crypto.getRandomValues(new Uint8Array(bytes)))
-}
-
-/** PKCE S256 (RFC 7636): challenge = BASE64URL(SHA256(verifier)). */
-export async function pkceChallenge(verifier: string): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', enc.encode(verifier))
-  return b64url(new Uint8Array(digest))
 }
 
 async function hmacKey(secret: string): Promise<CryptoKey> {
@@ -84,37 +78,6 @@ export function cookie(name: string, value: string, maxAgeSeconds: number, secur
 export function safeReturnTo(value: string | null | undefined, fallback = '/app'): string {
   if (!value || !value.startsWith('/') || value.startsWith('//') || value.startsWith('/\\')) return fallback
   return value
-}
-
-export interface IdClaims {
-  iss: string
-  aud: string
-  sub: string
-  exp: number
-  nonce?: string
-  email?: string
-  email_verified?: boolean
-  name?: string
-  picture?: string
-}
-
-/** Lê o payload do ID token. Ele veio direto do endpoint de token do Google por TLS
- *  (OIDC Core 3.1.3.7, item 6), então validamos as claims; a assinatura é garantida pelo TLS. */
-export function decodeIdToken(idToken: string): IdClaims {
-  const part = idToken.split('.')[1]
-  if (!part) throw new Error('id_token malformado')
-  return JSON.parse(dec.decode(fromB64url(part))) as IdClaims
-}
-
-export function validateClaims(c: IdClaims, opts: { clientId: string; nonce: string; now?: number }): string | null {
-  const now = (opts.now ?? Date.now()) / 1000
-  if (c.iss !== 'https://accounts.google.com' && c.iss !== 'accounts.google.com') return 'emissor inválido'
-  if (c.aud !== opts.clientId) return 'audiência inválida'
-  if (!c.exp || c.exp < now) return 'token expirado'
-  if (c.nonce !== opts.nonce) return 'nonce inválido'
-  if (!c.sub) return 'sem sub'
-  if (c.email && c.email_verified === false) return 'e-mail não verificado'
-  return null
 }
 
 export function roleFor(email: string | undefined, gestorEmails: string | undefined): 'visitante' | 'gestor' {

@@ -4,10 +4,13 @@
 // a conta de serviço (papel "Cloud Datastore User") é a única que lê e grava.
 //
 // Variáveis (Vercel → Settings → Environment Variables), passo a passo em docs/firebase.md:
-//   FIREBASE_SERVICE_ACCOUNT  = conteúdo do JSON da conta de serviço (inteiro, ou em base64)
+//   Na Vercel (sem chave): GCP_WORKLOAD_IDENTITY_PROVIDER e GCP_SERVICE_ACCOUNT (api/_lib/gcpOidc.ts)
+//   Fora da Vercel: FIREBASE_SERVICE_ACCOUNT = conteúdo do JSON da conta de serviço (inteiro, ou em base64)
 //   ou, separadas: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY
 //   FIRESTORE_EMULATOR_HOST   = host:porta do emulador local (opcional; dispensa credenciais)
 import { b64url, fromB64url } from './session.js'
+import { federatedAccessToken, oidcFederation } from './gcpOidc.js'
+import { DEFAULT_FIREBASE_PROJECT } from './config.js'
 
 export interface ServiceAccount { projectId: string; clientEmail: string; privateKey: string }
 
@@ -58,13 +61,20 @@ async function accessToken(sa: ServiceAccount): Promise<string> {
 
 export interface Firestore { getDoc(path: string): Promise<Record<string, unknown> | null>; setDoc(path: string, fields: Record<string, unknown>): Promise<void> }
 
-export function firestore(env: Record<string, string | undefined> = process.env): Firestore | null {
+/**
+ * Cliente do Firestore. Ordem de credencial: emulador local → sem chave (OIDC da Vercel, recomendado)
+ * → conta de serviço com chave (FIREBASE_SERVICE_ACCOUNT, para o servidor Oracle ou testes).
+ */
+export function firestore(env: Record<string, string | undefined> = process.env, oidcToken: string | null = null): Firestore | null {
   const emulator = env.FIRESTORE_EMULATOR_HOST
-  const sa = serviceAccount(env)
-  const projectId = sa?.projectId || (emulator ? env.FIREBASE_PROJECT_ID || 'demo-memoria-urbana' : '')
-  if (!projectId || (!sa && !emulator)) return null
+  const fed = oidcFederation(env)
+  const keyless = !emulator && fed && oidcToken ? fed : null
+  const sa = keyless ? null : serviceAccount(env)
+  const projectId = keyless ? env.FIREBASE_PROJECT_ID || DEFAULT_FIREBASE_PROJECT : sa?.projectId || (emulator ? env.FIREBASE_PROJECT_ID || 'demo-memoria-urbana' : '')
+  if (!projectId || (!sa && !emulator && !keyless)) return null
   const base = `${emulator ? `http://${emulator}` : 'https://firestore.googleapis.com'}/v1/projects/${projectId}/databases/(default)/documents/`
-  const headers = async (): Promise<Record<string, string>> => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${emulator ? 'owner' : await accessToken(sa!)}` })
+  const bearer = async () => (emulator ? 'owner' : keyless ? federatedAccessToken(keyless, oidcToken!) : accessToken(sa!))
+  const headers = async (): Promise<Record<string, string>> => ({ 'Content-Type': 'application/json', Authorization: `Bearer ${await bearer()}` })
   return {
     async getDoc(path) {
       const r = await fetch(base + path, { headers: await headers() })

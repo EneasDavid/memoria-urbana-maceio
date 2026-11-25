@@ -1,121 +1,84 @@
-# Firebase e login com Google: como gerar as credenciais
+# Firebase: login com Google e progresso online, sem chave guardada
 
-Com estes passos, quem entra com Google tem selos, pontos e passaporte salvos online (Firestore). A pessoa pode sair, trocar de celular ou limpar o navegador sem perder nada. Leva uns 15 minutos.
+Quem entra com Google tem selos, pontos e passaporte salvos online (Firestore). A pessoa pode sair, trocar de celular ou limpar o navegador sem perder nada.
 
-São **5 variáveis** na Vercel:
+O site continua hospedado na Vercel. O Firebase cuida de duas coisas:
 
-| Variável | Para quê | De onde vem |
+- **Login (Firebase Authentication):** o navegador abre o login do Google pelo Firebase (popup). O ID token vai **uma vez** para o servidor (`POST /api/auth/session`), que confere a assinatura e cria o cookie de sessão próprio (HttpOnly, assinado, 7 dias). O navegador não guarda token nenhum.
+- **Banco (Cloud Firestore):** só a API lê e grava. O acesso é **sem chave**: a Vercel prova quem é com um token OIDC de curta duração, trocado no Google por um acesso temporário à conta de serviço `api-progresso` (Workload Identity Federation).
+
+Projeto do Firebase/Google Cloud: `memoria-urbana-maceio` (número `503211513071`).
+
+## O que já está configurado
+
+| Onde | O quê |
+|---|---|
+| Firestore | Banco `(default)` em `southamerica-east1` (São Paulo, dados no Brasil), plano Spark. Regras de [`firebase/firestore.rules`](../firebase/firestore.rules): tudo negado ao navegador |
+| Authentication | Provedor **Google** ativado. Nome exibido no login: "Memória Urbana Maceió" |
+| App da Web | App `site` registrado (fornece a chave web pública) |
+| Conta de serviço | `api-progresso@memoria-urbana-maceio.iam.gserviceaccount.com`, só com o papel **Cloud Datastore User**. **Sem chave** |
+| Workload Identity Federation | Pool `vercel`, provedor OIDC `vercel` com emissor `https://oidc.vercel.com/eneasdavids-projects`, audiência `https://vercel.com/eneasdavids-projects` e condição `assertion.owner=='eneasdavids-projects' && assertion.project=='memoria-urbana-maceio'`. Só esse projeto da Vercel pode usar a conta de serviço (`roles/iam.workloadIdentityUser`) |
+| Vercel | OIDC Federation em modo **Team** (Settings → Security) |
+
+## Variáveis na Vercel
+
+| Variável | Segredo? | Valor |
 |---|---|---|
-| `GOOGLE_CLIENT_ID` | Login com Google | Passo 4 |
-| `GOOGLE_CLIENT_SECRET` | Login com Google | Passo 4 |
-| `SESSION_SECRET` | Assinar a sessão e a prova de dono de cada selo | Passo 5 |
-| `FIREBASE_SERVICE_ACCOUNT` | Gravar e ler o progresso no Firestore | Passo 3 |
-| `GESTOR_EMAILS` | (opcional) e-mails que abrem o painel da prefeitura | Vocês |
+| `SESSION_SECRET` | sim | 32+ caracteres aleatórios (já existe) |
+| `FIREBASE_WEB_API_KEY` | não (identificador público) | Firebase → ⚙️ Configurações do projeto → Seus apps → `site` → `apiKey` |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | não | `projects/503211513071/locations/global/workloadIdentityPools/vercel/providers/vercel` |
+| `GCP_SERVICE_ACCOUNT` | não | `api-progresso@memoria-urbana-maceio.iam.gserviceaccount.com` |
+| `GESTOR_EMAILS` | não | (opcional) e-mails que abrem o painel da prefeitura |
+| `FIREBASE_PROJECT_ID` | não | (opcional) padrão `memoria-urbana-maceio` |
 
-> **Nunca** coloque o arquivo JSON nem os segredos no Git, no Jira, em slides ou no chat. O `.gitignore` já bloqueia `*-firebase-adminsdk-*.json` e `*service-account*.json`.
+Marque **Production** e **Preview** e faça **Redeploy**: variáveis só valem para deploys novos.
 
----
+`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `FIREBASE_SERVICE_ACCOUNT` não são mais usados na Vercel e podem ser apagados.
 
-## 1. Criar o projeto no Firebase
+> A chave web do Firebase não é segredo (ela sempre vai para o navegador), mas não entra no bundle: o site só a busca em `/api/auth/firebase-config` na hora do login. No Google Cloud (APIs e serviços → Credenciais → chave do navegador), ela está restrita aos sites `https://mumcz.vercel.app/*`, `https://memoria-urbana-maceio.vercel.app/*` e `https://memoria-urbana-maceio.firebaseapp.com/*` (o frame do login usa a chave a partir desse domínio). A restrição não aceita curinga no meio do nome, então cada preview testado entra por extenso (ex.: `https://memoria-urbana-maceio-git-feat-fire-507633-eneasdavids-projects.vercel.app/*`).
 
-1. Abra <https://console.firebase.google.com> e entre com a conta Google do time.
-2. **Adicionar projeto** → nome `memoria-urbana-maceio` → pode desligar o Google Analytics (o site não usa) → **Criar projeto**.
+## Domínios autorizados para login
 
-O projeto do Firebase **é** um projeto do Google Cloud: o login com Google (passo 4) fica no mesmo lugar.
+Firebase → Authentication → Configurações → Domínios autorizados. Além dos padrões (`localhost`, `memoria-urbana-maceio.firebaseapp.com` e `.web.app`), adicione os endereços do site:
 
-## 2. Criar o banco (Firestore)
+- `mumcz.vercel.app`
+- `memoria-urbana-maceio.vercel.app`
+- endereços de preview que forem testados (ex.: `memoria-urbana-maceio-git-<branch>-eneasdavids-projects.vercel.app`)
 
-1. No menu: **Criação** → **Firestore Database** → **Criar banco de dados**.
-2. **Local:** `southamerica-east1 (São Paulo)`. Fica mais perto de Maceió, e os dados ficam no Brasil (LGPD). Não dá para mudar depois.
-3. **Modo de produção** → **Criar**.
-4. Aba **Regras**: apague o que estiver lá, cole o conteúdo de [`firebase/firestore.rules`](../firebase/firestore.rules) (tudo `if false`) e clique em **Publicar**.
-   - Assim, **nenhum navegador** lê ou grava direto no banco. Só a nossa API faz isso, com a conta de serviço do passo 3, que já confere a sessão e a prova de dono dos selos.
+Sem isso, o popup mostra `auth/unauthorized-domain`.
 
-## 3. Gerar a conta de serviço (credencial do servidor)
+## Segurança
 
-**Opção recomendada (mínimo de permissão):**
+- **Navegador nunca toca no banco:** regras do Firestore negam tudo. A API confere a sessão e a prova de dono de cada selo antes de gravar.
+- **ID token conferido no servidor** (`api/_lib/firebaseToken.ts`): assinatura RS256 com as chaves públicas do Google, `aud`/`iss` do projeto, validade, login feito há no máximo 5 minutos, provedor `google.com` e e-mail verificado.
+- **A conta é o id do Google** (`firebase.identities["google.com"]`), o mesmo do login antigo: ninguém perde selos na troca.
+- **CSP estrita no site todo.** Só a página `/entrar` libera `apis.google.com` (script do login), `identitytoolkit`/`securetoken` (conexão) e o frame de `memoria-urbana-maceio.firebaseapp.com`, com `Cross-Origin-Opener-Policy: same-origin-allow-popups` para o popup funcionar. `tests/security.test.mjs` impede que essa exceção cresça.
+- **Sem chave de conta de serviço:** o token OIDC da Vercel vale minutos e o pool só aceita este time e projeto. O acesso gerado tem só o escopo do Firestore.
 
-1. Abra <https://console.cloud.google.com/iam-admin/serviceaccounts> e escolha o projeto `memoria-urbana-maceio` no topo.
-2. **Criar conta de serviço** → nome `api-progresso` → **Criar e continuar**.
-3. **Papel:** procure **Cloud Datastore User** (é o que dá acesso ao Firestore) → **Continuar** → **Concluir**.
-4. Clique na conta criada → aba **Chaves** → **Adicionar chave** → **Criar nova chave** → **JSON** → **Criar**. O arquivo é baixado (algo como `memoria-urbana-maceio-1a2b3c.json`).
+## Conferir se funcionou
 
-**Opção rápida:** no Firebase, ⚙️ **Configurações do projeto** → **Contas de serviço** → **Gerar nova chave privada**. Funciona, mas essa conta tem acesso a tudo no projeto.
+1. `https://mumcz.vercel.app/api/auth/me` deve mostrar `"configured":true`.
+2. Em `/entrar`, **Continuar com Google** abre o popup; ao voltar, o app abre já com a sua foto.
+3. Leia uma placa (ou abra `/monumento/nise?via=qr`), confira o selo no Passaporte, saia e entre de novo (ou em outro celular): o selo continua lá.
+4. Firebase → Firestore → coleção `progresso`: um documento por conta. O id é um hash e não revela quem é a pessoa.
+5. Firebase → Authentication → Usuários: aparece a conta Google que entrou.
 
-**Transformar o JSON em uma linha (base64)** para colar na Vercel:
+Se o login funciona mas o progresso não vai para a nuvem, confira `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT` e se o OIDC da Vercel está em modo Team.
 
-```bash
-base64 -w0 memoria-urbana-maceio-1a2b3c.json
-```
+## Fora da Vercel (servidor Oracle e testes)
 
-No Mac (o `base64` do Mac não tem `-w0`):
-
-```bash
-base64 -i memoria-urbana-maceio-1a2b3c.json | tr -d '\n'
-```
-
-No Windows (PowerShell):
-
-```bash
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("memoria-urbana-maceio-1a2b3c.json"))
-```
-
-O resultado (um texto longo) vai em `FIREBASE_SERVICE_ACCOUNT`. Também funciona colar o JSON inteiro, sem converter. Depois de configurar, **apague o arquivo** do computador ou guarde num cofre de senhas.
-
-## 4. Criar o login com Google (OAuth)
-
-Ainda em <https://console.cloud.google.com>, no mesmo projeto:
-
-1. **APIs e serviços** → **Tela de permissão OAuth** (ou **Google Auth Platform**):
-   - Tipo: **Externo**. Nome do app: `Memória Urbana Maceió`. E-mail de suporte: o do time.
-   - Escopos: só `openid`, `email` e `profile` (o site não pede mais nada).
-   - Enquanto estiver em **Teste**, só os e-mails cadastrados em "Usuários de teste" conseguem entrar. Para abrir a todos, clique em **Publicar app**.
-2. **APIs e serviços** → **Credenciais** → **Criar credenciais** → **ID do cliente OAuth** → tipo **Aplicativo da Web**.
-   - **URIs de redirecionamento autorizados**, adicione exatamente:
-     - `https://mumcz.vercel.app/api/auth/callback`
-     - `https://memoria-urbana-maceio.vercel.app/api/auth/callback` (endereço antigo, ainda no ar)
-     - (se usar o servidor Oracle) `https://SEU-DOMINIO/api/auth/callback`
-     - (para testar localmente com `vercel dev`) `http://localhost:3000/api/auth/callback`
-   - **Criar** → copie o **ID do cliente** (`GOOGLE_CLIENT_ID`, termina em `.apps.googleusercontent.com`) e a **Chave secreta do cliente** (`GOOGLE_CLIENT_SECRET`, começa com `GOCSPX-`).
-
-> Erro `redirect_uri_mismatch` no login = o endereço do passo 4.2 está diferente do site (confira `https`, domínio e `/api/auth/callback`, sem barra no final).
-
-## 5. Gerar o `SESSION_SECRET`
-
-Precisa ter 32 caracteres ou mais, aleatórios:
-
-```bash
-openssl rand -base64 48
-```
-
-Sem `openssl`:
-
-```bash
-node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"
-```
-
-Guarde bem: trocar esse valor desconecta todo mundo. Os selos não se perdem, porque o servidor assina de novo os que já estão no Firestore.
-
-## 6. Colocar tudo na Vercel
-
-1. <https://vercel.com/eneasdavids-projects/memoria-urbana-maceio> → **Settings** → **Environment Variables**.
-2. Adicione as 5 variáveis da tabela do topo, marcando **Production** e **Preview**.
-3. **Deployments** → no último deploy, **⋯** → **Redeploy**. As variáveis só valem para deploys novos.
-
-No **servidor Oracle**, as mesmas variáveis vão em `/etc/memoria-urbana/api.env`, seguido de `sudo systemctl restart memoria-urbana-api`.
-
-## 7. Conferir se funcionou
-
-1. Abra `https://mumcz.vercel.app/api/auth/me`: deve aparecer `"configured":true`.
-2. Entre com Google, leia uma placa (ou abra `/monumento/nise?via=qr`) e confira o selo no Passaporte.
-3. **Perfil → Sair da conta**, entre de novo, ou entre em **outro celular** com a mesma conta: o selo continua lá.
-4. No Firebase → Firestore → coleção `progresso`: há um documento por conta. O id do documento é um hash e não revela quem é a pessoa. Os campos são `selos`, `pontos`, `atualizadoEm` e `progresso`.
-
-Se o passo 1 mostrar `"configured":false`, falta `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` ou `SESSION_SECRET` (que precisa ter 32+ caracteres), ou faltou o Redeploy. Se o login funciona mas o progresso não vai para a nuvem, confira `FIREBASE_SERVICE_ACCOUNT` e o papel **Cloud Datastore User** da conta de serviço.
+- O servidor Oracle não tem o token OIDC da Vercel. Lá o Firestore usa `FIREBASE_SERVICE_ACCOUNT` (JSON da conta de serviço, inteiro ou em base64) ou a pasta `PROGRESS_DIR`.
+- Emulador local: `FIRESTORE_EMULATOR_HOST=localhost:8080` dispensa credenciais (`firebase emulators:start` na pasta `firebase/`).
+- Em `vercel dev`, o token OIDC vem de `VERCEL_OIDC_TOKEN` (`vercel env pull`).
 
 ## Como funciona (resumo técnico)
 
-- `api/_lib/firestore.ts`: a API faz login como conta de serviço (JWT RS256 → token de acesso, renovado a cada hora) e usa a API REST do Firestore. Não precisa de SDK.
-- `api/progress.ts`: `GET` e `PUT /api/progress`, só com sessão Google. O servidor junta o que veio com o que já está salvo, sem perder nada, e dá a cada selo uma prova de dono (HMAC com `SESSION_SECRET`). Selo com prova de outra conta é recusado.
-- Sem Firestore configurado, a API tenta Upstash Redis (`KV_REST_API_URL`/`KV_REST_API_TOKEN`) ou a pasta `PROGRESS_DIR`. Sem nada, o progresso fica só no aparelho, que **não é apagado ao sair**.
-- Emulador local: `FIRESTORE_EMULATOR_HOST=localhost:8080` dispensa credenciais (`firebase emulators:start` na pasta `firebase/`).
+- `src/features/auth/firebaseLogin.ts`: baixa o SDK do Firebase só no clique, faz `signInWithPopup` com persistência em memória, manda o ID token para `/api/auth/session` e encerra o login do Firebase.
+- `api/auth/session.ts`: confere o token e grava o cookie `mu_session`. `api/auth/me.ts` e `api/auth/logout.ts` seguem iguais.
+- `api/_lib/gcpOidc.ts`: troca o token da Vercel no STS e gera o acesso da conta de serviço (cache de 1 hora).
+- `api/_lib/firestore.ts`: API REST do Firestore, sem SDK. Ordem: emulador → OIDC da Vercel → `FIREBASE_SERVICE_ACCOUNT`.
+- `api/progress.ts`: `GET` e `PUT /api/progress`, só com sessão Google. Junta o que veio com o que está salvo, sem perder nada, e dá a cada selo uma prova de dono (HMAC com `SESSION_SECRET`).
+
+## Hospedagem no Firebase (avaliada e não adotada)
+
+O Firebase Hosting gratuito só serve páginas estáticas. A API (login e progresso) precisaria de Cloud Functions ou App Hosting, que exigem o plano pago Blaze. Como a Vercel já faz tudo isso de graça, a hospedagem ficou na Vercel. Existe um site `memoria-urbana-maceio-48435.web.app` vazio, criado no registro do app, que pode ser apagado.

@@ -97,8 +97,8 @@ test('9 admin no cadastro: não há cadastro com papel; demonstração removida;
   const fake = await sign({ sub: 'x', role: 'admin', demo: true, exp: Math.floor(Date.now() / 1000) + 60 }, 'memoria-urbana-demo-sem-privilegio-real-000000')
   const res = await me(new Request('http://127.0.0.1/api/auth/me', { headers: { cookie: `mu_demo=${fake}` } }))
   assert.equal((await res.json()).user, null)
-  assert.doesNotMatch(read('api/auth/callback.ts'), /searchParams\.get\(['"]role/)
-  assert.match(read('api/auth/callback.ts'), /role: roleFor\(claims\.email, cfg\.gestorEmails\)/)
+  assert.doesNotMatch(read('api/auth/session.ts'), /role:\s*(body|json|claims)\.role|searchParams\.get\(['"]role/)
+  assert.match(read('api/auth/session.ts'), /role: roleFor\(c\.email, cfg\.gestorEmails\)/)
 })
 
 test('10 adivinhar o código: state, nonce e verificador com 256 bits e nunca repetidos', () => {

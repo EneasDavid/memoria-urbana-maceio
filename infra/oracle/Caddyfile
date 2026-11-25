@@ -8,7 +8,7 @@
 {$SITE_DOMAIN} {
 	encode zstd gzip
 
-	# Login (OAuth) e futuras APIs: Node local
+	# Login (sessão), progresso e futuras APIs: Node local
 	handle /api/* {
 		reverse_proxy 127.0.0.1:3001 {
 			header_up X-Forwarded-Host {host}
@@ -31,9 +31,19 @@
 		Referrer-Policy "strict-origin-when-cross-origin"
 		Permissions-Policy "camera=(self), geolocation=(self), microphone=()"
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
-		Cross-Origin-Opener-Policy "same-origin"
-		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://082noticias.com https://img.dhost.cloud https://prefeitura.maceio.cloud https://www.tnh1.com.br https://lh3.googleusercontent.com https://upload.wikimedia.org https://server.arcgisonline.com; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' https://accounts.google.com; frame-ancestors 'self'; upgrade-insecure-requests"
 		-Server
+	}
+
+	# CSP e COOP estritos em todo o site; só /entrar libera o login do Google (Firebase Authentication)
+	@site not path /entrar
+	header @site {
+		Cross-Origin-Opener-Policy "same-origin"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://082noticias.com https://img.dhost.cloud https://prefeitura.maceio.cloud https://www.tnh1.com.br https://lh3.googleusercontent.com https://upload.wikimedia.org https://server.arcgisonline.com; media-src 'self' blob:; connect-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+	}
+	@entrar path /entrar
+	header @entrar {
+		Cross-Origin-Opener-Policy "same-origin-allow-popups"
+		Content-Security-Policy "default-src 'self'; script-src 'self' https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://082noticias.com https://img.dhost.cloud https://prefeitura.maceio.cloud https://www.tnh1.com.br https://lh3.googleusercontent.com https://upload.wikimedia.org https://server.arcgisonline.com; media-src 'self' blob:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; font-src 'self' data:; frame-src https://memoria-urbana-maceio.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
 	}
 
 	log {

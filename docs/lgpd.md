@@ -22,7 +22,7 @@ Teste de legítimo interesse: a finalidade (segurança, patrimônio) é legítim
 
 - **Necessidade:** página pública sem cadastro. O relato não pede nome nem contato. O login recebe só `openid email profile`.
 - **Transparência:** política, cookies, termos e créditos linkados no rodapé de toda página pública.
-- **Segurança:** HTTPS/HSTS, CSP, cookies HttpOnly/Secure/SameSite, OAuth com PKCE, sem tokens do Google guardados.
+- **Segurança:** HTTPS/HSTS, CSP, cookies HttpOnly/Secure/SameSite, login pelo Firebase com token conferido no servidor, sem tokens guardados no navegador; Firestore sem chave de servidor.
 - **Prevenção:** fotos de relatos têm EXIF/GPS removidos (task do Celery) e não devem mostrar rostos.
 - **Não discriminação e livre acesso:** o conteúdo é igual com ou sem conta.
 
