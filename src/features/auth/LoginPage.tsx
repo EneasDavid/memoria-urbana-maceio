@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { GoogleG, Icon, LogoMark, EmMaceio, Skyline } from '../../ui'
-import { loginUrl, useSession } from './useSession'
+import { useSession } from './useSession'
+import { signInWithGoogle } from './firebaseLogin'
 import { setMode } from '../../shared/progress'
 import { listLocalProfiles, resumeLocalProfile, setLocalProfile } from '../../shared/localProfile'
 
 // Entrada da área com conta. A conta é opcional: serve para pontuar na Trilha, salvar carimbos
-// entre aparelhos. O botão leva ao fluxo OAuth 2.0 + PKCE no servidor.
+// entre aparelhos. O botão abre o login do Google pelo Firebase; o servidor cria a sessão (cookie HttpOnly).
 export function LoginPage({ returnTo }: { returnTo: string }) {
   const s = useSession()
 
@@ -14,7 +15,15 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
     if (s.status === 'authenticated' && !s.user.local) window.location.replace(returnTo)
   }, [s.status, returnTo])
 
-  const error = new URLSearchParams(window.location.search).get('erro')
+  const [error, setError] = useState<string | null>(() => new URLSearchParams(window.location.search).get('erro'))
+  const [busy, setBusy] = useState(false)
+  const google = async () => {
+    if (busy) return
+    setBusy(true); setError(null)
+    const r = await signInWithGoogle()
+    if (r.ok) { window.location.assign(returnTo); return }
+    setError(r.message); setBusy(false)
+  }
   // Sem conta: tudo o que é público funciona e o progresso fica salvo só neste aparelho.
   const [asking, setAsking] = useState(false)
   const [name, setName] = useState('')
@@ -31,14 +40,14 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
         <EmMaceio className="mt-0.5 text-[14px]" />
         <p className="mt-2 text-[15.5px] text-black/70 leading-snug">Escolha onde guardar seu progresso: na nuvem, com sua conta Google, ou só neste aparelho. As páginas dos monumentos continuam abertas a todos, sem conta.</p>
 
-        {error && <p className="mt-4 rounded-[12px] bg-[#c4402e]/10 px-3 py-2 text-[14px] text-[#a3321f]">Não foi possível entrar ({error}). Tente de novo.</p>}
+        {error && <p role="alert" className="mt-4 rounded-[12px] bg-[#c4402e]/10 px-3 py-2 text-[14px] text-[#a3321f]">{error}</p>}
 
         {s.status === 'unavailable' ? (
           <p className="mt-6 rounded-[12px] bg-[#dda93f]/15 px-3 py-2.5 text-[14px] text-[#6b4d0d]">{s.reason}</p>
         ) : (
-          <a href={loginUrl(returnTo)} aria-disabled={s.status === 'loading'} className="mt-6 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] leading-tight font-semibold text-center">
-            <GoogleG size={20} className="shrink-0" /><span>Continuar com Google</span>
-          </a>
+          <button type="button" onClick={google} disabled={s.status === 'loading' || busy} aria-busy={busy} className="mu-press mt-6 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] leading-tight font-semibold text-center disabled:opacity-60">
+            <GoogleG size={20} className="shrink-0" /><span>{busy ? 'Entrando com Google…' : 'Continuar com Google'}</span>
+          </button>
         )}
 
         {saved.length > 0 && (

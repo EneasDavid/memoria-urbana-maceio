@@ -22,7 +22,7 @@
 | `/` | todos, sem login | Apresentação do projeto, como funciona, destaques e trilhas |
 | `/galeria` | todos, sem login | Todos os monumentos por região (ver pela galeria não dá selo) |
 | `/monumento/:id` | todos, sem login | Página do monumento, aberta pelo QR/NFC da placa: bio, narração, audiodescrição, convite ao museu e relato de dano. Sem menus nem botão voltar |
-| `/entrar` | todos | Login com Google (OAuth 2.0 + PKCE) ou continuar sem conta, salvando no aparelho |
+| `/entrar` | todos | Login com Google (Firebase Authentication, sessão em cookie do servidor) ou continuar sem conta, salvando no aparelho |
 | `/app` | conta (participante) | Trilha Cultural: Explorar, Trilha, Passaporte e leitura da placa (telas do protótipo do Figma) |
 | `/painel` | papel gestor | Painel da prefeitura |
 | `/prototipo` | todos | Protótipo navegável do Figma Make, para apresentação |
@@ -109,7 +109,7 @@ pnpm install
 pnpm build
 node --experimental-strip-types --test tests/data.test.mjs   # integridade do conteúdo
 node --experimental-strip-types --test tests/smoke.test.mjs  # integração: sobe o build e verifica rotas, assets e logo
-node --experimental-strip-types --test tests/auth.test.mjs   # login: sessão assinada, PKCE, claims, open redirect
+node --experimental-strip-types --test tests/auth.test.mjs   # login: sessão assinada, token do Firebase, acesso sem chave, open redirect
 node --experimental-strip-types --test tests/compliance.test.mjs  # 17 regras legais e LGPD
 node --experimental-strip-types --test tests/a11y.test.mjs        # axe-core WCAG 2.1 AA + teclado (precisa do Chromium do Playwright)
 cd backend && pytest                                          # RBAC, cache, relatos com rate limit
@@ -123,7 +123,7 @@ cd backend && pytest                                          # RBAC, cache, rel
 
 Em `/entrar` há duas opções reais, sem usuários fictícios:
 
-- **Continuar com Google** (OAuth 2.0 + PKCE): sincroniza o progresso na nuvem. Precisa das variáveis `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `SESSION_SECRET` na Vercel. Para guardar selos e pontos online (`/api/progress`), configure o **Firebase Firestore** com `FIREBASE_SERVICE_ACCOUNT`. O passo a passo para gerar todas as credenciais (Firebase e login Google) está em [`docs/firebase.md`](docs/firebase.md). Alternativas: Upstash Redis (`KV_REST_API_URL`/`KV_REST_API_TOKEN`) ou a pasta `PROGRESS_DIR` no servidor Oracle. Sem isso, o progresso fica só no aparelho, que **não é apagado ao sair**.
+- **Continuar com Google** (Firebase Authentication): sincroniza o progresso na nuvem. O login abre num popup do Google; o servidor confere o token do Firebase e cria um cookie de sessão próprio (HttpOnly, 7 dias), sem guardar token no navegador. Selos e pontos ficam no **Firestore**, acessado **sem chave**: a Vercel se identifica por OIDC e usa a conta de serviço `api-progresso`, que só tem acesso ao Firestore. Variáveis e passo a passo em [`docs/firebase.md`](docs/firebase.md). Alternativas: Upstash Redis (`KV_REST_API_URL`/`KV_REST_API_TOKEN`) ou a pasta `PROGRESS_DIR` no servidor Oracle. Sem isso, o progresso fica só no aparelho, que **não é apagado ao sair**.
 - **Continuar sem conta, salvando neste aparelho**: o progresso (monumentos vistos e trilhas) fica no `localStorage` do celular; nada vai para o servidor.
 
 O antigo acesso de demonstração (visitante/gestor fictícios) foi removido. O painel só abre para e-mails listados em `GESTOR_EMAILS`.

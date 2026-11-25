@@ -23,7 +23,7 @@ Se a falha envolver dados pessoais, seguimos o plano de incidente de [`docs/lgpd
 
 | Proteção | Onde |
 |---|---|
-| Login OAuth 2.0 com PKCE, state e nonce; sessão em cookie HttpOnly, Secure, SameSite=Lax | `api/` |
+| Login com Google pelo Firebase Authentication; ID token conferido no servidor (RS256, projeto, login recente); sessão em cookie HttpOnly, Secure, SameSite=Lax; Firestore sem chave (OIDC) | `api/` |
 | CSRF: rotas POST só aceitam a própria origem | `api/_lib/config.ts` |
 | CSP sem script inline nem `eval`, HSTS de 2 anos, nosniff, `frame-ancestors` e Permissions-Policy | `vercel.json` e `infra/oracle/Caddyfile` |
 | Anexos validados pelo conteúdo, com recusa de compactados, poliglotas, scripts e bombas de descompressão | `src/shared/media.ts` e `backend/app/core/media.py` |

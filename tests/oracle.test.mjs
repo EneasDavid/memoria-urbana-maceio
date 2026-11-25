@@ -8,10 +8,11 @@ import { readFileSync, existsSync } from 'node:fs'
 const read = (p) => readFileSync(p, 'utf8')
 const caddy = read('infra/oracle/Caddyfile')
 const vercel = JSON.parse(read('vercel.json'))
-const vercelHeaders = Object.fromEntries(vercel.headers.flatMap((b) => b.headers).map((h) => [h.key, h.value]))
 
 test('Caddyfile tem os mesmos cabeçalhos de segurança da Vercel (CSP, HSTS, COOP…)', () => {
-  for (const [k, v] of Object.entries(vercelHeaders)) assert.ok(caddy.includes(`${k} "${v}"`), `cabeçalho ${k} diferente da Vercel`)
+  for (const b of vercel.headers) for (const { key: k, value: v } of b.headers) assert.ok(caddy.includes(`${k} "${v}"`), `cabeçalho ${k} (${b.source}) diferente da Vercel`)
+  assert.match(caddy, /@entrar path \/entrar/)
+  assert.match(caddy, /@site not path \/entrar/)
 })
 
 test('Caddyfile serve o HTML pré-renderizado, cai no spa.html e repassa só /api/* ao Node local', () => {
@@ -23,7 +24,7 @@ test('Caddyfile serve o HTML pré-renderizado, cai no spa.html e repassa só /ap
 test('setup.sh abre 80/443 no iptables da imagem Oracle e não guarda segredos no repositório', () => {
   const s = read('infra/oracle/setup.sh')
   assert.match(s, /iptables -I INPUT .*--dport \$port/)
-  assert.match(s, /GOOGLE_CLIENT_SECRET=\n/)
+  assert.match(s, /FIREBASE_WEB_API_KEY=\n/)
   assert.match(s, /NoNewPrivileges=true/)
 })
 
@@ -37,7 +38,7 @@ test('workflow de deploy só roda com variáveis da Oracle e fixa a chave do hos
 let server, base
 before(async () => {
   assert.ok(existsSync('server/build/api/auth/me.js'), 'rode `pnpm build:server` antes')
-  for (const k of ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'SESSION_SECRET']) delete process.env[k]
+  for (const k of ['FIREBASE_WEB_API_KEY', 'SESSION_SECRET']) delete process.env[k]
   const { createServer } = await import('../server/api-server.mjs')
   server = createServer()
   await new Promise((r) => server.listen(0, '127.0.0.1', r))
@@ -45,14 +46,15 @@ before(async () => {
 })
 after(() => server?.close())
 
-test('API Node responde /api/auth/me como na Vercel (sem OAuth configurado)', async () => {
+test('API Node responde /api/auth/me como na Vercel (sem login configurado)', async () => {
   const r = await fetch(base + '/api/auth/me')
   assert.equal(r.status, 200)
   assert.deepEqual(await r.json(), { configured: false, user: null })
 })
 
 test('API Node: login sem configuração responde 503, rota desconhecida 404, método errado 404', async () => {
-  assert.equal((await fetch(base + '/api/auth/login')).status, 503)
+  assert.equal((await fetch(base + '/api/auth/firebase-config')).status, 503)
+  assert.equal((await fetch(base + '/api/auth/session', { method: 'POST', headers: { origin: base }, body: '{}' })).status, 503)
   assert.equal((await fetch(base + '/api/nada')).status, 404)
   assert.equal((await fetch(base + '/api/auth/me', { method: 'DELETE' })).status, 404)
 })

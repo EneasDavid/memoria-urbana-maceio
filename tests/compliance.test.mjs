@@ -36,7 +36,8 @@ test('2. termos de uso com objeto, conduta, responsabilidade e foro', () => {
 test('3. aviso de cookies montado em todas as páginas públicas e página de cookies', () => {
   assert.match(read('src/app/Routes.tsx'), /<CookieNotice \/>/)
   const s = section('CookiesPage')
-  for (const c of ['mu_session', 'mu_oauth', 'mu_cookie_notice', 'mu_reports_pending']) assert.ok(s.includes(c), `cookie ${c} não documentado`)
+  assert.ok(!s.includes('mu_oauth'), 'mu_oauth não existe mais (login pelo Firebase)')
+  for (const c of ['mu_session', 'mu_cookie_notice', 'mu_reports_pending']) assert.ok(s.includes(c), `cookie ${c} não documentado`)
 })
 
 test('4. política de reembolso: serviço gratuito e nenhum código de pagamento', () => {
@@ -66,7 +67,7 @@ test('7. sem scripts de rastreamento no bundle nem na configuração', () => {
   const site = JSON.parse(read('.figma/make/site.json'))
   assert.ok(!site.analytics?.googleAnalyticsId, 'Google Analytics ligado em .figma/make/site.json')
   assert.ok(!site.customScripts, 'scripts customizados em .figma/make/site.json')
-  const csp = JSON.parse(read('vercel.json')).headers[0].headers.find((h) => h.key === 'Content-Security-Policy')?.value || ''
+  const csp = JSON.parse(read('vercel.json')).headers.find((b) => b.source !== '/entrar').headers.find((h) => h.key === 'Content-Security-Policy')?.value || ''
   assert.match(csp, /script-src 'self'(;|$)/, 'CSP precisa limitar scripts ao próprio site')
   assert.doesNotMatch(csp, /unsafe-eval/)
   assert.match(csp, /connect-src 'self'/, 'CSP precisa impedir envio de dados a terceiros')

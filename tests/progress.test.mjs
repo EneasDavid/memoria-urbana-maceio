@@ -9,7 +9,7 @@ import { mergeDocs, sanitizeDoc, emptyDoc } from '../api/_lib/progressDoc.ts'
 const SECRET = 'p'.repeat(48)
 let api
 before(async () => {
-  Object.assign(process.env, { GOOGLE_CLIENT_ID: 'cid', GOOGLE_CLIENT_SECRET: 'cs', SESSION_SECRET: SECRET, PROGRESS_MEMORY: '1' })
+  Object.assign(process.env, { FIREBASE_WEB_API_KEY: 'chave-web-publica-de-teste', SESSION_SECRET: SECRET, PROGRESS_MEMORY: '1' })
   assert.ok(existsSync('server/build/api/progress.js'), 'rode `pnpm build:server` antes')
   api = await import('../server/build/api/progress.js')
 })

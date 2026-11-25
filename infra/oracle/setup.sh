@@ -50,9 +50,9 @@ chmod 440 /etc/sudoers.d/memoria-urbana
 echo "==> Segredos do login (preencha depois; nunca vão para o Git)"
 if [ ! -f $ETC/api.env ]; then
   cat > $ETC/api.env <<ENV
-# OAuth Google (KAN-59). Sem estes valores, /api/auth/me responde configured:false e o site segue funcionando.
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
+# Login com Google pelo Firebase Authentication. Sem estes valores, /api/auth/me responde configured:false e o site segue funcionando.
+FIREBASE_PROJECT_ID=memoria-urbana-maceio
+FIREBASE_WEB_API_KEY=
 SESSION_SECRET=$(openssl rand -base64 48 | tr -d '\n')
 GESTOR_EMAILS=
 API_PORT=3001

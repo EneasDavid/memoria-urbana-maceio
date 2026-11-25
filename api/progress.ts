@@ -41,7 +41,7 @@ export async function proveStamps(doc: ProgressDoc, secret: string, sub: string)
 
 async function guard(req: Request) {
   const cfg = authConfig()
-  const store = progressStore()
+  const store = progressStore(req)
   if (!cfg) return { error: json({ configured: false, error: 'Login não configurado' }, 503) }
   if (!store) return { error: json({ configured: false, error: 'Armazenamento online não configurado' }, 503) }
   const sub = await sessionSub(req, cfg)

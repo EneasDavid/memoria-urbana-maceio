@@ -10,8 +10,8 @@ const HOST = process.env.API_HOST || '127.0.0.1' // só o Caddy, na mesma máqui
 const BUILD = path.resolve(import.meta.dirname, 'build/api')
 
 const ROUTES = {
-  'GET /api/auth/login': ['auth/login.js', 'GET'],
-  'GET /api/auth/callback': ['auth/callback.js', 'GET'],
+  'GET /api/auth/firebase-config': ['auth/firebase-config.js', 'GET'],
+  'POST /api/auth/session': ['auth/session.js', 'POST'],
   'GET /api/auth/me': ['auth/me.js', 'GET'],
   'POST /api/auth/logout': ['auth/logout.js', 'POST'],
   'GET /api/progress': ['progress.js', 'GET'],
@@ -24,7 +24,7 @@ async function handler(file, method) {
 }
 
 async function toRequest(req) {
-  // O Caddy informa o protocolo e o host originais; sem isso o cookie Secure e o redirect_uri sairiam errados.
+  // O Caddy informa o protocolo e o host originais; sem isso o cookie Secure e a conferência de origem (CSRF) sairiam errados.
   const proto = req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http'
   const host = req.headers['x-forwarded-host'] || req.headers.host || `127.0.0.1:${PORT}`
   const headers = new Headers()

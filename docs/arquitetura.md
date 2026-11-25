@@ -34,7 +34,7 @@ flowchart LR
   A <--> RD
   A --> FS
   A --> ST
-  A <-->|Authorization Code + PKCE| G
+  A <-->|ID token do Firebase| G
   A -->|enfileira| RD --> W
   S --> RD
   W --> FS
@@ -58,7 +58,7 @@ flowchart LR
 
 | Fase | Sprint | O que fica de pé |
 |---|---|---|
-| 1 · já entregue | 5 | Rotas públicas só de monumentos; OAuth (Authorization Code + PKCE) em Vercel Functions com sessão em cookie assinado; front em `app/` + `features/` |
+| 1 · já entregue | 5 | Rotas públicas só de monumentos; login com Google (hoje pelo Firebase Authentication, token conferido em Vercel Functions) com sessão em cookie assinado; progresso no Firestore sem chave (OIDC); front em `app/` + `features/` |
 | 2 · fundação | 6 | Backend FastAPI, Docker Compose, projeto Firebase, regras do Firestore, módulo de níveis de acesso (RBAC), CI do backend |
 | 3 · dados e sessões | 7 | Redis + Celery no ar; OAuth migra para a API com sessão no Redis; API de monumentos e de relatos; fotos no Storage |
 | 4 · processamento | 8 | Narração TTS, notificação de relatos, agregação de visitas, painel lendo a API, gestão de papéis e auditoria |
@@ -76,27 +76,27 @@ sequenceDiagram
   participant G as Google
   participant R as Redis
   participant D as Firestore
+  participant FB as Firebase Auth
   V->>F: "Continuar com Google"
-  F->>A: GET /api/auth/login?returnTo=/app
-  A->>A: gera state, nonce, code_verifier (PKCE S256)
-  A-->>V: 302 para accounts.google.com + cookie mu_oauth (assinado, 10 min)
-  V->>G: login e consentimento (openid email profile)
-  G-->>V: 302 /api/auth/callback?code&state
-  V->>A: callback
-  A->>A: confere state = cookie (anti-CSRF)
-  A->>G: POST /token (code + code_verifier + client_secret)
-  G-->>A: id_token
-  A->>A: valida iss, aud, exp, nonce, email_verified
-  A->>D: upsert users/{sub} (papel atual)
-  A->>R: SET sess:{sid} {uid, role} EX 7d
-  A-->>V: 302 returnTo + cookie mu_session=sid (HttpOnly, Secure, SameSite=Lax)
+  F->>A: GET /api/auth/firebase-config (chave web pública)
+  F->>FB: signInWithPopup (Google, openid email profile)
+  FB->>G: login e consentimento
+  G-->>FB: identidade Google
+  FB-->>F: ID token do Firebase (persistência só em memória)
+  F->>A: POST /api/auth/session { idToken } (mesma origem)
+  A->>A: confere RS256 (chaves públicas), aud/iss do projeto, exp, login há ≤ 5 min, google.com
+  A-->>F: cookie mu_session (HttpOnly, Secure, SameSite=Lax) e o front encerra o login do Firebase
+  F->>A: PUT /api/progress (com o cookie)
+  A->>G: STS: troca o token OIDC da Vercel → acesso da conta api-progresso (sem chave)
+  A->>D: grava progresso/{hash da conta}
 ```
 
-- **Nenhum token do Google** fica no navegador nem no banco. A API usa o `id_token` uma vez para identificar a pessoa e descarta.
+- **Nenhum token do Google ou do Firebase** fica no navegador nem no banco. A API usa o ID token uma vez para identificar a pessoa e descarta. A conta é o id do Google (`firebase.identities`).
 - **Fase 1 (no ar):** a sessão é um cookie assinado com HMAC (`api/_lib/session.ts`). É simples, mas não pode ser revogada antes de expirar.
 - **Fase 3:** a sessão passa a viver no Redis (`sess:{sid}`). Quando o papel de alguém muda ou a conta é excluída, a API apaga as sessões em `user_sessions:{uid}` e o acesso cai na hora.
 - **Variáveis:**
-  - `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` (Google Cloud Console → Credenciais → ID do cliente OAuth, tipo Web, redirect `https://memoria-urbana-maceio.vercel.app/api/auth/callback`);
+  - `FIREBASE_WEB_API_KEY` (chave web pública do app `site` no Firebase) e `FIREBASE_PROJECT_ID`;
+  - `GCP_WORKLOAD_IDENTITY_PROVIDER` e `GCP_SERVICE_ACCOUNT` (Firestore sem chave, via OIDC da Vercel);
   - `SESSION_SECRET` (32+ caracteres aleatórios);
   - `GESTOR_EMAILS` (só na fase 1; na fase 3 o papel vem do Firestore).
 
@@ -246,7 +246,7 @@ api_partners/{id}         name, keyHash, scopes[], ratePerMin, active
 | A04 Design inseguro | Página pública sem conta; minimização de dados; rate limit em relatos |
 | A05 Configuração | Cabeçalhos de segurança na Vercel, CORS fechado no domínio, docs da API só fora de produção |
 | A06 Componentes vulneráveis | `pnpm audit` e `pip-audit` no CI, Dependabot |
-| A07 Autenticação | OAuth com PKCE, state e nonce; logout por POST; revogação de sessão |
+| A07 Autenticação | Firebase Auth (Google) com token conferido no servidor e login recente; logout por POST; revogação de sessão |
 | A08 Integridade | Deploy só pela `main` protegida; CI verde obrigatório |
 | A09 Logs | `audit_log` para papéis e relatos; logs sem dado pessoal |
 | A10 SSRF | Worker só chama domínios de uma lista (Google, provedor de e-mail) |
@@ -290,7 +290,7 @@ tests/                  testes do front e da fase 1 do login
 | Linguagens | TypeScript 5/7, Python 3.12, SQL nenhum (NoSQL), Bash | Front e funções; backend; scripts de infra |
 | Front | React 19, Vite 8, Tailwind CSS 4 | SPA com páginas pré-renderizadas por monumento (`scripts/prerender.mjs`) |
 | APIs do navegador | Web Speech API (narração), Web NFC + câmera (QR), Geolocation, IndexedDB/localStorage | Recursos nativos, sem app instalado |
-| Login | OAuth 2.0 + OpenID Connect (Google) com PKCE; Vercel Functions (`api/auth/*`) | Sessão em cookie HMAC |
+| Login | Firebase Authentication (Google) no navegador; token conferido em Vercel Functions (`api/auth/session`) | Sessão em cookie HMAC |
 | Backend (fase 2+) | FastAPI, Pydantic, Uvicorn, Celery 5, Redis 7 | API REST `/api/v1`, filas, cache, rate limit |
 | Banco e arquivos | Firebase Firestore e Cloud Storage | Documento por monumento, fotos e áudios |
 | Dados abertos | Wikidata SPARQL, OpenStreetMap Overpass, Wikimedia Commons API | Ingestão do acervo (`docs/ingestao-de-dados.md`) |

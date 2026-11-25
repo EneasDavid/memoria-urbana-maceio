@@ -10,8 +10,8 @@ Matriz dos 40 requisitos para um app feito com IA não ser processado. O CI roda
 
 | # | Requisito | Status | Evidência | Task |
 |---|---|---|---|---|
-| 1 | Autenticação segura | ok | OAuth 2.0 + OIDC com PKCE S256, state e nonce; sessão HMAC em cookie HttpOnly. `api/auth/login.ts`, `tests/security.test.mjs` | KAN-53, KAN-158 |
-| 2 | Controle de acesso | ok | Papéis fechados (visitante, gestor, curador, admin) com `require()`. Sem acesso de demonstração: papel só pela lista do servidor. `backend/app/core/rbac.py`, `api/auth/callback.ts` | KAN-65, KAN-164 |
+| 1 | Autenticação segura | ok | Login Google pelo Firebase Authentication; ID token conferido no servidor (RS256, aud/iss, login recente); sessão HMAC em cookie HttpOnly. `api/auth/session.ts`, `api/_lib/firebaseToken.ts`, `tests/auth.test.mjs` | KAN-53, KAN-158 |
+| 2 | Controle de acesso | ok | Papéis fechados (visitante, gestor, curador, admin) com `require()`. Sem acesso de demonstração: papel só pela lista do servidor. `backend/app/core/rbac.py`, `api/auth/session.ts` | KAN-65, KAN-164 |
 | 3 | Criptografia de dados | parcial | TLS em tudo (HSTS de 2 anos); Firestore cifrado em repouso pelo Google; cookies assinados. Falta cifrar campos sensíveis e rotacionar segredos. `vercel.json` | KAN-182 |
 | 4 | HTTPS/TLS | ok | HSTS com preload e `upgrade-insecure-requests`; Caddy com certificado automático na Oracle. `vercel.json`, `infra/oracle/Caddyfile` | KAN-109 |
 | 5 | Hashing de senhas | n/a | Não há senha no projeto: o login é pelo Google e a demonstração não usa senha. O teste barra senha fixa no código. `tests/security.test.mjs` | — |

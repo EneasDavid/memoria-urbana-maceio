@@ -48,7 +48,7 @@ jobs:
       - name: Testes de dados (integridade do conteúdo)
         run: node --experimental-strip-types --no-warnings --test tests/data.test.mjs
 
-      - name: Testes do login (sessão, PKCE, claims, open redirect)
+      - name: Testes do login (sessão, token do Firebase, acesso sem chave, open redirect)
         run: node --experimental-strip-types --no-warnings --test tests/auth.test.mjs
 
       - name: Testes da narração (trechos, palavra falada, voz pt-BR)

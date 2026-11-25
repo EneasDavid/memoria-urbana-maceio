@@ -1,12 +1,13 @@
 // Onde o progresso de cada conta fica guardado no servidor (o primeiro configurado vale).
 // - Firebase Firestore (recomendado): coleção "progresso", um documento por conta (id = SHA-256 do id Google).
-//   Credenciais e passo a passo em docs/firebase.md.
+//   Na Vercel, sem chave (OIDC → conta de serviço api-progresso). Passo a passo em docs/firebase.md.
 // - Vercel: Upstash Redis (integração "Upstash for Redis" do Marketplace cria KV_REST_API_URL e KV_REST_API_TOKEN).
 // - Servidor Oracle: arquivos JSON numa pasta (PROGRESS_DIR), um por conta, com nome = SHA-256 do id da conta.
 // Sem nenhum dos dois, /api/progress responde { configured: false } e o app segue salvando só no aparelho.
 import { hmacB64 } from './session.js'
 import { sanitizeDoc, type ProgressDoc } from './progressDoc.js'
 import { firestore } from './firestore.js'
+import { vercelOidcToken } from './gcpOidc.js'
 
 export interface ProgressStore { get(sub: string): Promise<ProgressDoc | null>; put(sub: string, doc: ProgressDoc): Promise<void> }
 
@@ -50,8 +51,8 @@ function fileStore(dir: string): ProgressStore {
   }
 }
 
-function firestoreStore(): ProgressStore | null {
-  const fs = firestore()
+function firestoreStore(req?: Request): ProgressStore | null {
+  const fs = firestore(process.env, vercelOidcToken(req))
   if (!fs) return null
   return {
     async get(sub) {
@@ -66,8 +67,9 @@ function firestoreStore(): ProgressStore | null {
 }
 
 let memory: Map<string, ProgressDoc> | null = null
-export function progressStore(): ProgressStore | null {
-  const fs = firestoreStore()
+/** `req` traz o token OIDC da Vercel (acesso ao Firestore sem chave). */
+export function progressStore(req?: Request): ProgressStore | null {
+  const fs = firestoreStore(req)
   if (fs) return fs
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
