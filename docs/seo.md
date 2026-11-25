@@ -33,7 +33,7 @@ O React substitui o HTML estático ao carregar, então a página continua igual 
 ## Search Console (dono do projeto)
 
 1. Entre em https://search.google.com/search-console com a conta Google do projeto.
-2. Clique em **Adicionar propriedade → Prefixo do URL** e informe `https://memoria-urbana-maceio.vercel.app/`, ou o domínio da Oracle depois da virada.
+2. Clique em **Adicionar propriedade → Prefixo do URL** e informe `https://mumcz.vercel.app/`, ou o domínio da Oracle depois da virada.
 3. Escolha **Tag HTML** e copie só o valor de `content="…"`.
 4. Cadastre esse valor como variável `GOOGLE_SITE_VERIFICATION`:
    - na Vercel: Settings → Environment Variables, depois faça um redeploy;
