@@ -36,8 +36,8 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
         {s.status === 'unavailable' ? (
           <p className="mt-6 rounded-[12px] bg-[#dda93f]/15 px-3 py-2.5 text-[14px] text-[#6b4d0d]">{s.reason}</p>
         ) : (
-          <a href={loginUrl(returnTo)} aria-disabled={s.status === 'loading'} className="mt-6 w-full h-[52px] rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] font-semibold">
-            <GoogleG size={20} />Continuar com Google
+          <a href={loginUrl(returnTo)} aria-disabled={s.status === 'loading'} className="mt-6 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] leading-tight font-semibold text-center">
+            <GoogleG size={20} className="shrink-0" /><span>Continuar com Google</span>
           </a>
         )}
 
@@ -47,8 +47,8 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
             <ul className="mt-2 space-y-2">
               {saved.map((p) => (
                 <li key={p.id}>
-                  <button type="button" onClick={() => resume(p.id)} className="mu-press w-full h-12 rounded-[14px] border border-black/10 px-4 flex items-center gap-2 text-[15px] font-semibold text-left">
-                    <Icon name="person" size={17} className="text-[#1f6b6b] shrink-0" />Continuar como {p.name}
+                  <button type="button" onClick={() => resume(p.id)} className="mu-press w-full min-h-12 rounded-[14px] border border-black/10 px-4 py-2 flex items-center gap-2 text-[15px] leading-tight font-semibold text-left">
+                    <Icon name="person" size={17} className="text-[#1f6b6b] shrink-0" /><span className="min-w-0 break-words">Continuar como {p.name}</span>
                   </button>
                 </li>
               ))}
@@ -58,14 +58,15 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
 
         <div className="mt-4 flex items-center gap-3 text-[13px] text-black/70"><span className="h-px flex-1 bg-black/10" />ou<span className="h-px flex-1 bg-black/10" /></div>
         {!asking ? (
-          <button type="button" onClick={() => setAsking(true)} className="mu-press mt-4 w-full h-[52px] rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2 text-[16px] font-semibold">
-            <Icon name="lock" size={17} />Continuar sem conta, salvando neste aparelho
+          <button type="button" onClick={() => setAsking(true)} className="mu-press mt-4 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2.5 text-[16px] leading-tight font-semibold">
+            <Icon name="lock" size={17} className="shrink-0" />
+            <span className="flex flex-col items-start text-left">Continuar sem conta<span className="text-[13px] font-medium text-white/80">Salvando só neste aparelho</span></span>
           </button>
         ) : (
           <form onSubmit={useDevice} className="mt-4 rounded-[14px] bg-[#f6f3ec] p-4">
             <label htmlFor="nome-local" className="block text-[15px] font-semibold">Como podemos te chamar?</label>
             <input id="nome-local" autoFocus required maxLength={40} value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="Ex.: Ana (fica só neste celular)" className="mt-2 w-full h-12 rounded-[12px] border border-black/15 bg-white px-3 text-[16px]" />
-            <button type="submit" className="mu-press mt-3 w-full h-12 rounded-[12px] bg-[#0b2f49] text-white text-[16px] font-semibold">Salvar neste aparelho</button>
+            <button type="submit" className="mu-press mt-3 w-full min-h-12 px-4 py-2 rounded-[12px] bg-[#0b2f49] text-white text-[16px] font-semibold">Salvar neste aparelho</button>
           </form>
         )}
         <p className="mt-2 text-[13px] leading-snug text-black/70">Seu nome, selos e trilhas ficam só neste celular. Nada vai para o servidor. Você pode entrar com Google depois para sincronizar.</p>

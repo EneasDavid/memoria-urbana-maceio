@@ -75,6 +75,9 @@ jobs:
       - name: Trilhas temáticas, grafo de personalidades e progresso sem login (local-first)
         run: pnpm exec playwright install --with-deps chromium && node --experimental-strip-types --no-warnings --test tests/trails.test.mjs
 
+      - name: Layout (texto nunca vaza, é cortado ou fica espremido em botões e links; 320/390 px, claro/escuro, fonte 125%)
+        run: node --experimental-strip-types --no-warnings --test tests/layout.test.mjs
+
       - name: Usabilidade e carga cognitiva (passos para ler a placa e ganhar o selo)
         run: node --experimental-strip-types --no-warnings --test tests/usabilidade.test.mjs
 
