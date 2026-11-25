@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/EneasDavid/memoria-urbana-maceio/actions/workflows/ci.yml/badge.svg)](https://github.com/EneasDavid/memoria-urbana-maceio/actions/workflows/ci.yml)
 
-**O monumento como convite.** Cada estátua e praça de Maceió ganha uma placa com QR/NFC. Quem aproxima o celular lê a bio do homenageado, ouve a narração ou a audiodescrição e recebe um convite para o museu mais próximo que aprofunda a história. Tudo isso é gratuito e sem login. A conta Google só entra para pontuar na trilha e liberar o modo 3D.
+**O monumento como convite.** Cada estátua e praça de Maceió ganha uma placa com QR/NFC. Quem aproxima o celular lê a bio do homenageado, ouve a narração ou a audiodescrição e recebe um convite para o museu mais próximo que aprofunda a história. Tudo isso é gratuito e sem login. A conta Google só entra para levar os carimbos e o progresso da trilha para a nuvem.
 
 ## Artefatos
 
@@ -57,31 +57,33 @@ As estátuas da orla e das praças do Centro viraram paisagem. Elas são vistas 
 - **Na placa:** a pessoa lê pelo QR/NFC e cai direto na página do monumento, sem instalar app e sem cadastro.
 - **Bio, narração e audiodescrição** escritas com fontes jornalísticas e acadêmicas.
 - **Convite ao museu** em toda página, com endereço, horário e o motivo da visita.
-- **Trilha e pontos (opcional)** para quem entra com Google: carimbos, níveis e modo 3D.
+- **Trilha e pontos (opcional)** para quem entra com Google: carimbos e níveis.
 - **Painel da prefeitura:** cadastro de monumentos, relatos de problemas e visitas agregadas e anônimas.
 
 ## Metodologia
 
-- Scrum com sprints **semanais por tema: 4 dias de desenvolvimento + 1 de review, retro e planning** da próxima sprint. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
+- Scrum com sprints **curtas por tema: 4 dias úteis, sendo 3 de desenvolvimento + 1 de review, retro e planning** da próxima sprint. O fluxo vai de problema → épico → backlog → user story → issue, tudo no Jira.
 - Estimativa em story points (planning poker), burndown por sprint, dailies e retrospectiva.
 - Programação em par, baixo acoplamento e alta coesão: telas, dados (`src/data.ts`) e fluxo do celular ficam separados.
 - Testes servem para **achar falhas** (falta → erro → falha) antes que elas cheguem à placa.
 
 ### Sprints
 
-Sprints semanais, cada uma com um tema (back → front → segurança → usabilidade → LGPD → acervo → entrega → validação).
+As sprints são as do Jira (projeto KAN), cada uma com um tema: placa → conteúdo e museu → trilha → preservação e testes → qualidade e CI/CD → backend → dados e filas → processamento assíncrono → APIs abertas e piloto. Hoje o Jira tem 15 épicos e 137 tarefas concluídas (301 story points).
 
-| Sprint | Período | O que foi entregue e como foi testado | Estado |
+| Sprint | Período | O que foi entregue e como foi validado | Estado |
 |---|---|---|---|
-| Sprint 1 · Backend e dados | 01/10 – 07/10 | Esqueleto da API FastAPI com níveis de acesso (RBAC), regras do Firestore fechadas, login Google com PKCE em funções serverless e documento de arquitetura. Teste: pytest de RBAC e API (fakeredis), testes de sessão, PKCE e claims. | concluída |
-| Sprint 2 · Front e acesso na placa | 08/10 – 14/10 | Página do monumento aberta por QR/NFC sem login, bio e audiodescrição, narração sincronizada e convite ao museu em toda página. Teste: integridade dos dados, smoke do build servido e testes da narração. | concluída |
-| Sprint 3 · Segurança | 15/10 – 21/10 | Cabeçalhos HTTP, CSP, CSRF, limite de relatos, anexos seguros e os 14 ataques comuns (admin, IDOR, chaves, fraudes de pontos, XSS, segredos, banco). Teste: suítes de segurança, mídia e ataques no Node e no pytest. | concluída |
-| Sprint 4 · Usabilidade | 22/10 – 28/10 | Teste de usabilidade com moradores e correções que saíram dele; leis de UX (Fitts, Hick, Miller, Jakob, Postel), animação e responsividade. Teste: Playwright com regras de UX, responsivo de 320 a 1440 px e Core Web Vitals. | concluída |
-| Sprint 5 · LGPD e conformidade | 29/10 – 04/11 | Aviso de cookies, créditos e licença das fotos, fontes de dados citadas, aviso antes de câmera e localização, termos, privacidade e acessibilidade WCAG AA. Teste: 17 regras legais e axe-core no claro e no escuro. | concluída |
-| Sprint 6 · Back 2: acervo, ingestão noturna e trilhas | 05/11 – 11/11 | Segunda sprint de backend: rotina noturna no Celery que busca os dados abertos dos monumentos de 00h às 4h, em lotes idempotentes; novos monumentos, trilhas temáticas, grafo de personalidades, Trilha Cultural, relato de dano e painel. Teste: pytest da janela de horário, idempotência e lotes; dados, trilhas e grafo. | concluída |
-| Sprint 7 · Qualidade e entrega contínua | 12/11 – 18/11 | Repositório, GitHub Actions, deploy contínuo na Vercel, SEO com páginas pré-renderizadas, servidor próprio na Oracle e espelho Jira ↔ GitHub. Teste: CI com 3 jobs a cada push; SEO e servidor Oracle. | concluída |
-| Sprint 8 · Validação e apresentação | 19/11 – 24/11 | Progresso sem login (local-first), ingestão semanal idempotente, documentação de arquitetura, relatório e apresentação com demonstração ao vivo. Teste: suíte completa no CI e roteiro de demo com QR reais. | em andamento |
-| Backlog pós-disciplina | 25/11 – 31/12 | Redis e Celery em produção, narração na nuvem, API de parceiros, exclusão de conta, teste de carga e piloto com placas físicas. | planejada |
+| Sprint 1 · Acesso na placa | 26/10 – 29/10 | Leitura da placa por NFC e QR, página aberta do monumento, bio em linguagem simples e protótipo navegável no Figma Make. Validação: review com demo do fluxo placa → página. | concluída |
+| Sprint 2 · Conteúdo e convite ao museu | 30/10 – 04/11 | Abas Bio e Audiodescrição e card "Como chegar" ao museu em todas as páginas. Validação: review com demo no protótipo. | concluída |
+| Sprint 3 · Trilha e engajamento | 05/11 – 10/11 | Mapa da Trilha Cultural, rota até o museu, carimbos e passaporte, login Google opcional. Validação: review com demo no protótipo. | concluída |
+| Sprint 4 · Preservação, correções e teste com usuários | 11/11 – 16/11 | Relato de dano em 2 toques, painel da prefeitura e 5 correções na Trilha e no Passaporte que saíram do teste de usabilidade com moradores. | concluída |
+| Sprint 5 · Qualidade, conteúdo e CI/CD | 17/11 – 20/11 | Repositório, GitHub Actions, deploy na Vercel e espelho Jira ↔ GitHub; OAuth + PKCE; esqueleto do backend FastAPI; 17 regras legais; SEO; segurança (CSRF, anexos, 14 ataques); UX e design fino; trilhas temáticas, grafo de personalidades, dados abertos e progresso sem login. Teste: CI com 3 jobs a cada push. 118 de 130 tarefas concluídas. | ativa |
+| Sprint 6 · Fundação do backend e segurança | 23/11 – 26/11 | Firebase e regras, cliente OAuth no ar, Docker Compose, deploy do backend, OWASP e proteção da main. | planejada |
+| Sprint 7 · Dados, sessões e filas | 27/11 – 02/12 | Redis e Celery em produção, login na API com sessão no Redis, níveis de acesso em todas as rotas, APIs de monumentos e relatos, fotos no Storage. | planejada |
+| Sprint 8 · Processamento assíncrono e painel | 03/12 – 08/12 | Narração TTS, aviso de relatos, contagem de visitas, painel lendo a API, gestão de papéis com auditoria e curadoria no CMS. | planejada |
+| Sprint 9 · APIs abertas, LGPD e piloto | 09/12 – 14/12 | API de parceiros, mescla do progresso do aparelho, exclusão de dados, ZAP e teste de carga, conversão rua → museu e piloto com placas físicas. | planejada |
+
+Parte do que está na Sprint 5 (trilhas temáticas, grafo, rotina noturna no Celery, home e galeria, selo pelo QR, permissões) foi entregue em 24–25/11, com a sprint ainda ativa, e registrada no Jira depois da entrega (KAN-198 a KAN-213). A visualização 3D e a realidade aumentada ficaram no backlog (KAN-214).
 
 O último dia de cada sprint é de review (demo do incremento), retrospectiva e planning (planning poker em story points).
 
