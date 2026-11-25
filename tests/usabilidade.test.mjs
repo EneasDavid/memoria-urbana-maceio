@@ -131,3 +131,20 @@ test('perfil só no aparelho: ler o QR pela câmera abre o app e o selo entra no
   assert.ok((await page.evaluate(() => JSON.parse(localStorage.getItem('mu_app:local-abc@aparelho:collected')))).includes('nise'), 'selo continua depois de recarregar')
   await ctx.close()
 })
+
+test('segurança dos dados no aparelho: sair apaga o cache e outra conta não vê os selos da anterior', async () => {
+  const { ctx, page } = await phone()
+  await page.addInitScript(() => { if (!sessionStorage.getItem('init')) { sessionStorage.setItem('init', '1'); localStorage.setItem('mu_local_user', JSON.stringify({ id: 'a1', name: 'Ana', createdAt: 1 })) } })
+  await page.goto(BASE + '/monumento/nise?via=qr')
+  await page.waitForURL('**/app')
+  await page.waitForFunction(() => (JSON.parse(localStorage.getItem('mu_app:local-a1@aparelho:collected') || '[]')).includes('nise'))
+  // troca de conta sem sair: outra pessoa cria perfil no mesmo aparelho
+  await page.evaluate(() => localStorage.setItem('mu_local_user', JSON.stringify({ id: 'b2', name: 'Bia', createdAt: 2 })))
+  await page.goto(BASE + '/app')
+  await page.getByRole('navigation', { name: 'Abas' }).waitFor()
+  const leftovers = await page.evaluate(() => Object.keys(localStorage).filter((k) => k.includes('local-a1') || k === 'mu_progress'))
+  assert.deepEqual(leftovers, [], 'dados da conta anterior foram apagados')
+  assert.equal(await page.evaluate(() => localStorage.getItem('mu_owner')), 'local-b2')
+  assert.equal(await page.evaluate(() => sessionStorage.getItem('mu_session')), 'local-b2')
+  await ctx.close()
+})

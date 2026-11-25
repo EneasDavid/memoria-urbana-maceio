@@ -36,6 +36,13 @@ O acervo é feito de **dados públicos sobre patrimônio e figuras públicas**, 
 - **Sem analytics de terceiros:** a CSP barra rastreadores; contagem de leituras do painel é agregada e anônima.
 - **Padrões seguros:** EXIF/GPS removidos de fotos, IP só como hash com sal rotativo, nenhum campo de nome, telefone ou CPF.
 
+## Dados de cada conta no aparelho
+
+- Cada conta guarda selos, pontos e trilhas em chaves próprias (`mu_app:<conta>:…`).
+- `mu_owner` registra de quem é o que está no aparelho. Se outra conta entrar (Google ou perfil local), o cache da anterior é apagado antes de o app abrir.
+- A aba guarda só o id da conta ativa em `sessionStorage` (`mu_session`). O login Google fica no cookie HttpOnly assinado do servidor; o navegador nunca vê token.
+- **Sair apaga** selos, pontos, trilhas, perfil local e relatos pendentes do aparelho; ficam só preferências (tema, aviso de cookies, permissões).
+
 ## Permissões do aparelho
 
 | Recurso | Quando é pedido | Guardado | Observação |
