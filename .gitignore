@@ -28,3 +28,4 @@ shots/
 *-firebase-adminsdk-*.json
 *service-account*.json
 client_secret*.json
+.vercel
