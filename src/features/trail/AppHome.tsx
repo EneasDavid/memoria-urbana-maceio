@@ -4,6 +4,7 @@ import type { User } from '../../data'
 import { queueReport } from '../monument/reports'
 import { logout, type SessionUser } from '../auth/useSession'
 import { loadProgress } from '../../shared/progress'
+import { ensureOwner } from '../../shared/deviceData'
 import { byId } from '../../data'
 
 // Área com conta: o mesmo app do protótipo do Figma (Explorar, Trilha, Passaporte e leitura da placa),
@@ -17,6 +18,8 @@ const hoje = () => {
 }
 
 export function AppHome({ user }: { user: SessionUser }) {
+  // Antes de ler qualquer dado: confere se o cache do aparelho é desta conta (senão apaga o da conta anterior)
+  useState(() => ensureOwner(user.sub))
   const appUser = useMemo<User>(() => ({ name: user.name, email: user.email, color: '#c4683a', picture: user.picture }), [user.name, user.email, user.picture])
   const [dark, setDarkState] = useState(() => typeof window !== 'undefined' && (document.documentElement.classList.contains('mu-dark') || !!window.matchMedia?.('(prefers-color-scheme: dark)').matches))
   const setDark = useCallback((v: boolean) => {
