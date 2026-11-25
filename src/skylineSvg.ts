@@ -11,11 +11,19 @@ const t = (x: number, s = 1, y = 0) => `transform="translate(${x} ${y}) scale(${
 const palm = (x: number, s: number, c: string) => `
   <path ${t(x, s, 100 - 100 * s)} d="M14 100c3-18 6-34 4-52l3 .3c2 18-1 34-3 52z" fill="${c}"/>
   <path ${t(x, s, 100 - 100 * s)} d="M19 48c-8-9-20-10-29-4 9-1 17 1 23 6-9-1-18 3-23 12 8-6 17-8 23-6-5 6-6 14-4 21 3-8 6-15 10-19 5 5 8 12 8 21 3-9 2-17-3-23 8 0 16 5 20 12-3-9-11-15-20-15 8-5 17-5 25 0-8-8-19-8-27-2z" fill="${c}"/>`
-const lighthouse = (x: number, s: number, ink: string, gold: string) => `
-  <path ${t(x, s, 100 - 100 * s)} d="M4 100l3-56c0-3 2-5 4-6h8c2 1 4 3 4 6l3 56z" fill="${ink}"/>
-  <path ${t(x, s, 100 - 100 * s)} d="M2 38h26v-3H2zM7 35c0-7 3-11 8-14 5 3 8 7 8 14z" fill="${ink}"/>
-  <path ${t(x, s, 100 - 100 * s)} d="M8 58h14l.6 8H7.4zM7 78h16l.6 8H6.4z" fill="#c8102e" opacity=".85"/>
+// Farol de Maceió (Jacintinho): torre com listras vermelhas e brancas, galeria escura e cúpula vermelha.
+const FAROL_RED = '#c8102e'
+const lighthouse = (x: number, s: number, ink: string, gold: string) => {
+  const xl = (y: number) => +(7 - (3 * (y - 44)) / 56).toFixed(2)
+  const xr = (y: number) => +(23 + (3 * (y - 44)) / 56).toFixed(2)
+  const band = (a: number, b: number) => `M${xl(a)} ${a}L${xr(a)} ${a}L${xr(b)} ${b}L${xl(b)} ${b}z`
+  return `
+  <path ${t(x, s, 100 - 100 * s)} d="M4 100l3-56c0-3 2-5 4-6h8c2 1 4 3 4 6l3 56z" fill="#ffffff" stroke="${ink}" stroke-width="1.2"/>
+  <path ${t(x, s, 100 - 100 * s)} d="M7 44c0-3 2-5 4-6h8c2 1 4 3 4 6z${band(52, 60)}${band(68, 76)}${band(84, 92)}" fill="${FAROL_RED}"/>
+  <path ${t(x, s, 100 - 100 * s)} d="M2 38h26v-3H2z" fill="${ink}"/>
+  <path ${t(x, s, 100 - 100 * s)} d="M7 35c0-7 3-11 8-14 5 3 8 7 8 14z" fill="${FAROL_RED}"/>
   <circle ${t(x, s, 100 - 100 * s)} cx="15" cy="28" r="2.6" fill="${gold}"/>`
+}
 const baroque = (x: number, s: number, body: string, tower: string, win: string) => `
   <path ${t(x, s, 100 - 100 * s)} d="M0 100V58c0-4 3-7 6-8 4-10 11-15 19-15s15 5 19 15c3 1 6 4 6 8v42z" fill="${body}"/>
   <path ${t(x, s, 100 - 100 * s)} d="M48 100V30c0-3 2-6 5-7 0-8 4-12 8-14 4 2 8 6 8 14 3 1 5 4 5 7v70z" fill="${tower}"/>
@@ -81,3 +89,21 @@ function parse(markup: string): Shape[] {
 export const skylineShapes = (ink = SKY.navy) => parse(raw(ink))
 export const ornamentShapes = (ink = SKY.navy) => parse(ornamentMarkup(ink))
 export const skylineMarkup = (ink = SKY.navy) => raw(ink)
+
+// Cenas menores para os slides: os mesmos elementos em combinações, tamanhos e larguras diferentes,
+// para cada slide ter um recorte da cidade (orla, farol, centro, Jaraguá, igrejas…) em vez da mesma faixa.
+const wave = (w: number, teal: string) => {
+  let d = 'M0 108'
+  for (let x = 0; x < w; x += 66) d += 'c15 0 17-7 33-7s18 7 33 7'
+  return `<path d="${d}" fill="none" stroke="${teal}" stroke-width="3.4" stroke-linecap="round"/>`
+}
+export const SCENES = {
+  farol: { w: 190, draw: (ink: string) => { const { teal, tealSoft, gold } = SKY; return `<path d="M0 104c50-12 110-12 190 0v16H0z" fill="${tealSoft}" opacity=".45"/>${palm(4, 0.8, teal)}${lighthouse(58, 1.18, ink, gold)}${palm(112, 0.62, teal)}${palm(146, 0.48, teal)}${wave(190, teal)}` } },
+  orla: { w: 330, draw: (ink: string) => { const { teal, tealSoft, gold, cream } = SKY; return `<path d="M0 104c60-14 140-14 330-2v18H0z" fill="${tealSoft}" opacity=".45"/>${palm(0, 1, teal)}${lighthouse(64, 1.05, ink, gold)}${palm(108, 0.7, teal)}${palm(150, 0.9, teal)}${boat(214, 0.95, ink, cream)}<path d="M296 18a20 20 0 0 1 20 20" stroke="${gold}" stroke-width="3" fill="none" stroke-linecap="round"/>${wave(330, teal)}` } },
+  centro: { w: 360, draw: (ink: string) => { const { teal, gold, goldSoft, cream } = SKY; return `${palm(0, 0.7, teal)}${baroque(40, 1.12, goldSoft, gold, cream)}${casario(130, 0.85, ink, cream)}${chapel(234, 0.95, ink, gold, goldSoft)}${palm(290, 0.95, teal)}${wave(360, teal)}<path d="M40 116c80-5 160-5 240 0" fill="none" stroke="${gold}" stroke-width="2.4" stroke-linecap="round"/>` } },
+  jaragua: { w: 340, draw: (ink: string) => { const { teal, gold, cream } = SKY; return `${towers(0, 1.08, ink, cream)}${casario(76, 0.8, ink, cream)}${palm(176, 0.8, teal)}${lighthouse(216, 0.8, ink, gold)}${boat(262, 0.85, ink, cream)}${wave(340, teal)}` } },
+  igrejas: { w: 300, draw: (ink: string) => { const { teal, gold, goldSoft, cream } = SKY; return `${chapel(0, 0.8, ink, gold, goldSoft)}${baroque(52, 1.15, goldSoft, gold, cream)}${palm(140, 0.6, teal)}${baroque(170, 0.82, ink, ink, cream)}${palm(236, 0.85, teal)}${wave(300, teal)}` } },
+  completo: { w: SKY_W, draw: (ink: string) => raw(ink) },
+} as const
+export type SceneName = keyof typeof SCENES
+export const sceneMarkup = (name: SceneName, ink = SKY.navy) => SCENES[name].draw(ink)
