@@ -58,7 +58,7 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
 
         <div className="mt-4 flex items-center gap-3 text-[13px] text-black/70"><span className="h-px flex-1 bg-black/10" />ou<span className="h-px flex-1 bg-black/10" /></div>
         {!asking ? (
-          <button type="button" onClick={() => setAsking(true)} className="mu-press mt-4 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2.5 text-[16px] leading-tight font-semibold">
+          <button type="button" aria-label="Continuar sem conta, salvando neste aparelho" onClick={() => setAsking(true)} className="mu-press mt-4 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] bg-[#0b2f49] text-white flex items-center justify-center gap-2.5 text-[16px] leading-tight font-semibold">
             <Icon name="lock" size={17} className="shrink-0" />
             <span className="flex flex-col items-start text-left">Continuar sem conta<span className="text-[13px] font-medium text-white/80">Salvando só neste aparelho</span></span>
           </button>

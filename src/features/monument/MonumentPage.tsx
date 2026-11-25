@@ -104,15 +104,15 @@ export function MonumentPage({ id }: { id: string }) {
 
       <div className="max-w-[760px] mx-auto px-5 pb-12">
         {/* Princípio 20 (frequência de uso) + 13 (Fitts): o que quase todo visitante faz fica no topo, em alvos grandes */}
-        <nav aria-label="Ações rápidas" className="mu-stage -mt-6 relative z-10 grid grid-cols-3 gap-2 rounded-[var(--r-card)] bg-white p-2 mu-edge mu-raise-2 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+        <nav aria-label="Ações rápidas" className="mu-stage -mt-6 relative z-10 grid grid-cols-3 gap-1.5 min-[380px]:gap-2 rounded-[var(--r-card)] bg-white p-1.5 min-[380px]:p-2 mu-edge mu-raise-2 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
           {/* O play da narração é um só (no cartão logo abaixo); aqui ficam as outras ações mais usadas */}
-          <a href="#museu" className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b] text-white text-[clamp(11.5px,3.6vw,13.5px)] leading-tight text-center min-w-0 px-1 font-semibold flex flex-col items-center justify-center gap-1">
+          <a href="#museu" className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b] text-white text-[clamp(10px,3.1vw,13.5px)] leading-tight text-center min-w-0 px-0.5 hyphens-auto [overflow-wrap:anywhere] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="pin" size={17} stroke={2.4} />Museu
           </a>
-          <button type="button" onClick={share} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[clamp(11.5px,3.6vw,13.5px)] leading-tight text-center min-w-0 px-1 font-semibold flex flex-col items-center justify-center gap-1">
+          <button type="button" onClick={share} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#1f6b6b]/10 text-[#1f6b6b] text-[clamp(10px,3.1vw,13.5px)] leading-tight text-center min-w-0 px-0.5 hyphens-auto [overflow-wrap:anywhere] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="share" size={17} stroke={2.4} />{copied ? 'Link copiado' : 'Compartilhar'}
           </button>
-          <button type="button" onClick={() => setReport(true)} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#c4402e]/10 text-[#a3321f] text-[clamp(11.5px,3.6vw,13.5px)] leading-tight text-center min-w-0 px-1 font-semibold flex flex-col items-center justify-center gap-1">
+          <button type="button" onClick={() => setReport(true)} className="mu-press min-h-[56px] rounded-[var(--r-inner)] bg-[#c4402e]/10 text-[#a3321f] text-[clamp(10px,3.1vw,13.5px)] leading-tight text-center min-w-0 px-0.5 hyphens-auto [overflow-wrap:anywhere] font-semibold flex flex-col items-center justify-center gap-1">
             <Icon name="flag" size={17} stroke={2.4} />Relatar
           </button>
         </nav>
