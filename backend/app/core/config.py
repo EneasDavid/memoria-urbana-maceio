@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     bootstrap_admin_email: str = ""
     report_rate_per_hour: int = 5
     cache_ttl_seconds: int = 600
-    public_origin: str = "https://memoria-urbana-maceio.vercel.app"
+    public_origin: str = "https://mumcz.vercel.app"
 
 
 @lru_cache

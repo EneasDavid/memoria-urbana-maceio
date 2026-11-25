@@ -96,7 +96,7 @@ sequenceDiagram
 - **Fase 1 (no ar):** a sessão é um cookie assinado com HMAC (`api/_lib/session.ts`). É simples, mas não pode ser revogada antes de expirar.
 - **Fase 3:** a sessão passa a viver no Redis (`sess:{sid}`). Quando o papel de alguém muda ou a conta é excluída, a API apaga as sessões em `user_sessions:{uid}` e o acesso cai na hora.
 - **Variáveis:**
-  - `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` (Google Cloud Console → Credenciais → ID do cliente OAuth, tipo Web, redirect `https://memoria-urbana-maceio.vercel.app/api/auth/callback`);
+  - `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` (Google Cloud Console → Credenciais → ID do cliente OAuth, tipo Web, redirect `https://mumcz.vercel.app/api/auth/callback` e o antigo `https://memoria-urbana-maceio.vercel.app/api/auth/callback`);
   - `SESSION_SECRET` (32+ caracteres aleatórios);
   - `GESTOR_EMAILS` (só na fase 1; na fase 3 o papel vem do Firestore).
 

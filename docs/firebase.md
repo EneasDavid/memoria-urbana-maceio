@@ -72,7 +72,8 @@ Ainda em <https://console.cloud.google.com>, no mesmo projeto:
    - Enquanto estiver em **Teste**, só os e-mails cadastrados em "Usuários de teste" conseguem entrar. Para abrir a todos, clique em **Publicar app**.
 2. **APIs e serviços** → **Credenciais** → **Criar credenciais** → **ID do cliente OAuth** → tipo **Aplicativo da Web**.
    - **URIs de redirecionamento autorizados**, adicione exatamente:
-     - `https://memoria-urbana-maceio.vercel.app/api/auth/callback`
+     - `https://mumcz.vercel.app/api/auth/callback`
+     - `https://memoria-urbana-maceio.vercel.app/api/auth/callback` (endereço antigo, ainda no ar)
      - (se usar o servidor Oracle) `https://SEU-DOMINIO/api/auth/callback`
      - (para testar localmente com `vercel dev`) `http://localhost:3000/api/auth/callback`
    - **Criar** → copie o **ID do cliente** (`GOOGLE_CLIENT_ID`, termina em `.apps.googleusercontent.com`) e a **Chave secreta do cliente** (`GOOGLE_CLIENT_SECRET`, começa com `GOCSPX-`).
@@ -105,7 +106,7 @@ No **servidor Oracle**, as mesmas variáveis vão em `/etc/memoria-urbana/api.en
 
 ## 7. Conferir se funcionou
 
-1. Abra `https://memoria-urbana-maceio.vercel.app/api/auth/me`: deve aparecer `"configured":true`.
+1. Abra `https://mumcz.vercel.app/api/auth/me`: deve aparecer `"configured":true`.
 2. Entre com Google, leia uma placa (ou abra `/monumento/nise?via=qr`) e confira o selo no Passaporte.
 3. **Perfil → Sair da conta**, entre de novo, ou entre em **outro celular** com a mesma conta: o selo continua lá.
 4. No Firebase → Firestore → coleção `progresso`: há um documento por conta. O id do documento é um hash e não revela quem é a pessoa. Os campos são `selos`, `pontos`, `atualizadoEm` e `progresso`.
