@@ -37,6 +37,10 @@ export function prepareGoogle(): Promise<Ready | null> {
     const auth = existing ? sdk.getAuth(app) : sdk.initializeAuth(app, { persistence: sdk.inMemoryPersistence, popupRedirectResolver: sdk.browserPopupRedirectResolver })
     const provider = new sdk.GoogleAuthProvider() // escopos padrão: openid, email e profile
     provider.setCustomParameters({ prompt: 'select_account' })
+    // Safari: o primeiro signInWithPopup carrega um iframe interno do Firebase ANTES de abrir a janela; essa espera
+    // faz o Safari perder o "clique do usuário" e bloquear o pop-up. getRedirectResult inicializa esse iframe agora,
+    // antes do clique (sem abrir nada nem logar ninguém). Limite de 8 s para não travar a página.
+    await Promise.race([sdk.getRedirectResult(auth).catch(() => null), new Promise((r) => setTimeout(r, 8000))])
     ready = { auth, provider, sdk }
     return ready
   })().catch(() => { preparing = null; return null })

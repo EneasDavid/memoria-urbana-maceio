@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GoogleG, Icon, LogoMark, EmMaceio, Skyline } from '../../ui'
 import { useSession } from './useSession'
-import { prepareGoogle, signInWithGoogle } from './firebaseLogin'
+import { isGoogleReady, prepareGoogle, signInWithGoogle } from './firebaseLogin'
 import { setMode } from '../../shared/progress'
 import { listLocalProfiles, resumeLocalProfile, setLocalProfile } from '../../shared/localProfile'
 
@@ -16,7 +16,8 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
   }, [s.status, returnTo])
 
   // Prepara o Firebase ao abrir a página: no clique, a janela do Google abre na hora (sem bloqueio de pop-up)
-  useEffect(() => { void prepareGoogle() }, [])
+  const [googleReady, setGoogleReady] = useState(isGoogleReady)
+  useEffect(() => { void prepareGoogle().then((r) => setGoogleReady(!!r)) }, [])
 
   const [error, setError] = useState<string | null>(() => new URLSearchParams(window.location.search).get('erro'))
   const [busy, setBusy] = useState(false)
@@ -48,8 +49,8 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
         {s.status === 'unavailable' ? (
           <p className="mt-6 rounded-[12px] bg-[#dda93f]/15 px-3 py-2.5 text-[14px] text-[#6b4d0d]">{s.reason}</p>
         ) : (
-          <button type="button" onClick={google} disabled={s.status === 'loading' || busy} aria-busy={busy} className="mu-press mt-6 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] leading-tight font-semibold text-center disabled:opacity-60">
-            <GoogleG size={20} className="shrink-0" /><span>{busy ? 'Entrando com Google…' : 'Continuar com Google'}</span>
+          <button type="button" onClick={google} disabled={s.status === 'loading' || busy || !googleReady} aria-busy={busy || !googleReady} className="mu-press mt-6 w-full min-h-[52px] px-4 py-2.5 rounded-[14px] border border-black/10 flex items-center justify-center gap-3 text-[16px] leading-tight font-semibold text-center disabled:opacity-60">
+            <GoogleG size={20} className="shrink-0" /><span>{busy ? 'Entrando com Google…' : googleReady ? 'Continuar com Google' : 'Preparando o login…'}</span>
           </button>
         )}
 
