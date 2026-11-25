@@ -47,7 +47,7 @@ Matriz dos 40 requisitos para um app feito com IA não ser processado. O CI roda
 | 35 | Notificação de incidente | ok | Comunicação à ANPD e aos titulares (art. 48); canal privado em `SECURITY.md`. `SECURITY.md` | KAN-167 |
 | 36 | Testes de segurança | ok | 14 ataques comuns em `tests/abuse.test.mjs` e `backend/tests/test_ataques.py` ([mapa](seguranca-14-ataques.md)); `tests/security.test.mjs`, `tests/media.test.mjs`, testes de anexo e OWASP ZAP planejado. `tests/security.test.mjs` | KAN-166, KAN-77 |
 | 37 | Revisão de código | ok | CODEOWNERS e template de PR; proteção da `main` planejada. `.github/CODEOWNERS` | KAN-168, KAN-46 |
-| 38 | Privilégios administrativos | parcial | Admin só por e-mail listado; sem acesso de demonstração. Falta 2FA obrigatório e revisão periódica. `api/auth/callback.ts` | KAN-181 |
+| 38 | Privilégios administrativos | parcial | Admin só por e-mail listado; sem acesso de demonstração. Falta 2FA obrigatório e revisão periódica. `api/auth/session.ts` | KAN-181 |
 | 39 | Gestão de vulnerabilidades | ok | `SECURITY.md` com prazos e Dependabot. `SECURITY.md` | KAN-167 |
 | 40 | Auditoria de conformidade | ok | Esta matriz e o relatório gerado no CI. `scripts/audit-report.mjs` | KAN-170 |
 
