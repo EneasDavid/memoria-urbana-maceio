@@ -1,3 +1,5 @@
+// Variáveis de ambiente sem depender dos tipos do Node (o compilador da Vercel não acha @types/node com TypeScript 7)
+const processEnv: Record<string, string | undefined> = (globalThis as unknown as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {}
 // Acesso ao Google Cloud SEM chave: Workload Identity Federation com o token OIDC da Vercel.
 // 1. A Vercel entrega a cada requisição um JWT curto que prova "sou o projeto memoria-urbana-maceio"
 //    (cabeçalho x-vercel-oidc-token; em `vercel dev`, a variável VERCEL_OIDC_TOKEN).
@@ -11,14 +13,14 @@
 
 export interface OidcFederation { provider: string; serviceAccount: string }
 
-export function oidcFederation(env: Record<string, string | undefined> = process.env): OidcFederation | null {
+export function oidcFederation(env: Record<string, string | undefined> = processEnv): OidcFederation | null {
   const provider = env.GCP_WORKLOAD_IDENTITY_PROVIDER?.trim()
   const serviceAccount = env.GCP_SERVICE_ACCOUNT?.trim()
   return provider && serviceAccount ? { provider, serviceAccount } : null
 }
 
 /** Token OIDC da Vercel desta requisição (cabeçalho em produção; variável em desenvolvimento). */
-export function vercelOidcToken(req?: Request, env: Record<string, string | undefined> = process.env): string | null {
+export function vercelOidcToken(req?: Request, env: Record<string, string | undefined> = processEnv): string | null {
   return req?.headers.get('x-vercel-oidc-token') || env.VERCEL_OIDC_TOKEN || null
 }
 

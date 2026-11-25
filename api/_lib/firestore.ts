@@ -11,10 +11,12 @@
 import { b64url, fromB64url } from './session.js'
 import { federatedAccessToken, oidcFederation } from './gcpOidc.js'
 import { DEFAULT_FIREBASE_PROJECT } from './config.js'
+// Variáveis de ambiente sem depender dos tipos do Node (o compilador da Vercel não acha @types/node com TypeScript 7)
+const processEnv: Record<string, string | undefined> = (globalThis as unknown as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {}
 
 export interface ServiceAccount { projectId: string; clientEmail: string; privateKey: string }
 
-export function serviceAccount(env: Record<string, string | undefined> = process.env): ServiceAccount | null {
+export function serviceAccount(env: Record<string, string | undefined> = processEnv): ServiceAccount | null {
   let raw = env.FIREBASE_SERVICE_ACCOUNT?.trim()
   if (raw) {
     if (!raw.startsWith('{')) { try { raw = new TextDecoder().decode(fromB64url(raw)) } catch { return null } }
@@ -65,7 +67,7 @@ export interface Firestore { getDoc(path: string): Promise<Record<string, unknow
  * Cliente do Firestore. Ordem de credencial: emulador local → sem chave (OIDC da Vercel, recomendado)
  * → conta de serviço com chave (FIREBASE_SERVICE_ACCOUNT, para o servidor Oracle ou testes).
  */
-export function firestore(env: Record<string, string | undefined> = process.env, oidcToken: string | null = null): Firestore | null {
+export function firestore(env: Record<string, string | undefined> = processEnv, oidcToken: string | null = null): Firestore | null {
   const emulator = env.FIRESTORE_EMULATOR_HOST
   const fed = oidcFederation(env)
   const keyless = !emulator && fed && oidcToken ? fed : null

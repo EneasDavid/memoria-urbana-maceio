@@ -8,6 +8,8 @@ import { hmacB64 } from './session.js'
 import { sanitizeDoc, type ProgressDoc } from './progressDoc.js'
 import { firestore } from './firestore.js'
 import { vercelOidcToken } from './gcpOidc.js'
+// Variáveis de ambiente sem depender dos tipos do Node (o compilador da Vercel não acha @types/node com TypeScript 7)
+const processEnv: Record<string, string | undefined> = (globalThis as unknown as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {}
 
 export interface ProgressStore { get(sub: string): Promise<ProgressDoc | null>; put(sub: string, doc: ProgressDoc): Promise<void> }
 
@@ -31,18 +33,23 @@ function redisStore(url: string, token: string): ProgressStore {
   }
 }
 
+// Módulos do Node carregados só no servidor Oracle (arquivo local); tipados à mão para não exigir @types/node
+interface FsLike { readFile(p: string, enc: 'utf8'): Promise<string>; mkdir(p: string, o: { recursive: boolean; mode: number }): Promise<unknown>; writeFile(p: string, d: string, o: { mode: number }): Promise<void>; rename(a: string, b: string): Promise<void> }
+interface PathLike { join(...p: string[]): string }
+const nodeModule = <T>(name: string): Promise<T> => import(/* @vite-ignore */ name) as Promise<T>
+
 function fileStore(dir: string): ProgressStore {
   const file = async (sub: string) => {
-    const path = await import('node:path')
+    const path = await nodeModule<PathLike>('node:path')
     return path.join(dir, (await keyFor(sub)) + '.json')
   }
   return {
     async get(sub) {
-      const fs = await import('node:fs/promises')
+      const fs = await nodeModule<FsLike>('node:fs/promises')
       try { return sanitizeDoc(JSON.parse(await fs.readFile(await file(sub), 'utf8'))) } catch (e) { if ((e as { code?: string }).code === 'ENOENT') return null; throw e }
     },
     async put(sub, doc) {
-      const fs = await import('node:fs/promises')
+      const fs = await nodeModule<FsLike>('node:fs/promises')
       await fs.mkdir(dir, { recursive: true, mode: 0o700 })
       const f = await file(sub)
       await fs.writeFile(f + '.tmp', JSON.stringify(doc), { mode: 0o600 })
@@ -52,7 +59,7 @@ function fileStore(dir: string): ProgressStore {
 }
 
 function firestoreStore(req?: Request): ProgressStore | null {
-  const fs = firestore(process.env, vercelOidcToken(req))
+  const fs = firestore(processEnv, vercelOidcToken(req))
   if (!fs) return null
   return {
     async get(sub) {
@@ -71,11 +78,11 @@ let memory: Map<string, ProgressDoc> | null = null
 export function progressStore(req?: Request): ProgressStore | null {
   const fs = firestoreStore(req)
   if (fs) return fs
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
+  const url = processEnv.KV_REST_API_URL || processEnv.UPSTASH_REDIS_REST_URL
+  const token = processEnv.KV_REST_API_TOKEN || processEnv.UPSTASH_REDIS_REST_TOKEN
   if (url && token) return redisStore(url, token)
-  if (process.env.PROGRESS_DIR) return fileStore(process.env.PROGRESS_DIR)
-  if (process.env.PROGRESS_MEMORY === '1') { // só testes
+  if (processEnv.PROGRESS_DIR) return fileStore(processEnv.PROGRESS_DIR)
+  if (processEnv.PROGRESS_MEMORY === '1') { // só testes
     const m = (memory ??= new Map())
     return { async get(s) { return m.get(s) ?? null }, async put(s, d) { m.set(s, d) } }
   }

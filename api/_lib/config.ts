@@ -1,3 +1,5 @@
+// Variáveis de ambiente sem depender dos tipos do Node (o compilador da Vercel não acha @types/node com TypeScript 7)
+const processEnv: Record<string, string | undefined> = (globalThis as unknown as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {}
 // Configuração lida das variáveis de ambiente da Vercel (Settings → Environment Variables).
 // Sem elas, as rotas /api/auth/* respondem que o login não está configurado e o site segue público.
 // Login: Firebase Authentication (Google). O navegador entra pelo Firebase e o servidor troca o ID token
@@ -12,7 +14,7 @@ export interface AuthConfig {
 
 export const DEFAULT_FIREBASE_PROJECT = 'memoria-urbana-maceio'
 
-export function authConfig(env: Record<string, string | undefined> = process.env): AuthConfig | null {
+export function authConfig(env: Record<string, string | undefined> = processEnv): AuthConfig | null {
   const projectId = env.FIREBASE_PROJECT_ID || DEFAULT_FIREBASE_PROJECT
   const webApiKey = env.FIREBASE_WEB_API_KEY || ''
   const sessionSecret = env.SESSION_SECRET || ''
