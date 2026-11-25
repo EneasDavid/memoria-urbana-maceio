@@ -1,70 +1,70 @@
 {
   "jiraBaseUrl": "https://ic-team-yrsngn10.atlassian.net",
   "board": "https://ic-team-yrsngn10.atlassian.net/jira/software/projects/KAN/boards/1",
-  "cadence": "Sprints semanais por tema: 4 dias de desenvolvimento + 1 de review, retro e planning",
+  "cadence": "Sprints curtas por tema: 4 dias úteis, sendo 3 de desenvolvimento + 1 de review, retro e planning",
   "sprints": [
     {
-      "name": "Sprint 1 · Backend e dados",
+      "name": "Sprint 1 · Acesso na placa",
       "state": "closed",
-      "start": "2026-10-01",
-      "end": "2026-10-07",
-      "goal": "Esqueleto da API FastAPI com níveis de acesso (RBAC), regras do Firestore fechadas, login Google com PKCE em funções serverless e documento de arquitetura. Teste: pytest de RBAC e API (fakeredis), testes de sessão, PKCE e claims."
+      "start": "2026-10-26",
+      "end": "2026-10-29",
+      "goal": "Ler a placa (NFC/QR) e abrir a página do monumento sem login; protótipo navegável no Figma Make. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     },
     {
-      "name": "Sprint 2 · Front e acesso na placa",
+      "name": "Sprint 2 · Conteúdo e convite ao museu",
       "state": "closed",
-      "start": "2026-10-08",
-      "end": "2026-10-14",
-      "goal": "Página do monumento aberta por QR/NFC sem login, bio e audiodescrição, narração sincronizada e convite ao museu em toda página. Teste: integridade dos dados, smoke do build servido e testes da narração."
-    },
-    {
-      "name": "Sprint 3 · Segurança",
-      "state": "closed",
-      "start": "2026-10-15",
-      "end": "2026-10-21",
-      "goal": "Cabeçalhos HTTP, CSP, CSRF, limite de relatos, anexos seguros e os 14 ataques comuns (admin, IDOR, chaves, fraudes de pontos, XSS, segredos, banco). Teste: suítes de segurança, mídia e ataques no Node e no pytest."
-    },
-    {
-      "name": "Sprint 4 · Usabilidade",
-      "state": "closed",
-      "start": "2026-10-22",
-      "end": "2026-10-28",
-      "goal": "Teste de usabilidade com moradores e correções que saíram dele; leis de UX (Fitts, Hick, Miller, Jakob, Postel), animação e responsividade. Teste: Playwright com regras de UX, responsivo de 320 a 1440 px e Core Web Vitals."
-    },
-    {
-      "name": "Sprint 5 · LGPD e conformidade",
-      "state": "closed",
-      "start": "2026-10-29",
+      "start": "2026-10-30",
       "end": "2026-11-04",
-      "goal": "Aviso de cookies, créditos e licença das fotos, fontes de dados citadas, aviso antes de câmera e localização, termos, privacidade e acessibilidade WCAG AA. Teste: 17 regras legais e axe-core no claro e no escuro."
+      "goal": "Bio em abas (Bio/Audiodescrição) e card Como chegar ao museu em todas as páginas. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     },
     {
-      "name": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "name": "Sprint 3 · Trilha e engajamento",
       "state": "closed",
       "start": "2026-11-05",
-      "end": "2026-11-11",
-      "goal": "Segunda sprint de backend: rotina noturna no Celery que busca os dados abertos dos monumentos de 00h às 4h, em lotes idempotentes; novos monumentos, trilhas temáticas, grafo de personalidades, Trilha Cultural, relato de dano e painel. Teste: pytest da janela de horário, idempotência e lotes; dados, trilhas e grafo."
+      "end": "2026-11-10",
+      "goal": "Mapa da Trilha, rota até o museu, carimbos/passaporte e login Google opcional. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     },
     {
-      "name": "Sprint 7 · Qualidade e entrega contínua",
+      "name": "Sprint 4 · Preservação, correções e teste com usuários",
       "state": "closed",
-      "start": "2026-11-12",
-      "end": "2026-11-18",
-      "goal": "Repositório, GitHub Actions, deploy contínuo na Vercel, SEO com páginas pré-renderizadas, servidor próprio na Oracle e espelho Jira ↔ GitHub. Teste: CI com 3 jobs a cada push; SEO e servidor Oracle."
+      "start": "2026-11-11",
+      "end": "2026-11-16",
+      "goal": "Relato de dano, painel da prefeitura, correção dos bugs da Trilha/Passaporte e teste com usuários do protótipo. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     },
     {
-      "name": "Sprint 8 · Validação e apresentação",
+      "name": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "state": "active",
-      "start": "2026-11-19",
-      "end": "2026-11-24",
-      "goal": "Progresso sem login (local-first), ingestão semanal idempotente, documentação de arquitetura, relatório e apresentação com demonstração ao vivo. Teste: suíte completa no CI e roteiro de demo com QR reais."
+      "start": "2026-11-17",
+      "end": "2026-11-20",
+      "goal": "Narração e audiodescrição reais, cache de visitados, repositório + CI/CD (GitHub Actions, testes de integração, Vercel) e sincronização Jira ↔ GitHub. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     },
     {
-      "name": "Backlog pós-disciplina",
+      "name": "Sprint 6 · Fundação do backend e segurança",
       "state": "future",
-      "start": "2026-11-25",
-      "end": "2026-12-31",
-      "goal": "Redis e Celery em produção, narração na nuvem, API de parceiros, exclusão de conta, teste de carga e piloto com placas físicas."
+      "start": "2026-11-23",
+      "end": "2026-11-26",
+      "goal": "Firebase e regras, cliente OAuth no ar, Docker Compose, deploy do backend no Render, estudo de gamificação sem login, OWASP e proteção da main. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+    },
+    {
+      "name": "Sprint 7 · Dados, sessões e filas",
+      "state": "future",
+      "start": "2026-11-27",
+      "end": "2026-12-02",
+      "goal": "Redis e Celery em produção, login migrado para a API com sessão no Redis, níveis de acesso em todas as rotas, APIs de monumentos e relatos, fotos no Storage. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+    },
+    {
+      "name": "Sprint 8 · Processamento assíncrono e painel",
+      "state": "future",
+      "start": "2026-12-03",
+      "end": "2026-12-08",
+      "goal": "Narração TTS, aviso de relatos, contagem de visitas, painel lendo a API, gestão de papéis com auditoria e curadoria no CMS. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
+    },
+    {
+      "name": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "state": "future",
+      "start": "2026-12-09",
+      "end": "2026-12-14",
+      "goal": "API de parceiros, mescla do progresso do aparelho, exclusão de dados, ZAP e teste de carga, conversão rua → museu e piloto com placas físicas. Dias 1–3: desenvolvimento. Dia 4: sprint review, retro e planning da próxima."
     }
   ],
   "epics": [
@@ -153,7 +153,9 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "barreira-1"
+      ],
       "description": "Quem passa pela estátua abre a história sem app e sem cadastro. Resolve a barreira 1: na estátua, nada conta quem foi o homenageado."
     },
     {
@@ -164,7 +166,9 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "barreira-2"
+      ],
       "description": "A história chega a quem não lê bem ou não enxerga. Resolve a barreira 2."
     },
     {
@@ -175,7 +179,9 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "ponto-base"
+      ],
       "description": "Toda página leva a um museu ou centro histórico ligado ao homenageado, com rota de ônibus ou a pé."
     },
     {
@@ -186,7 +192,9 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "engajamento"
+      ],
       "description": "Mapa, carimbos e passaporte para ampliar e popularizar o uso e estimular a volta."
     },
     {
@@ -197,7 +205,9 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "barreira-3"
+      ],
       "description": "Dano e perda passam a ter registro: relato, painel da prefeitura e memória em 3D. Resolve a barreira 3."
     },
     {
@@ -208,19 +218,10 @@
       "epic": null,
       "points": null,
       "sprint": null,
-      "labels": [],
+      "labels": [
+        "qualidade"
+      ],
       "description": "Testes para achar falhas e aumentar a confiança: plano por etapa, OWASP, usuários e cache."
-    },
-    {
-      "key": "KAN-38",
-      "type": "Epic",
-      "summary": "E7 · Entrega contínua (CI/CD)",
-      "status": "Em andamento",
-      "epic": null,
-      "points": null,
-      "sprint": null,
-      "labels": [],
-      "description": "Todo push na main passa por checagem de tipos, build e testes de integração e é publicado na Vercel."
     },
     {
       "key": "KAN-10",
@@ -229,8 +230,10 @@
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 5,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 1 · Acesso na placa",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como morador, quero encostar o celular na placa e abrir a página do monumento, para saber quem foi o homenageado. Web NFC real no Android; simulado nos demais."
     },
     {
@@ -240,8 +243,10 @@
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 5,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 1 · Acesso na placa",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como morador sem NFC, quero ler o QR da placa com a câmera, para abrir a mesma página. Leitura real via BarcodeDetector no Chrome/Android."
     },
     {
@@ -251,8 +256,10 @@
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 1 · Acesso na placa",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como visitante, quero ver a página sem login, para não desistir antes de ler."
     },
     {
@@ -262,20 +269,11 @@
       "status": "Concluído",
       "epic": "KAN-5",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 1 · Acesso na placa",
+      "labels": [
+        "conteudo"
+      ],
       "description": "Como visitante, quero uma bio curta e direta, com fontes, para entender quem foi o homenageado."
-    },
-    {
-      "key": "KAN-39",
-      "type": "Tarefa",
-      "summary": "Protótipo navegável no Figma Make",
-      "status": "Concluído",
-      "epic": "KAN-4",
-      "points": 5,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
-      "description": "Protótipo navegável do fluxo placa → página → convite ao museu, publicado em https://rotacultural.figma.site. Aceite: fluxo completo até o card Como chegar, sem login."
     },
     {
       "key": "KAN-14",
@@ -284,8 +282,10 @@
       "status": "Concluído",
       "epic": "KAN-6",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 2 · Conteúdo e convite ao museu",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como visitante, quero ver em toda página o museu ligado ao homenageado, com endereço, horário e por que visitar."
     },
     {
@@ -295,9 +295,51 @@
       "status": "Concluído",
       "epic": "KAN-5",
       "points": 2,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 2 · Conteúdo e convite ao museu",
+      "labels": [
+        "acessibilidade"
+      ],
       "description": "Como visitante com baixa visão, quero alternar entre a bio e a audiodescrição da peça."
+    },
+    {
+      "key": "KAN-16",
+      "type": "História",
+      "summary": "Narração em áudio real (voz sintetizada)",
+      "status": "Em andamento",
+      "epic": "KAN-5",
+      "points": 3,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "acessibilidade"
+      ],
+      "description": "Como visitante, quero ouvir a bio narrada, para acompanhar sem ler."
+    },
+    {
+      "key": "KAN-17",
+      "type": "História",
+      "summary": "Audiodescrição das 15 peças",
+      "status": "Em andamento",
+      "epic": "KAN-5",
+      "points": 5,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "acessibilidade",
+        "conteudo"
+      ],
+      "description": "Como visitante cego ou com baixa visão, quero a audiodescrição de cada peça."
+    },
+    {
+      "key": "KAN-18",
+      "type": "História",
+      "summary": "Curadoria com fontes no CMS",
+      "status": "Em andamento",
+      "epic": "KAN-5",
+      "points": 8,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "conteudo"
+      ],
+      "description": "Como curador, quero cadastrar bios e fontes no CMS, para manter o conteúdo verificável."
     },
     {
       "key": "KAN-19",
@@ -306,8 +348,10 @@
       "status": "Concluído",
       "epic": "KAN-6",
       "points": 5,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 3 · Trilha e engajamento",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como visitante, quero a rota até o museu a partir de onde estou, a pé ou de ônibus."
     },
     {
@@ -317,8 +361,10 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 8,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 3 · Trilha e engajamento",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como visitante, quero ver no mapa as placas próximas para seguir uma trilha."
     },
     {
@@ -328,8 +374,10 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 3 · Trilha e engajamento",
+      "labels": [
+        "engajamento"
+      ],
       "description": "Como visitante logado, quero ganhar carimbos ao visitar placas e museus."
     },
     {
@@ -339,9 +387,24 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 3 · Trilha e engajamento",
+      "labels": [
+        "engajamento"
+      ],
       "description": "Como visitante, quero entrar só se quiser pontuar ou ver em 3D; história e museu ficam livres."
+    },
+    {
+      "key": "KAN-23",
+      "type": "História",
+      "summary": "Cache dos lugares visitados",
+      "status": "A fazer",
+      "epic": "KAN-7",
+      "points": 3,
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "qualidade"
+      ],
+      "description": "Como visitante, quero que o app lembre por onde passei ao reabrir e sem internet."
     },
     {
       "key": "KAN-24",
@@ -350,8 +413,10 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 5,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como morador, quero relatar uma peça danificada, para avisar a prefeitura."
     },
     {
@@ -361,9 +426,24 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 8,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+      "labels": [
+        "funcionalidade"
+      ],
       "description": "Como gestor, quero ver leituras por placa e danos relatados, para priorizar manutenção. Dados ainda simulados."
+    },
+    {
+      "key": "KAN-26",
+      "type": "História",
+      "summary": "Visualização 3D e AR da peça",
+      "status": "A fazer",
+      "epic": "KAN-8",
+      "points": 8,
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "funcionalidade"
+      ],
+      "description": "Como visitante logado, quero ver a peça em 3D, para preservar a memória. Hoje é uma prévia; falta modelo real."
     },
     {
       "key": "KAN-27",
@@ -372,7 +452,7 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
       "labels": [
         "bug"
       ],
@@ -385,7 +465,7 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
       "labels": [
         "bug"
       ],
@@ -398,7 +478,7 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
       "labels": [
         "bug"
       ],
@@ -411,7 +491,7 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
       "labels": [
         "bug"
       ],
@@ -424,77 +504,11 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
       "labels": [
         "bug"
       ],
       "description": "Falha: com a lista rolada, a ficha abria sob a barra de abas. Erro: renderizada dentro do contêiner rolável. Corrigido com portal."
-    },
-    {
-      "key": "KAN-34",
-      "type": "Tarefa",
-      "summary": "Teste de usabilidade com moradores",
-      "status": "Concluído",
-      "epic": "KAN-9",
-      "points": 3,
-      "sprint": "Sprint 4 · Usabilidade",
-      "labels": [],
-      "description": "Teste com usuários do protótipo navegável: leitura da placa, bio, áudio e convite ao museu. Achados viraram as correções KAN-27 a KAN-31."
-    },
-    {
-      "key": "KAN-16",
-      "type": "História",
-      "summary": "Narração em áudio real (voz sintetizada)",
-      "status": "Em andamento",
-      "epic": "KAN-5",
-      "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Como visitante, quero ouvir a bio narrada, para acompanhar sem ler."
-    },
-    {
-      "key": "KAN-17",
-      "type": "História",
-      "summary": "Audiodescrição das 15 peças",
-      "status": "Em andamento",
-      "epic": "KAN-5",
-      "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Como visitante cego ou com baixa visão, quero a audiodescrição de cada peça."
-    },
-    {
-      "key": "KAN-18",
-      "type": "História",
-      "summary": "Curadoria com fontes no CMS",
-      "status": "Em andamento",
-      "epic": "KAN-5",
-      "points": 8,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Como curador, quero cadastrar bios e fontes no CMS, para manter o conteúdo verificável."
-    },
-    {
-      "key": "KAN-23",
-      "type": "História",
-      "summary": "Cache dos lugares visitados",
-      "status": "A fazer",
-      "epic": "KAN-7",
-      "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Como visitante, quero que o app lembre por onde passei ao reabrir e sem internet."
-    },
-    {
-      "key": "KAN-26",
-      "type": "História",
-      "summary": "Visualização 3D e AR da peça",
-      "status": "Em andamento",
-      "epic": "KAN-8",
-      "points": 8,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Como visitante logado, quero ver a peça em 3D, para preservar a memória. Hoje é uma prévia; falta modelo real."
     },
     {
       "key": "KAN-32",
@@ -503,88 +517,11 @@
       "status": "Em andamento",
       "epic": "KAN-9",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Um caso de teste por tela do fluxo (placa, página, áudio, museu, trilha, painel). Base para os testes automatizados do CI."
-    },
-    {
-      "key": "KAN-40",
-      "type": "Tarefa",
-      "summary": "Repositório GitHub público com o código do Make",
-      "status": "Concluído",
-      "epic": "KAN-38",
-      "points": 2,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
-      "labels": [],
-      "description": "Código versionado em EneasDavid/memoria-urbana-maceio, enviado pelo Figma Make. Repositório público."
-    },
-    {
-      "key": "KAN-41",
-      "type": "Tarefa",
-      "summary": "Pipeline de CI no GitHub Actions",
-      "status": "Concluído",
-      "epic": "KAN-38",
-      "points": 3,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
-      "labels": [],
-      "description": "Todo push e PR na main roda tsc, build, testes e pnpm audit (.github/workflows/ci.yml). Aceite: badge do CI verde no README."
-    },
-    {
-      "key": "KAN-42",
-      "type": "Tarefa",
-      "summary": "Testes de dados e de integração (smoke)",
-      "status": "Concluído",
-      "epic": "KAN-38",
-      "points": 3,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
-      "labels": [],
-      "description": "tests/data.test.mjs (ids únicos, coordenadas em Maceió, museu em todo monumento, fontes HTTPS) e tests/smoke.test.mjs (sobe o build e confere página, assets e logo). Relaciona-se com KAN-32."
-    },
-    {
-      "key": "KAN-43",
-      "type": "Tarefa",
-      "summary": "Deploy contínuo na Vercel",
-      "status": "Concluído",
-      "epic": "KAN-38",
-      "points": 2,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
-      "labels": [],
-      "description": "Importar o repositório na Vercel com vercel.json (Vite, rewrites SPA, headers de segurança) e publicar a cada push na main, com preview por PR. Aceite: URL de produção no README. Entregue: https://memoria-urbana-maceio.vercel.app"
-    },
-    {
-      "key": "KAN-44",
-      "type": "Tarefa",
-      "summary": "Sincronizar backlog do Jira com Issues do GitHub",
-      "status": "Concluído",
-      "epic": "KAN-38",
-      "points": 3,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
-      "labels": [],
-      "description": "Workflow jira-sync.yml + .github/jira-backlog.json: uma issue por task com a chave KAN-xx no título, milestone por sprint e issue fechada quando a task está concluída."
-    },
-    {
-      "key": "KAN-45",
-      "type": "Tarefa",
-      "summary": "Corrigir: novo monumento no painel sem campo museum",
-      "status": "Concluído",
-      "epic": "KAN-9",
-      "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
-        "bug"
+        "teste"
       ],
-      "description": "Falha: o CI falhava no tsc. Erro: o botão Novo monumento criava o objeto sem museum. Corrigido: nasce com museum vazio."
-    },
-    {
-      "key": "KAN-47",
-      "type": "Tarefa",
-      "summary": "Vincular commits e PRs ao Jira (GitHub for Jira)",
-      "status": "A fazer",
-      "epic": "KAN-38",
-      "points": 1,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Instalar o app GitHub for Atlassian e autorizar o repositório, para ver commits, branches e PRs com KAN-xx na aba Desenvolvimento do Jira."
+      "description": "Um caso de teste por tela do fluxo (placa, página, áudio, museu, trilha, painel). Base para os testes automatizados do CI."
     },
     {
       "key": "KAN-33",
@@ -593,9 +530,25 @@
       "status": "A fazer",
       "epic": "KAN-9",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "seguranca",
+        "teste"
+      ],
       "description": "Testes guiados pelo OWASP Top 10: cabeçalhos, dependências vulneráveis, entrada do relato de dano e dados do login."
+    },
+    {
+      "key": "KAN-34",
+      "type": "Tarefa",
+      "summary": "Teste de usabilidade com moradores",
+      "status": "Concluído",
+      "epic": "KAN-9",
+      "points": 3,
+      "sprint": "Sprint 4 · Preservação, correções e teste com usuários",
+      "labels": [
+        "teste"
+      ],
+      "description": "Teste com usuários do protótipo navegável: leitura da placa, bio, áudio e convite ao museu. Achados viraram as correções KAN-27 a KAN-31."
     },
     {
       "key": "KAN-35",
@@ -604,8 +557,10 @@
       "status": "A fazer",
       "epic": "KAN-6",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "impacto"
+      ],
       "description": "Como gestor, quero saber quantas leituras de placa viram visita ao museu."
     },
     {
@@ -615,20 +570,11 @@
       "status": "A fazer",
       "epic": "KAN-5",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "conteudo"
+      ],
       "description": "Publicar o CMS e trocar os dados fixos do app pelos do CMS."
-    },
-    {
-      "key": "KAN-46",
-      "type": "Tarefa",
-      "summary": "Proteger a main: PR com CI verde obrigatório",
-      "status": "A fazer",
-      "epic": "KAN-38",
-      "points": 2,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
-      "description": "Regra de proteção de branch: PR revisado em par e status check do CI obrigatório."
     },
     {
       "key": "KAN-37",
@@ -637,15 +583,148 @@
       "status": "A fazer",
       "epic": "KAN-4",
       "points": 8,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "piloto"
+      ],
       "description": "Instalar placas NFC/QR em monumentos piloto e medir leituras reais."
+    },
+    {
+      "key": "KAN-38",
+      "type": "Epic",
+      "summary": "E7 · Entrega contínua (CI/CD)",
+      "status": "A fazer",
+      "epic": null,
+      "points": null,
+      "sprint": null,
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Todo push na main passa por checagem de tipos, build e testes de integração e é publicado na Vercel."
+    },
+    {
+      "key": "KAN-39",
+      "type": "Tarefa",
+      "summary": "Protótipo navegável no Figma Make",
+      "status": "Concluído",
+      "epic": "KAN-4",
+      "points": 5,
+      "sprint": "Sprint 1 · Acesso na placa",
+      "labels": [
+        "prototipo"
+      ],
+      "description": "Protótipo navegável do fluxo placa → página → convite ao museu, publicado em https://rotacultural.figma.site. Aceite: fluxo completo até o card Como chegar, sem login."
+    },
+    {
+      "key": "KAN-40",
+      "type": "Tarefa",
+      "summary": "Repositório GitHub público com o código do Make",
+      "status": "Concluído",
+      "epic": "KAN-38",
+      "points": 2,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Código versionado em EneasDavid/memoria-urbana-maceio, enviado pelo Figma Make. Repositório público."
+    },
+    {
+      "key": "KAN-41",
+      "type": "Tarefa",
+      "summary": "Pipeline de CI no GitHub Actions",
+      "status": "Concluído",
+      "epic": "KAN-38",
+      "points": 3,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Todo push e PR na main roda tsc, build, testes e pnpm audit (.github/workflows/ci.yml). Aceite: badge do CI verde no README."
+    },
+    {
+      "key": "KAN-42",
+      "type": "Tarefa",
+      "summary": "Testes de dados e de integração (smoke)",
+      "status": "Concluído",
+      "epic": "KAN-38",
+      "points": 3,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd",
+        "testes"
+      ],
+      "description": "tests/data.test.mjs (ids únicos, coordenadas em Maceió, museu em todo monumento, fontes HTTPS) e tests/smoke.test.mjs (sobe o build e confere página, assets e logo). Relaciona-se com KAN-32."
+    },
+    {
+      "key": "KAN-43",
+      "type": "Tarefa",
+      "summary": "Deploy contínuo na Vercel",
+      "status": "Concluído",
+      "epic": "KAN-38",
+      "points": 2,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Importar o repositório na Vercel com vercel.json (Vite, rewrites SPA, headers de segurança) e publicar a cada push na main, com preview por PR. Aceite: URL de produção no README. Entregue: https://memoria-urbana-maceio.vercel.app"
+    },
+    {
+      "key": "KAN-44",
+      "type": "Tarefa",
+      "summary": "Sincronizar backlog do Jira com Issues do GitHub",
+      "status": "Concluído",
+      "epic": "KAN-38",
+      "points": 3,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Workflow jira-sync.yml + .github/jira-backlog.json: uma issue por task com a chave KAN-xx no título, milestone por sprint e issue fechada quando a task está concluída."
+    },
+    {
+      "key": "KAN-45",
+      "type": "Tarefa",
+      "summary": "Corrigir: novo monumento no painel sem campo museum",
+      "status": "Concluído",
+      "epic": "KAN-9",
+      "points": 1,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "bug"
+      ],
+      "description": "Falha: o CI falhava no tsc. Erro: o botão Novo monumento criava o objeto sem museum. Corrigido: nasce com museum vazio."
+    },
+    {
+      "key": "KAN-46",
+      "type": "Tarefa",
+      "summary": "Proteger a main: PR com CI verde obrigatório",
+      "status": "A fazer",
+      "epic": "KAN-38",
+      "points": 2,
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Regra de proteção de branch: PR revisado em par e status check do CI obrigatório."
+    },
+    {
+      "key": "KAN-47",
+      "type": "Tarefa",
+      "summary": "Vincular commits e PRs ao Jira (GitHub for Jira)",
+      "status": "A fazer",
+      "epic": "KAN-38",
+      "points": 1,
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "ci-cd"
+      ],
+      "description": "Instalar o app GitHub for Atlassian e autorizar o repositório, para ver commits, branches e PRs com KAN-xx na aba Desenvolvimento do Jira."
     },
     {
       "key": "KAN-48",
       "type": "Epic",
       "summary": "E8 · Backend e APIs (FastAPI)",
-      "status": "Em andamento",
+      "status": "A fazer",
       "epic": null,
       "points": null,
       "sprint": null,
@@ -658,7 +737,7 @@
       "key": "KAN-49",
       "type": "Epic",
       "summary": "E9 · Dados no Firebase",
-      "status": "Em andamento",
+      "status": "A fazer",
       "epic": null,
       "points": null,
       "sprint": null,
@@ -671,7 +750,7 @@
       "key": "KAN-50",
       "type": "Epic",
       "summary": "E10 · Processamento assíncrono (Celery + Redis)",
-      "status": "Em andamento",
+      "status": "A fazer",
       "epic": null,
       "points": null,
       "sprint": null,
@@ -684,7 +763,7 @@
       "key": "KAN-51",
       "type": "Epic",
       "summary": "E11 · Identidade e níveis de acesso (OAuth + RBAC)",
-      "status": "Em andamento",
+      "status": "A fazer",
       "epic": null,
       "points": null,
       "sprint": null,
@@ -700,8 +779,10 @@
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "front"
+      ],
       "description": "Uma URL por monumento (/monumento/:id), lista em /, sem cabeçalho, sem botão voltar e sem login. Protótipo em /prototipo. Detalhes e critério de aceite no Jira."
     },
     {
@@ -711,8 +792,10 @@
       "status": "Concluído",
       "epic": "KAN-51",
       "points": 5,
-      "sprint": "Sprint 1 · Backend e dados",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "oauth"
+      ],
       "description": "/api/auth/login, callback, me e logout; state, nonce, PKCE S256, claims validadas, cookie HttpOnly assinado; 9 testes. Detalhes e critério de aceite no Jira."
     },
     {
@@ -722,8 +805,10 @@
       "status": "Concluído",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Sprint 1 · Backend e dados",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "front"
+      ],
       "description": "Roteador sem dependências, features monument/auth/trail/panel, área logada e protótipo carregados sob demanda. Detalhes e critério de aceite no Jira."
     },
     {
@@ -733,8 +818,10 @@
       "status": "Concluído",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Sprint 1 · Backend e dados",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "arquitetura"
+      ],
       "description": "docs/arquitetura.md com diagramas, contratos de API, tasks do Celery, chaves Redis, modelo Firestore e OWASP. Detalhes e critério de aceite no Jira."
     },
     {
@@ -744,8 +831,10 @@
       "status": "Concluído",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Sprint 1 · Backend e dados",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "arquitetura"
+      ],
       "description": "backend/ com FastAPI, RBAC, rate limit, Celery e beat, Docker Compose, regras do Firebase e 12 testes pytest. Detalhes e critério de aceite no Jira."
     },
     {
@@ -755,8 +844,9 @@
       "status": "Em andamento",
       "epic": "KAN-49",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
+        "firebase",
         "urgente"
       ],
       "description": "Projeto no console, Firestore em southamerica-east1, Storage, conta de serviço com papéis mínimos. Detalhes e critério de aceite no Jira."
@@ -768,19 +858,23 @@
       "status": "A fazer",
       "epic": "KAN-49",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "firebase",
+        "seguranca"
+      ],
       "description": "firebase deploy das regras de firebase/ e teste no emulador. Detalhes e critério de aceite no Jira."
     },
     {
       "key": "KAN-59",
       "type": "Tarefa",
       "summary": "Configurar cliente OAuth no Google Cloud e variáveis na Vercel",
-      "status": "Concluído",
+      "status": "Em andamento",
       "epic": "KAN-51",
       "points": 1,
-      "sprint": "Sprint 1 · Backend e dados",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
+        "oauth",
         "urgente"
       ],
       "description": "Tela de consentimento, ID do cliente Web, redirect /api/auth/callback; GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET, GESTOR_EMAILS. Detalhes e critério de aceite no Jira."
@@ -792,8 +886,10 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "backend"
+      ],
       "description": "API, worker, beat, Redis e emulador com um comando; seed dos monumentos. Detalhes e critério de aceite no Jira."
     },
     {
@@ -803,8 +899,11 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "backend",
+        "ci-cd"
+      ],
       "description": "render.yaml (web, worker, beat, Key Value) e rewrite na Vercel; health em /api/v1/health. Detalhes e critério de aceite no Jira."
     },
     {
@@ -814,8 +913,11 @@
       "status": "A fazer",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [
+        "estudo",
+        "gamificacao"
+      ],
       "description": "Spike: localStorage x IndexedDB x Cache API, Safari ITP, fraude (token de carimbo HMAC), LGPD e mescla na conta. Detalhes e critério de aceite no Jira."
     },
     {
@@ -825,8 +927,11 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "celery",
+        "redis"
+      ],
       "description": "Worker e beat no Render, acks_late, retry com backoff, time_limit. Detalhes e critério de aceite no Jira."
     },
     {
@@ -836,8 +941,11 @@
       "status": "A fazer",
       "epic": "KAN-51",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "oauth",
+        "redis"
+      ],
       "description": "Mesmo contrato /api/auth/*, sessão sess:{sid} revogável, upsert users/{sub}, apagar api/. Detalhes e critério de aceite no Jira."
     },
     {
@@ -847,8 +955,11 @@
       "status": "A fazer",
       "epic": "KAN-51",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "rbac",
+        "seguranca"
+      ],
       "description": "Middleware de sessão, bootstrap do admin, teste de autorização por rota. Detalhes e critério de aceite no Jira."
     },
     {
@@ -858,8 +969,11 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "api",
+        "firebase"
+      ],
       "description": "Migração do data.ts, GET /monuments com cache e ETag, front com fallback. Detalhes e critério de aceite no Jira."
     },
     {
@@ -869,8 +983,11 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "api",
+        "firebase"
+      ],
       "description": "POST /reports no Firestore, 5/h por hash de IP, front envia a fila local. Detalhes e critério de aceite no Jira."
     },
     {
@@ -880,8 +997,12 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [
+        "celery",
+        "firebase",
+        "seguranca"
+      ],
       "description": "Redimensiona, remove EXIF/GPS, miniatura, moderação opcional. Detalhes e critério de aceite no Jira."
     },
     {
@@ -891,8 +1012,11 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "api-externa",
+        "celery"
+      ],
       "description": "Task media.generate_narration, voz pt-BR, MP3 no Storage. Detalhes e critério de aceite no Jira."
     },
     {
@@ -902,8 +1026,11 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "api-externa",
+        "celery"
+      ],
       "description": "E-mail ou Telegram, sem dado pessoal. Detalhes e critério de aceite no Jira."
     },
     {
@@ -913,8 +1040,11 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "celery",
+        "redis"
+      ],
       "description": "INCR + HyperLogLog, flush a cada 15 min, saúde das placas. Detalhes e critério de aceite no Jira."
     },
     {
@@ -924,8 +1054,11 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "api",
+        "rbac"
+      ],
       "description": "Relatos, visitas e placas com dados reais; só gestor/admin. Detalhes e critério de aceite no Jira."
     },
     {
@@ -935,8 +1068,11 @@
       "status": "A fazer",
       "epic": "KAN-51",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [
+        "rbac",
+        "seguranca"
+      ],
       "description": "PATCH /admin/users/{uid}/role, audit_log, sessões derrubadas. Detalhes e critério de aceite no Jira."
     },
     {
@@ -946,8 +1082,11 @@
       "status": "A fazer",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "api",
+        "rbac"
+      ],
       "description": "Chave com hash, escopo flow:read, rate limit por minuto. Detalhes e critério de aceite no Jira."
     },
     {
@@ -957,8 +1096,11 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 5,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "celery",
+        "gamificacao"
+      ],
       "description": "POST /me/merge-device, valida tokens de carimbo, sem duplicar. Detalhes e critério de aceite no Jira."
     },
     {
@@ -968,8 +1110,11 @@
       "status": "A fazer",
       "epic": "KAN-51",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "lgpd",
+        "seguranca"
+      ],
       "description": "DELETE /me, purge_expired, página de privacidade. Detalhes e critério de aceite no Jira."
     },
     {
@@ -979,8 +1124,11 @@
       "status": "A fazer",
       "epic": "KAN-9",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
-      "labels": [],
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [
+        "ci-cd",
+        "seguranca"
+      ],
       "description": "ZAP contra o preview, audits bloqueando alta, k6 com p95 < 500 ms. Detalhes e critério de aceite no Jira."
     },
     {
@@ -990,8 +1138,9 @@
       "status": "Concluído",
       "epic": "KAN-5",
       "points": 2,
-      "sprint": "Sprint 2 · Front e acesso na placa",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
+        "acessibilidade",
         "bug"
       ],
       "description": "Hook useSystemTheme lê prefers-color-scheme, aplica o tema escuro e acompanha a troca ao vivo. Detalhes e print no Jira."
@@ -1003,8 +1152,11 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "labels": [],
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [
+        "gamificacao",
+        "oauth"
+      ],
       "description": "Atalho \"Entrar · pontuar\" e card \"Ganhe o carimbo da Placa XX\"; a página continua aberta sem conta. Detalhes e print no Jira."
     },
     {
@@ -1014,8 +1166,10 @@
       "status": "Concluído",
       "epic": "KAN-5",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
+        "acessibilidade",
+        "audio",
         "bug"
       ],
       "description": "Narração um trecho por vez, destaque da frase e da palavra faladas, pausa real e voz pt-BR. Detalhes e print no Jira."
@@ -1028,6 +1182,7 @@
       "epic": null,
       "points": null,
       "sprint": null,
+      "labels": [],
       "description": "Os 17 itens para o site não ser processado, verificados pelo job Conformidade do CI."
     },
     {
@@ -1038,6 +1193,7 @@
       "epic": null,
       "points": null,
       "sprint": null,
+      "labels": [],
       "description": "Servidor Oracle Cloud Always Free com HTTPS e deploy contínuo; site encontrado no Google."
     },
     {
@@ -1047,7 +1203,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Página /privacidade com controlador, dados tratados, base legal, retenção, cookies, compartilhamento e transferência internacional (art. 33), direitos do titular (art. 18), encarregado, segurança, crianças e adolescentes (art. 14) e alterações. Verificação no CI: compliance.test.mjs › 1. política de privacidade completa."
     },
     {
@@ -1057,7 +1214,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Página /termos com objeto, uso gratuito, conduta, segurança na rua, propriedade intelectual, limitação de responsabilidade, lei aplicável e foro de Maceió. Verificação no CI: compliance.test.mjs › 2. termos de uso."
     },
     {
@@ -1067,7 +1225,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Aviso no primeiro acesso e página /cookies com a tabela de todos os cookies e armazenamentos usados. Verificação no CI: compliance.test.mjs › 3. aviso de cookies + a11y.test.mjs › aviso de cookies."
     },
     {
@@ -1077,7 +1236,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Serviço gratuito declarado nos termos (seção 'Uso gratuito, pagamentos e reembolso'). Não há cobrança, então não há reembolso. Verificação no CI: compliance.test.mjs › 4. sem cobrança."
     },
     {
@@ -1087,7 +1247,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "O formulário de relato informa o que é coletado e liga para a política de privacidade. Verificação no CI: compliance.test.mjs › 5. formulários com aviso e link."
     },
     {
@@ -1097,7 +1258,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Relato sem campos de nome, e-mail, telefone ou CPF; login com escopo mínimo openid email profile. Verificação no CI: compliance.test.mjs › 6. minimização."
     },
     {
@@ -1107,7 +1269,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Nenhum script de análise ou publicidade; CSP só com as origens usadas. Verificação no CI: compliance.test.mjs › 7. sem rastreadores."
     },
     {
@@ -1117,7 +1280,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Meta WCAG 2.1 AA, idioma pt-BR, movimento reduzido e página /acessibilidade com limitações conhecidas e canal de contato. Verificação no CI: a11y.test.mjs › axe sem violações graves (24 casos)."
     },
     {
@@ -1127,7 +1291,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Todo <img> tem alt: descritivo para fotos e ícones com significado, vazio para decorativos. Verificação no CI: compliance.test.mjs › 9. alt + a11y.test.mjs."
     },
     {
@@ -1137,7 +1302,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Cores de texto ajustadas para 4,5:1 (AA) no modo claro e no escuro. Verificação no CI: a11y.test.mjs › color-contrast."
     },
     {
@@ -1147,7 +1313,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Link 'Pular para o conteúdo', foco visível, diálogo de relato com foco preso e Esc para fechar, tabelas roláveis focáveis. Verificação no CI: a11y.test.mjs › teclado (3 testes)."
     },
     {
@@ -1157,7 +1324,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Nenhuma nota, estrela ou depoimento; números de demonstração marcados como simulados. Verificação no CI: compliance.test.mjs › 12. sem avaliações."
     },
     {
@@ -1167,7 +1335,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Removidas afirmações que o site não cumpre. Verificação no CI: compliance.test.mjs › 13. sem promessas falsas."
     },
     {
@@ -1177,7 +1346,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Toda foto com autor, fonte e situação da licença; página /creditos. Verificação no CI: compliance.test.mjs › 14. créditos completos."
     },
     {
@@ -1187,7 +1357,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Página /sobre e rodapé com responsável, natureza do projeto, cidade, contato e aviso de que não há CNPJ. Verificação no CI: compliance.test.mjs › 15. dados do projeto."
     },
     {
@@ -1197,7 +1368,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Registro das operações de tratamento, base legal, retenção, direitos do titular e plano de resposta a incidente em docs/lgpd.md. Verificação no CI: compliance.test.mjs › 16. docs/lgpd.md."
     },
     {
@@ -1207,7 +1379,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Matriz com 11 riscos, base legal, probabilidade, impacto, mitigação e dono em docs/riscos-juridicos.md. Verificação no CI: compliance.test.mjs › 17. matriz de riscos."
     },
     {
@@ -1217,7 +1390,8 @@
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Novo job no GitHub Actions que roda as 17 regras e o axe-core com Playwright a cada push e PR. Verificação no CI: CI › Conformidade (LGPD, acessibilidade, legal)."
     },
     {
@@ -1227,7 +1401,8 @@
       "status": "A fazer",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Pedir autorização por escrito aos autores das 8 fotos (Secom Maceió e veículos citados em /creditos) ou substituir por fotos feitas pela equipe ou com licença livre (CC BY/CC0). Ao concluir, atualizar o campo license em src/data.ts e a página /creditos. Risco R1."
     },
     {
@@ -1237,7 +1412,8 @@
       "status": "A fazer",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Criar um e-mail do projeto para o encarregado (art. 41), preencher ORG.contato.email em src/legal/org.ts e publicar em /privacidade. Hoje o canal é o GitHub Issues. Risco R3."
     },
     {
@@ -1247,7 +1423,8 @@
       "status": "A fazer",
       "epic": "KAN-81",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "Levar política de privacidade, termos, docs/lgpd.md e a matriz de riscos para revisão do orientador ou de um advogado. Registrar o parecer e os ajustes. A matriz diz que não substitui parecer jurídico."
     },
     {
@@ -1257,7 +1434,8 @@
       "status": "A fazer",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "O /prototipo vem do Figma Make e ficou fora do axe-core no CI. Corrigir contraste, alt e teclado nele ou marcar a rota como demonstração não acessível e incluí-la no tests/a11y.test.mjs."
     },
     {
@@ -1267,11 +1445,11 @@
       "status": "Em andamento",
       "epic": "KAN-82",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
-      "description": "Responsável: dono do projeto (exige cartão para verificação e login). Região sa-saopaulo-1, shape VM.Standard.A1.Flex com até 2 OCPU e 12 GB (limite grátis desde jun/2026), Ubuntu 24.04, chave SSH. Abrir portas 80 e 443 na security list. Atenção: conta parada por 30 dias pode ser recuperada pela Oracle.",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "urgente"
-      ]
+      ],
+      "description": "Responsável: dono do projeto (exige cartão para verificação e login). Região sa-saopaulo-1, shape VM.Standard.A1.Flex com até 2 OCPU e 12 GB (limite grátis desde jun/2026), Ubuntu 24.04, chave SSH. Abrir portas 80 e 443 na security list. Atenção: conta parada por 30 dias pode ser recuperada pela Oracle."
     },
     {
       "key": "KAN-106",
@@ -1280,7 +1458,8 @@
       "status": "A fazer",
       "epic": "KAN-82",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Rodar infra/oracle/setup.sh na VM: usuário deploy, ufw, Caddy com HTTPS automático, Node 22, serviço systemd do app e atualizações automáticas de segurança."
     },
     {
@@ -1290,7 +1469,8 @@
       "status": "A fazer",
       "epic": "KAN-82",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "As funções api/auth/* hoje rodam na Vercel. Criar server/ que serve o build estático e as mesmas rotas /api/auth/* com os mesmos handlers Request/Response, sem mudar o front."
     },
     {
@@ -1300,7 +1480,8 @@
       "status": "A fazer",
       "epic": "KAN-82",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Workflow que, após o CI verde na main, gera o build e envia por rsync/SSH para a VM e reinicia o serviço. Segredos ORACLE_HOST, ORACLE_USER e ORACLE_SSH_KEY no GitHub, cadastrados pelo dono do repositório."
     },
     {
@@ -1310,7 +1491,8 @@
       "status": "A fazer",
       "epic": "KAN-82",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Definir o domínio (ou endereço provisório com o IP), apontar o DNS para o IP público da VM e confirmar o certificado do Caddy. Manter a Vercel como reserva até a virada."
     },
     {
@@ -1320,11 +1502,11 @@
       "status": "Em andamento",
       "epic": "KAN-82",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
-      "description": "Responsável: dono do projeto (conta Google). Adicionar a propriedade, colar o código de verificação (meta tag google-site-verification) e enviar /sitemap.xml. Pedir indexação das páginas dos monumentos.",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "urgente"
-      ]
+      ],
+      "description": "Responsável: dono do projeto (conta Google). Adicionar a propriedade, colar o código de verificação (meta tag google-site-verification) e enviar /sitemap.xml. Pedir indexação das páginas dos monumentos."
     },
     {
       "key": "KAN-111",
@@ -1333,7 +1515,8 @@
       "status": "Concluído",
       "epic": "KAN-82",
       "points": 2,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "robots.txt liberando as páginas públicas, sitemap.xml gerado no build com todos os monumentos e páginas legais, title/description/canonical/Open Graph por página e JSON-LD (TouristAttraction e WebSite)."
     },
     {
@@ -1343,7 +1526,8 @@
       "status": "Concluído",
       "epic": "KAN-82",
       "points": 3,
-      "sprint": "Sprint 7 · Qualidade e entrega contínua",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Gerar no build um index.html por monumento com título, descrição e texto da bio, para o Google ler sem executar JavaScript. O React assume a página ao carregar."
     },
     {
@@ -1354,6 +1538,7 @@
       "epic": null,
       "points": null,
       "sprint": null,
+      "labels": [],
       "description": "20 princípios de UX e animação e 10 ajustes finos de design, verificados por tests/ux.test.mjs no CI."
     },
     {
@@ -1363,7 +1548,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Botões achatam levemente ao apertar (scale 0.97 × 0.94) e voltam com mola. Verificação no CI: ux.test › 1 e 10: squash."
     },
     {
@@ -1373,7 +1559,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A seta do 'Como chegar' recua antes de avançar. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1383,7 +1570,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Enquanto a narração toca, o resto da página recua. Verificação no CI: ux.test › 3 e 8: foco na narração."
     },
     {
@@ -1393,7 +1581,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A folha de relato tem pose de entrada e de saída definidas. Verificação no CI: ux.test › 4 e 19: saída e arrastar."
     },
     {
@@ -1403,7 +1592,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A folha passa um pouco do ponto e assenta. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1413,7 +1603,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Curvas de entrada e saída padronizadas em tokens. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1423,7 +1614,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "O aviso de cookies sai descendo em curva. Verificação no CI: ux.test › 7: cookies em arco."
     },
     {
@@ -1433,7 +1625,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Barras de áudio dançam no título enquanto a voz fala. Verificação no CI: ux.test › 3 e 8: barras de áudio."
     },
     {
@@ -1443,7 +1636,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Tempos curtos: 110 ms no toque, 200 ms nas trocas, 320 ms nos painéis. Verificação no CI: ux.test › tokens + 17 Doherty."
     },
     {
@@ -1453,7 +1647,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A escolha do problema 'pula' e o envio solta um anel. Verificação no CI: ux.test › 1 e 10: feedback."
     },
     {
@@ -1463,7 +1658,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Cartões da lista com perspectiva e sombra em camadas. Verificação no CI: ux.test › 11: profundidade."
     },
     {
@@ -1473,7 +1669,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Sistema visual coeso: tokens de cor, raio, borda e movimento compartilhados. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1483,7 +1680,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Ações principais grandes e perto do polegar. Verificação no CI: ux.test › 13, 14 e 20."
     },
     {
@@ -1493,7 +1691,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Todo alvo de toque tem pelo menos 44 px. Verificação no CI: ux.test › 13, 14 e 20: alvos ≥ 44 px."
     },
     {
@@ -1503,7 +1702,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A lista de 15 monumentos foi dividida em 4 regiões. Verificação no CI: ux.test › 15 e 16: grupos."
     },
     {
@@ -1513,7 +1713,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Nenhum grupo passa de 7 itens. Verificação no CI: ux.test › 15 e 16: ≤ 7 por grupo."
     },
     {
@@ -1523,7 +1724,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Resposta em menos de 400 ms. Verificação no CI: ux.test › 17 Doherty."
     },
     {
@@ -1533,7 +1735,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Endereços tolerantes: placa, caixa alta, acento e nome. Verificação no CI: ux.test › 18 Postel."
     },
     {
@@ -1543,7 +1746,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Padrões conhecidos: arrastar a alça para baixo fecha a folha. Verificação no CI: ux.test › 4 e 19: arrastar."
     },
     {
@@ -1553,7 +1757,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "O que quase todo visitante faz fica no topo. Verificação no CI: ux.test › 13, 14 e 20."
     },
     {
@@ -1563,7 +1768,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Raio interno = raio externo − espaçamento. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1573,7 +1779,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Bordas em oklch(0 0 0 / 7%), que somem no fundo e acompanham o tema. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1583,7 +1790,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Cores da marca definidas em OKLCH. Verificação no CI: ux.test › tokens + a11y."
     },
     {
@@ -1593,7 +1801,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Gradientes interpolados em OKLCH, sem 'meio cinza'. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1603,7 +1812,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Traço do ícone acompanha o peso da fonte. Verificação no CI: ux.test › ajuste 5."
     },
     {
@@ -1613,7 +1823,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Listas que rolam de lado somem suavemente nas bordas. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1623,7 +1834,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Bio ↔ Audiodescrição troca com desfoque. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1633,7 +1845,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "No modo escuro, camadas mais altas são mais claras. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1643,7 +1856,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A folha anima a altura entre formulário e 'Obrigado!'. Verificação no CI: ux.test › 9: altura."
     },
     {
@@ -1653,7 +1867,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Logo de fundo branco se funde com a areia. Verificação no CI: ux.test › tokens (CSS)."
     },
     {
@@ -1663,7 +1878,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "13 testes no navegador para os 20 princípios e 10 ajustes, no job Conformidade. Verificação no CI: CI › Conformidade › UX e animação."
     },
     {
@@ -1673,7 +1889,8 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Foto (≤ 10 MB, recodificada sem EXIF) ou vídeo (≤ 25 MB e 30 s) com prévia, guardado no aparelho até a API existir."
     },
     {
@@ -1683,7 +1900,8 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 3,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Magic bytes, recusa de compactados/documentos/SVG/executáveis, poliglotas, scripts e bombas de descompressão."
     },
     {
@@ -1693,7 +1911,8 @@
       "status": "Concluído",
       "epic": "KAN-48",
       "points": 3,
-      "sprint": "Sprint 1 · Backend e dados",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Mesmas regras no servidor, limite em streaming (413), 415 para conteúdo inválido, quarentena e fila."
     },
     {
@@ -1703,7 +1922,8 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 2,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Fixtures de ataque em tests/fixtures/media usadas por media.test, attach.test e pytest."
     },
     {
@@ -1713,7 +1933,8 @@
       "status": "A fazer",
       "epic": "KAN-50",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "ffprobe sem rede e com limites, duração ≤ 30 s, metadados removidos, miniatura."
     },
     {
@@ -1723,7 +1944,8 @@
       "status": "A fazer",
       "epic": "KAN-8",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "POST do relato e PUT do anexo com nova tentativa offline."
     },
     {
@@ -1733,7 +1955,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Skill de design aplicada às correções; plano no DESIGN.md."
     },
     {
@@ -1743,7 +1966,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "tests/guidelines.test.mjs nas páginas públicas."
     },
     {
@@ -1753,7 +1977,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Sistema de design em um arquivo para pessoas e IAs."
     },
     {
@@ -1763,7 +1988,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "pnpm shots: 24 prints para comparar com o protótipo."
     },
     {
@@ -1773,7 +1999,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Testes no navegador e artefato de prints em todo CI."
     },
     {
@@ -1783,11 +2010,9 @@
       "status": "Concluído",
       "epic": "KAN-5",
       "points": 1,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "description": "Um só controle de narração; barra com Museu, Compartilhar e Relatar.",
-      "labels": [
-        "bug"
-      ]
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
+      "description": "Um só controle de narração; barra com Museu, Compartilhar e Relatar."
     },
     {
       "key": "KAN-157",
@@ -1796,20 +2021,19 @@
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 1,
-      "sprint": "Sprint 2 · Front e acesso na placa",
-      "description": "Cabeçalho refeito: logo e Entrar numa linha, título e descrição com largura toda.",
-      "labels": [
-        "bug"
-      ]
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
+      "description": "Cabeçalho refeito: logo e Entrar numa linha, título e descrição com largura toda."
     },
     {
       "key": "KAN-158",
       "type": "Tarefa",
       "summary": "Adicionar autenticação OAuth (login com Google) funcionando no site",
-      "status": "Concluído",
+      "status": "A fazer",
       "epic": "KAN-51",
       "points": 5,
-      "sprint": "Sprint 1 · Backend e dados",
+      "sprint": "Sprint 6 · Fundação do backend e segurança",
+      "labels": [],
       "description": "Ligar de verdade o login com Google (OAuth 2.0 + OIDC). Hoje /api/auth/me responde configured:false. Depende de KAN-59 (cliente OAuth no Google Cloud) e KAN-107 (servidor Node). Cadastrar GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, SESSION_SECRET e GESTOR_EMAILS na Vercel e na VM; testar Entrar → consentimento → callback → sessão → Sair; conferir PKCE, state, nonce, cookies e open redirect em produção; mostrar nome/foto no botão e liberar Trilha, 3D e painel por papel. Aceite: visitante entra com Google no celular, ganha o carimbo e sai; gestor abre o /painel; sem login tudo da placa continua aberto."
     },
     {
@@ -1819,11 +2043,11 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 1,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
-      "description": "O contêiner de altura dinâmica (overflow: hidden) cortava o contorno de foco e as bordas; ganhou 6 px de folga.",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "bug"
-      ]
+      ],
+      "description": "O contêiner de altura dinâmica (overflow: hidden) cortava o contorno de foco e as bordas; ganhou 6 px de folga."
     },
     {
       "key": "KAN-160",
@@ -1832,7 +2056,8 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Miniatura com brilho, etapa escrita e barra indeterminada durante a verificação; spinner 'Enviando foto/vídeo…' no envio."
     },
     {
@@ -1842,11 +2067,22 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 2,
-      "sprint": "Sprint 3 · Segurança",
-      "description": "Padrão '<%=' gerava falso positivo em vídeos grandes; marcas de celular eram bloqueadas; vídeo não decodificável pelo navegador era recusado. Corrigido no aparelho e no servidor.",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "bug"
-      ]
+      ],
+      "description": "Padrão '<%=' gerava falso positivo em vídeos grandes; marcas de celular eram bloqueadas; vídeo não decodificável pelo navegador era recusado. Corrigido no aparelho e no servidor."
+    },
+    {
+      "key": "KAN-162",
+      "type": "Epic",
+      "summary": "E15 · Segurança · conformidade (40 requisitos) e SEO técnico",
+      "status": "Em andamento",
+      "epic": null,
+      "points": null,
+      "sprint": null,
+      "labels": [],
+      "description": "Os 40 requisitos para o app não ser processado (segurança, LGPD, consumidor, transparência) e o checklist de SEO técnico, com matriz em docs/conformidade-40.md e relatório gerado pelo CI."
     },
     {
       "key": "KAN-163",
@@ -1855,7 +2091,8 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Antes de abrir câmera ou galeria, um aviso explica que só o arquivo escolhido é enviado e permite recusar. O navegador não pede permissão para a galeria; a câmera usa capture=environment."
     },
     {
@@ -1865,7 +2102,8 @@
       "status": "Concluído",
       "epic": "KAN-51",
       "points": 3,
-      "sprint": "Sprint 1 · Backend e dados",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Botões 'Como visitante' e 'Como gestor' em /entrar. Sessão fictícia de 2 h, sem senha, marcada demo: true, sem acesso a dados reais; desligável com DEMO_LOGIN=off."
     },
     {
@@ -1875,7 +2113,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "sameOrigin(req) em /api/auth/demo e /api/auth/logout; requisição sem Origin ou de outro host recebe 403."
     },
     {
@@ -1885,7 +2124,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "tests/security.test.mjs no job build do CI: HSTS, CSP, Permissions-Policy, cookies, PKCE, papéis, varredura de segredos, SQL e limite de taxa."
     },
     {
@@ -1895,7 +2135,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Dependabot para npm, pip e GitHub Actions; política de divulgação em SECURITY.md."
     },
     {
@@ -1905,7 +2146,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "CODEOWNERS e pull_request_template.md com checklist de segurança, LGPD e acessibilidade."
     },
     {
@@ -1915,7 +2157,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Seção 'Uso de inteligência artificial' em /sobre (art. 20 LGPD) e aviso 'Voz sintetizada pelo seu aparelho' na narração."
     },
     {
@@ -1925,7 +2168,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "docs/conformidade-40.md e scripts/audit-report.mjs, que valida a matriz e publica o resumo no job Conformidade."
     },
     {
@@ -1935,7 +2179,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Seção com os 3 monumentos mais próximos (haversine), também no HTML pré-renderizado."
     },
     {
@@ -1945,7 +2190,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "public/og.png com og:image, largura, altura e alt; twitter summary_large_image; logo de 518 KB para 26 KB."
     },
     {
@@ -1955,7 +2201,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Asserções novas em tests/seo.test.mjs."
     },
     {
@@ -1965,7 +2212,8 @@
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Sem rolagem horizontal em 320, 390 e 768 px; LCP < 2,5 s e CLS < 0,1 em tests/guidelines.test.mjs."
     },
     {
@@ -1975,11 +2223,11 @@
       "status": "Em andamento",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
-      "description": "Escolha da licença pela equipe e arquivo de avisos de terceiros.",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "urgente"
-      ]
+      ],
+      "description": "Escolha da licença pela equipe e arquivo de avisos de terceiros."
     },
     {
       "key": "KAN-176",
@@ -1988,11 +2236,11 @@
       "status": "Em andamento",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
-      "description": "Aceitar e arquivar os DPAs de cada operador listado em docs/lgpd.md (art. 39).",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [
         "urgente"
-      ]
+      ],
+      "description": "Aceitar e arquivar os DPAs de cada operador listado em docs/lgpd.md (art. 39)."
     },
     {
       "key": "KAN-177",
@@ -2001,7 +2249,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "Gravar data e versão dos termos aceitos por usuário."
     },
     {
@@ -2011,7 +2260,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "Logs JSON com id de requisição, sem e-mail, IP completo ou token."
     },
     {
@@ -2021,7 +2271,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [],
       "description": "Exportação agendada e restauração testada."
     },
     {
@@ -2031,7 +2282,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [],
       "description": "Alertas por e-mail para picos de erro e de relatos."
     },
     {
@@ -2041,7 +2293,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [],
       "description": "2FA nas contas do Google Cloud, Vercel, GitHub e Oracle; revisão mensal de papéis."
     },
     {
@@ -2051,7 +2304,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 8 · Processamento assíncrono e painel",
+      "labels": [],
       "description": "Campos sensíveis cifrados e rotação de SESSION_SECRET e chaves."
     },
     {
@@ -2061,7 +2315,8 @@
       "status": "A fazer",
       "epic": "KAN-162",
       "points": 1,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 9 · APIs abertas, LGPD e piloto",
+      "labels": [],
       "description": "Pedir links da Ufal, dos museus parceiros e da imprensa local."
     },
     {
@@ -2071,7 +2326,8 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "/app usa as telas do protótipo do Figma em tela cheia: abas Explorar, Trilha e Passaporte, leitura da placa, carimbo animado e perfil, sem moldura de celular nem relógio 9:41."
     },
     {
@@ -2081,7 +2337,8 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Conta Google: data e rede reais, só QR/NFC verdadeiros, GPS só com localização real, sem amigos fictícios. Na demonstração as simulações continuam."
     },
     {
@@ -2091,7 +2348,8 @@
       "status": "Concluído",
       "epic": "KAN-8",
       "points": 1,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Cartão antes do pedido do navegador: a imagem fica no aparelho e só o código da placa é lido; Permitir câmera ou Agora não."
     },
     {
@@ -2101,7 +2359,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "tests/access.test.mjs: abas, conta real sem simulação, demonstração com simulação e axe-core nas 3 abas no claro e no escuro."
     },
     {
@@ -2111,7 +2370,8 @@
       "status": "A fazer",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "Criar /api/v1/progress (FastAPI + Firestore) para gravar carimbo, XP, fotos e relatos por usuário e carregar ao entrar."
     },
     {
@@ -2121,7 +2381,8 @@
       "status": "A fazer",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": "Sprint 7 · Dados, sessões e filas",
+      "labels": [],
       "description": "Safari não tem BarcodeDetector; adicionar decodificador JS leve, carregado só no leitor."
     },
     {
@@ -2131,7 +2392,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 2,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Arcos verde-água e dourado, assinatura \"— em Maceió —\", onda da orla e silhueta da base da placa no rodapé e no login."
     },
     {
@@ -2141,7 +2403,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A estrela parecia nota de avaliação; entram o ícone da placa de rua da logo e o de estátua."
     },
     {
@@ -2151,7 +2414,8 @@
       "status": "Concluído",
       "epic": "KAN-9",
       "points": 2,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Pedidos do Dependabot aceitos; react e react-dom juntos e tsconfig ajustado para o TypeScript 7."
     },
     {
@@ -2161,7 +2425,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Emblema, assinatura \"— em Maceió —\", selo Painel da Prefeitura e silhueta da cidade na barra lateral; títulos com os dois arcos da logo."
     },
     {
@@ -2171,7 +2436,8 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Mapa segue a pessoa com watchPosition, distâncias reais, check-in por GPS só perto da obra e selo mais perto; aviso antes do pedido, não grava nem envia."
     },
     {
@@ -2181,7 +2447,8 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 1,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Assinatura no topo do Explorar, arcos da logo sob os títulos e silhueta da cidade no Perfil."
     },
     {
@@ -2191,7 +2458,8 @@
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "Seção Monumentos no Explorar: progresso, filtro por área e Perto de você, foto, situação, distância e placa."
     },
     {
@@ -2201,193 +2469,194 @@
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 3,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
+      "labels": [],
       "description": "A partir de 1024 px: topo como o site do protótipo, Explorar em duas colunas com cartões, Trilha com mapa e lista ao lado, ficha e leitor em painel centralizado. O celular não muda."
     },
     {
-      "key": "KAN-201",
+      "key": "KAN-198",
       "type": "Tarefa",
       "summary": "Os 14 ataques comuns com testes (admin, IDOR, chave, pontos, XSS, segredos, banco)",
       "status": "Concluído",
       "epic": "KAN-162",
       "points": 5,
-      "sprint": "Sprint 3 · Segurança",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Os 14 ataques comuns com testes (admin, IDOR, chave, pontos, XSS, segredos, banco)."
     },
     {
-      "key": "KAN-202",
+      "key": "KAN-199",
       "type": "Tarefa",
       "summary": "Mais 10 monumentos vindos de dados abertos (Wikidata, OpenStreetMap, Commons)",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Mais 10 monumentos vindos de dados abertos (Wikidata, OpenStreetMap, Commons)."
     },
     {
-      "key": "KAN-203",
+      "key": "KAN-200",
       "type": "Tarefa",
       "summary": "Trilhas temáticas (Bronze, Escritores, Fé, Porto, República, Bebedouro)",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Trilhas temáticas (Bronze, Escritores, Fé, Porto, República, Bebedouro)."
     },
     {
-      "key": "KAN-204",
+      "key": "KAN-201",
       "type": "Tarefa",
       "summary": "Grafo de personalidades e “+ Mais sobre” com Trilha [pessoa]",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Grafo de personalidades e “+ Mais sobre” com Trilha [pessoa]."
     },
     {
-      "key": "KAN-205",
+      "key": "KAN-202",
       "type": "Tarefa",
       "summary": "Progresso sem login no aparelho e aviso nuvem ou aparelho",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 5,
-      "sprint": "Sprint 8 · Validação e apresentação",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Progresso sem login no aparelho e aviso nuvem ou aparelho."
     },
     {
-      "key": "KAN-206",
+      "key": "KAN-203",
       "type": "Tarefa",
       "summary": "Ingestão semanal idempotente das fontes abertas",
       "status": "Concluído",
       "epic": "KAN-38",
       "points": 3,
-      "sprint": "Sprint 8 · Validação e apresentação",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Ingestão semanal idempotente das fontes abertas."
     },
     {
-      "key": "KAN-207",
+      "key": "KAN-204",
       "type": "Tarefa",
       "summary": "Relatório de critérios e apresentação com QR de demonstração",
       "status": "Em andamento",
       "epic": "KAN-38",
       "points": 3,
-      "sprint": "Sprint 8 · Validação e apresentação",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Relatório de critérios e apresentação com QR de demonstração."
     },
     {
-      "key": "KAN-208",
+      "key": "KAN-205",
       "type": "Tarefa",
       "summary": "Rotina noturna no Celery: buscar dados dos monumentos de 00h às 4h",
       "status": "Concluído",
       "epic": "KAN-50",
       "points": 5,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Tarefa default.ingest_public_sources no Celery beat, a cada 20 min entre 00h e 4h (America/Maceio), lote de 10 bens do Wikidata/Commons por vez, idempotente por QID, para a área de preparação da curadoria."
     },
     {
-      "key": "KAN-209",
+      "key": "KAN-206",
       "type": "Tarefa",
       "summary": "Home sobre o projeto e Galeria separada (galeria não dá selo)",
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Home sobre o projeto e Galeria separada (galeria não dá selo)."
     },
     {
-      "key": "KAN-210",
+      "key": "KAN-207",
       "type": "Tarefa",
       "summary": "Leitor de QR no site também no iPhone (jsQR) e links /monumento/<id>?via=qr",
       "status": "Concluído",
       "epic": "KAN-4",
       "points": 5,
-      "sprint": "Sprint 2 · Front e acesso na placa",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Leitor de QR no site também no iPhone (jsQR) e links /monumento/<id>?via=qr."
     },
     {
-      "key": "KAN-211",
+      "key": "KAN-208",
       "type": "Tarefa",
       "summary": "Sessão igual em todas as páginas: chip com foto do Google e barra de abas com conta",
       "status": "Concluído",
       "epic": "KAN-51",
       "points": 3,
-      "sprint": "Sprint 2 · Front e acesso na placa",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Sessão igual em todas as páginas: chip com foto do Google e barra de abas com conta."
     },
     {
-      "key": "KAN-212",
+      "key": "KAN-209",
       "type": "Tarefa",
       "summary": "Selo automático ao abrir pelo QR da câmera do celular (sem ler duas vezes)",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 3,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Selo automático ao abrir pelo QR da câmera do celular (sem ler duas vezes)."
     },
     {
-      "key": "KAN-213",
+      "key": "KAN-210",
       "type": "Tarefa",
       "summary": "Primeiro acesso pede localização e câmera; galeria só ao anexar; microfone nunca",
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 3,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Primeiro acesso pede localização e câmera; galeria só ao anexar; microfone nunca."
     },
     {
-      "key": "KAN-214",
+      "key": "KAN-211",
       "type": "Tarefa",
       "summary": "Localização pedida uma vez e resposta guardada no aparelho",
       "status": "Concluído",
       "epic": "KAN-81",
       "points": 1,
-      "sprint": "Sprint 5 · LGPD e conformidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Localização pedida uma vez e resposta guardada no aparelho."
     },
     {
-      "key": "KAN-215",
+      "key": "KAN-212",
       "type": "Tarefa",
       "summary": "Testes de usabilidade e carga cognitiva (passos para ler a placa e ganhar o selo)",
       "status": "Concluído",
       "epic": "KAN-113",
       "points": 3,
-      "sprint": "Sprint 4 · Usabilidade",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Testes de usabilidade e carga cognitiva (passos para ler a placa e ganhar o selo)."
     },
     {
-      "key": "KAN-216",
+      "key": "KAN-213",
       "type": "Tarefa",
       "summary": "Progresso da Trilha persistente no aparelho (sem dados simulados)",
       "status": "Concluído",
       "epic": "KAN-7",
       "points": 2,
-      "sprint": "Sprint 6 · Back 2: acervo, ingestão noturna e trilhas",
+      "sprint": "Sprint 5 · Qualidade, conteúdo e CI/CD",
       "labels": [],
       "description": "Progresso da Trilha persistente no aparelho (sem dados simulados)."
     },
     {
-      "key": "KAN-217",
+      "key": "KAN-214",
       "type": "Tarefa",
       "summary": "Visualização 3D e realidade aumentada (funcionalidade futura)",
       "status": "A fazer",
       "epic": "KAN-7",
       "points": 8,
-      "sprint": "Backlog pós-disciplina",
+      "sprint": null,
       "labels": [],
       "description": "Visualização 3D e realidade aumentada (funcionalidade futura)."
     }
