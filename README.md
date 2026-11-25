@@ -8,7 +8,7 @@
 
 | Artefato | Link |
 |---|---|
-| Sistema online (Vercel) | https://memoria-urbana-maceio.vercel.app |
+| Sistema online (Vercel) | https://mumcz.vercel.app (o endereço antigo https://memoria-urbana-maceio.vercel.app continua no ar) |
 | Protótipo publicado (Figma Make) | https://rotacultural.figma.site |
 | Arquivo do Figma Make | https://www.figma.com/make/1aEK440GM9tIze8UfG7usz/Sem-t%C3%ADtulo |
 | Apresentação (Canva) | https://www.canva.com/design/DAHaJGuZ0zs/eP23D5eJfYwAb0mdKRQgLQ/edit |
@@ -98,7 +98,7 @@ O último dia de cada sprint é de review (demo do incremento), retrospectiva e 
 | Etapa | Onde | O que faz |
 |---|---|---|
 | CI | GitHub Actions (`.github/workflows/ci.yml`) | Em todo push ou PR na `main`: instala, checa tipos (`tsc`), gera o build, roda os testes de dados e de integração e audita dependências |
-| CD | Vercel (integração Git) | Todo push na `main` publica em https://memoria-urbana-maceio.vercel.app. PRs ganham uma URL de preview |
+| CD | Vercel (integração Git) | Todo push na `main` publica em https://mumcz.vercel.app (e no antigo memoria-urbana-maceio.vercel.app). PRs ganham uma URL de preview |
 | Backlog | GitHub Actions (`.github/workflows/jira-sync.yml`) | Espelha o backlog do Jira em Issues e milestones |
 | CD Oracle | GitHub Actions (`.github/workflows/deploy-oracle.yml`) | Depois do CI verde, publica na VM Oracle Cloud via SSH (Caddy + Node). Fica desligado até existirem as variáveis `ORACLE_HOST` e `SITE_URL`. Guia em [docs/oracle.md](docs/oracle.md) |
 

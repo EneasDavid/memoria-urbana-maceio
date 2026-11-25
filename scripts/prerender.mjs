@@ -11,7 +11,7 @@ import { monuments } from '../src/data.ts'
 import { nearby, fmtDistance } from '../src/shared/geo.ts'
 
 const DIST = path.resolve(import.meta.dirname, '../dist')
-export const SITE = (process.env.SITE_URL || 'https://memoria-urbana-maceio.vercel.app').replace(/\/+$/, '')
+export const SITE = (process.env.SITE_URL || 'https://mumcz.vercel.app').replace(/\/+$/, '')
 const VERIFY = process.env.GOOGLE_SITE_VERIFICATION || ''
 const NAME = 'Memória Urbana Maceió'
 const TODAY = new Date().toISOString().slice(0, 10)
