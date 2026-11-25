@@ -23,3 +23,8 @@ server/build/
 shots/
 *.egg-info/
 !.env.example
+
+# Credenciais do Firebase/Google: nunca versionar (vão nas variáveis da Vercel)
+*-firebase-adminsdk-*.json
+*service-account*.json
+client_secret*.json

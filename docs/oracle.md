@@ -63,7 +63,7 @@ sudo SITE_DOMAIN=<dominio> ACME_EMAIL=<seu-email> bash setup.sh
 O script faz o seguinte:
 - instala Node 22 e Caddy;
 - abre 80/443 no iptables (as imagens Ubuntu da Oracle bloqueiam essas portas mesmo com a Security List liberada);
-- cria o usuário `deploy`, o serviço `memoria-urbana-api` e o arquivo `/etc/memoria-urbana/api.env` com `SESSION_SECRET` aleatório;
+- cria o usuário `deploy`, o serviço `memoria-urbana-api` e o arquivo `/etc/memoria-urbana/api.env` com `SESSION_SECRET` aleatório e `PROGRESS_DIR` (progresso da Trilha por conta, em `/var/lib/memoria-urbana/progress`);
 - liga as atualizações automáticas de segurança.
 
 Depois gere uma chave **só para o deploy**, no seu computador e não na VM:

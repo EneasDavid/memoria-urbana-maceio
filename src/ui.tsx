@@ -110,8 +110,8 @@ export function Row({ icon, iconBg = '#2c8585', title, subtitle, right, onClick,
       )}
       <span className={`flex-1 min-w-0 flex items-center gap-2 py-[11px] pr-4 ${last ? '' : 'border-b border-[rgba(60,60,67,0.12)]'}`}>
         <span className="flex-1 min-w-0">
-          <span className="block text-[16px] leading-tight text-black truncate">{title}</span>
-          {subtitle && <span className="block text-[13px] text-[rgba(60,60,67,0.6)] mt-0.5 truncate">{subtitle}</span>}
+          <span className="block text-[16px] leading-tight text-black [overflow-wrap:anywhere]">{title}</span>
+          {subtitle && <span className="block text-[13px] leading-snug text-[rgba(60,60,67,0.6)] mt-0.5 [overflow-wrap:anywhere]">{subtitle}</span>}
         </span>
         {right}
         {onClick && <Icon name="chevR" size={15} stroke={2.4} className="text-[rgba(60,60,67,0.3)] shrink-0" />}
@@ -205,9 +205,9 @@ export function Avatar({ name, color = '#2c8585', size = 36, picture }: { name: 
   )
 }
 
-export function GoogleG({ size = 18 }: { size?: number }) {
+export function GoogleG({ size = 18, className }: { size?: number; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" className={className}>
       <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z" />
       <path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z" />
       <path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7z" />

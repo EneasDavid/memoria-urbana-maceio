@@ -121,7 +121,7 @@ cd backend && pytest                                          # RBAC, cache, rel
 
 Em `/entrar` há duas opções reais, sem usuários fictícios:
 
-- **Continuar com Google** (OAuth 2.0 + PKCE): sincroniza o progresso na nuvem. Precisa das variáveis `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `SESSION_SECRET` na Vercel.
+- **Continuar com Google** (OAuth 2.0 + PKCE): sincroniza o progresso na nuvem. Precisa das variáveis `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `SESSION_SECRET` na Vercel. Para guardar selos e pontos online (`/api/progress`), configure o **Firebase Firestore** com `FIREBASE_SERVICE_ACCOUNT`. O passo a passo para gerar todas as credenciais (Firebase e login Google) está em [`docs/firebase.md`](docs/firebase.md). Alternativas: Upstash Redis (`KV_REST_API_URL`/`KV_REST_API_TOKEN`) ou a pasta `PROGRESS_DIR` no servidor Oracle. Sem isso, o progresso fica só no aparelho, que **não é apagado ao sair**.
 - **Continuar sem conta, salvando neste aparelho**: o progresso (monumentos vistos e trilhas) fica no `localStorage` do celular; nada vai para o servidor.
 
 O antigo acesso de demonstração (visitante/gestor fictícios) foi removido. O painel só abre para e-mails listados em `GESTOR_EMAILS`.

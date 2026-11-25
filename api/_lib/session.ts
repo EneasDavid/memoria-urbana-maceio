@@ -33,6 +33,12 @@ async function hmacKey(secret: string): Promise<CryptoKey> {
   return crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify'])
 }
 
+/** HMAC-SHA256 em base64url (43 caracteres). Usado nas provas de dono dos selos. */
+export async function hmacB64(secret: string, message: string): Promise<string> {
+  const sig = await crypto.subtle.sign('HMAC', await hmacKey(secret), enc.encode(message))
+  return b64url(new Uint8Array(sig))
+}
+
 /** Token compacto "payload.assinatura" (HMAC-SHA256). `exp` em segundos é obrigatório. */
 export async function sign(payload: Record<string, unknown> & { exp: number }, secret: string): Promise<string> {
   if (!secret || secret.length < 32) throw new Error('SESSION_SECRET precisa de pelo menos 32 caracteres')

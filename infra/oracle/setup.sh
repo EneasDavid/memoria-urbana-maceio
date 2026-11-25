@@ -56,10 +56,15 @@ GOOGLE_CLIENT_SECRET=
 SESSION_SECRET=$(openssl rand -base64 48 | tr -d '\n')
 GESTOR_EMAILS=
 API_PORT=3001
+# Progresso da Trilha de cada conta Google (selos, pontos, passaporte), um JSON por conta
+PROGRESS_DIR=/var/lib/memoria-urbana/progress
 ENV
   chown root:deploy $ETC/api.env && chmod 640 $ETC/api.env
 fi
 printf 'SITE_DOMAIN=%s\nACME_EMAIL=%s\n' "$SITE_DOMAIN" "$ACME_EMAIL" > $ETC/caddy.env
+
+grep -q '^PROGRESS_DIR=' $ETC/api.env || printf '# Progresso da Trilha de cada conta Google\nPROGRESS_DIR=/var/lib/memoria-urbana/progress\n' >> $ETC/api.env
+install -d -o deploy -g deploy -m 700 /var/lib/memoria-urbana /var/lib/memoria-urbana/progress
 
 echo "==> Serviço da API (systemd, usuário sem privilégios)"
 cat > /etc/systemd/system/memoria-urbana-api.service <<UNIT
@@ -78,6 +83,7 @@ ProtectSystem=strict
 ProtectHome=true
 PrivateTmp=true
 ReadOnlyPaths=$APP
+ReadWritePaths=/var/lib/memoria-urbana
 
 [Install]
 WantedBy=multi-user.target
