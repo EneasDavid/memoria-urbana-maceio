@@ -70,7 +70,7 @@ jobs:
         run: pnpm build:server && node --experimental-strip-types --no-warnings --test tests/oracle.test.mjs
 
       - name: Progresso online (salvar por conta, juntar aparelhos, selo de outra conta recusado)
-        run: node --experimental-strip-types --no-warnings --test tests/progress.test.mjs
+        run: node --experimental-strip-types --no-warnings --test tests/progress.test.mjs tests/firestore.test.mjs
 
       - name: Trilhas temáticas, grafo de personalidades e progresso sem login (local-first)
         run: pnpm exec playwright install --with-deps chromium && node --experimental-strip-types --no-warnings --test tests/trails.test.mjs

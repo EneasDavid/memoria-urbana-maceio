@@ -1,9 +1,12 @@
-// Onde o progresso de cada conta fica guardado no servidor.
+// Onde o progresso de cada conta fica guardado no servidor (o primeiro configurado vale).
+// - Firebase Firestore (recomendado): coleção "progresso", um documento por conta (id = SHA-256 do id Google).
+//   Credenciais e passo a passo em docs/firebase.md.
 // - Vercel: Upstash Redis (integração "Upstash for Redis" do Marketplace cria KV_REST_API_URL e KV_REST_API_TOKEN).
 // - Servidor Oracle: arquivos JSON numa pasta (PROGRESS_DIR), um por conta, com nome = SHA-256 do id da conta.
 // Sem nenhum dos dois, /api/progress responde { configured: false } e o app segue salvando só no aparelho.
 import { hmacB64 } from './session.js'
 import { sanitizeDoc, type ProgressDoc } from './progressDoc.js'
+import { firestore } from './firestore.js'
 
 export interface ProgressStore { get(sub: string): Promise<ProgressDoc | null>; put(sub: string, doc: ProgressDoc): Promise<void> }
 
@@ -47,8 +50,25 @@ function fileStore(dir: string): ProgressStore {
   }
 }
 
+function firestoreStore(): ProgressStore | null {
+  const fs = firestore()
+  if (!fs) return null
+  return {
+    async get(sub) {
+      const d = await fs.getDoc('progresso/' + (await keyFor(sub)))
+      return d ? sanitizeDoc(d.progresso) : null
+    },
+    async put(sub, doc) {
+      // campos legíveis no console do Firebase; o id da conta não aparece (só o hash)
+      await fs.setDoc('progresso/' + (await keyFor(sub)), { v: 1, progresso: doc as unknown as Record<string, unknown>, selos: doc.collected.length, pontos: doc.xp, atualizadoEm: new Date() })
+    },
+  }
+}
+
 let memory: Map<string, ProgressDoc> | null = null
 export function progressStore(): ProgressStore | null {
+  const fs = firestoreStore()
+  if (fs) return fs
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN
   if (url && token) return redisStore(url, token)
