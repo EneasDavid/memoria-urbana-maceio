@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { GoogleG, Icon, LogoMark, EmMaceio, Skyline } from '../../ui'
 import { useSession } from './useSession'
-import { signInWithGoogle } from './firebaseLogin'
+import { prepareGoogle, signInWithGoogle } from './firebaseLogin'
 import { setMode } from '../../shared/progress'
 import { listLocalProfiles, resumeLocalProfile, setLocalProfile } from '../../shared/localProfile'
 
@@ -14,6 +14,9 @@ export function LoginPage({ returnTo }: { returnTo: string }) {
     document.title = 'Entrar · Memória Urbana Maceió'
     if (s.status === 'authenticated' && !s.user.local) window.location.replace(returnTo)
   }, [s.status, returnTo])
+
+  // Prepara o Firebase ao abrir a página: no clique, a janela do Google abre na hora (sem bloqueio de pop-up)
+  useEffect(() => { void prepareGoogle() }, [])
 
   const [error, setError] = useState<string | null>(() => new URLSearchParams(window.location.search).get('erro'))
   const [busy, setBusy] = useState(false)
